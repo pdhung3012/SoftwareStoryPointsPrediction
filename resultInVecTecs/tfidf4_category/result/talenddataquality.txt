@@ -180,3 +180,29 @@ Result for MLPClassifier(activation='relu', alpha=1, batch_size='auto', beta_1=0
    macro avg       0.38      0.32      0.30      1381
 weighted avg       0.61      0.62      0.54      1381
 
+Result for GradientBoostingClassifier(ccp_alpha=0.0, criterion='friedman_mse', init=None,
+                           learning_rate=0.1, loss='deviance', max_depth=5,
+                           max_features=None, max_leaf_nodes=None,
+                           min_impurity_decrease=0.0, min_impurity_split=None,
+                           min_samples_leaf=1, min_samples_split=2,
+                           min_weight_fraction_leaf=0.0, n_estimators=100,
+                           n_iter_no_change=None, presort='deprecated',
+                           random_state=1234, subsample=1.0, tol=0.0001,
+                           validation_fraction=0.1, verbose=0,
+                           warm_start=False)
+0.6010426441455532
+[[173 238   8   2]
+ [ 75 646  19   7]
+ [  5 136   7   4]
+ [  4  51   3   3]]
+              precision    recall  f1-score   support
+
+           0       0.67      0.41      0.51       421
+           1       0.60      0.86      0.71       747
+           2       0.19      0.05      0.07       152
+           3       0.19      0.05      0.08        61
+
+    accuracy                           0.60      1381
+   macro avg       0.41      0.34      0.34      1381
+weighted avg       0.56      0.60      0.55      1381
+
