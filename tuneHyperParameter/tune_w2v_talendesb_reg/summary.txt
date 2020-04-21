@@ -1,0 +1,25 @@
+Default estimator:
+XGBRegressor(alpha=10, base_score=0.5, booster=None, colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=0.3, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints=None,
+             learning_rate=0.1, max_delta_step=0, max_depth=5,
+             min_child_weight=1, missing=nan, monotone_constraints=None,
+             n_estimators=10, n_jobs=0, num_parallel_tree=1,
+             objective='reg:linear', random_state=0, reg_alpha=10, reg_lambda=1,
+             scale_pos_weight=1, subsample=1, tree_method=None,
+             validate_parameters=False, verbosity=None)
+MAE: 0.8784854590207681
+MQE: 1.8677858594129537
+Best estimator:
+XGBRegressor(alpha=10, base_score=0.5, booster=None, colsample_bylevel=1,
+             colsample_bynode=1, colsample_bytree=0.3, gamma=0, gpu_id=-1,
+             importance_type='gain', interaction_constraints=None,
+             learning_rate=0.1, max_delta_step=0, max_depth=5,
+             min_child_weight=1, missing=nan, monotone_constraints=None,
+             n_estimators=10, n_jobs=0, num_parallel_tree=1,
+             objective='reg:linear', random_state=0, reg_alpha=10, reg_lambda=1,
+             scale_pos_weight=1, subsample=1, tree_method=None,
+             validate_parameters=False, verbosity=None)
+Result for best estimator of SVC
+MAE: 0.8741752892390064
+MQE: 1.8771527724186439
