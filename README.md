@@ -28,7 +28,7 @@ The following code will run for evaluating story points by Machine Learning algo
 
 **RQ1. Classification: What is the accuracy of story points categories classification?**
 
-- Run 'evaluateRQ1.py'.
+```python evaluateRQ1.py```
 - Input: the default is the path 'replicationPackage/data/pretrainedVector/TFIDF4/' (you can go to the code and change paths for other vectorization models)
 - Output: the accuracy of each systems in 10 ML Classification algorithms. You can see the best accuracy on each systems along with the details prediction in 'details/' folder.
 
