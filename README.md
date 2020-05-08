@@ -1,7 +1,9 @@
 # Software Effort Prediction in Agile Development withMachine Learning & Natural Language Processing
 The success of software development projects hinges upon, amongst other factors, on project and time management. One popular method used to aid time management and estimating project timelines for agile software development is the estimation number of story points, which represent the amount of development effort per individual software issues or requests in number of man hours. In this paper, we explore various text vectorization machine learning techniques to predict software development effort measured in number of story points. Our results show that the problem can be formulated as both a classification or a regression problem, and successfully solved using supervised learning. Moreover, several of our regression models achieve better accuracy than prior literature. We also demonstrate that Generative Adversarial Network (GAN) semi-supervised yields significantly better results than normal semi-supervised learning. Finally, we show that deep learning architectures such as convolutional attention recurrent neural networks yield very promising results, but require further hyperparameter tuning.
 
-**Authors: Hung Phan, Eliska Koberdanz, Jeremiah Roghair** from Department of Computer Science, Iowa State University.
+**Authors: Hung Phan, Eliska Koberdanz, Jeremiah Roghair** from Department of Computer Science, Iowa State University, USA.
+
+This is the research project in the course Advance in Software Engineering - COMS 665 (Spring 2020) - Iowa State University, USA.
 
 # Requirements:
 - Python 3.6.
