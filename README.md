@@ -35,9 +35,10 @@ The following code will run for evaluating story points by Machine Learning algo
 
 **RQ2. Regression: What is the accuracy of story points prediction?**
 
-- Run 'evaluateRQ2.py'.
+- Run 'evaluateRQ2AllSystems.py'.
 - Input: the default is the path 'replicationPackage/data/pretrainedVector/TFIDF4/' (you can go to the code and change paths for other vectorization models)
 - Output: the accuracy of each systems in 7 ML Regression algorithms. You can see the best accuracy on each systems along with the details prediction in 'details/' folder.
+If you want to run on a specific system such as Moodle, run 'evaluateRQ2Moodle.py'.
 
 **RQ3. Semi-supervised training: How does the semi-supervised training affect accuracy?**
 
