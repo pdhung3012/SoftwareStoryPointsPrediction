@@ -17,7 +17,7 @@ This is the research project in the course Advance in Software Engineering - COM
 We put all of our code, data and result inside replicationPackage folder. This folder has following items:
 
 - preprocessCode: the code for vectorizing software features of TSE 2018 dataset.
-- expectedResults: expected results for Research Question 1-4 (you can generate the results by yourselves if you run the python code in this folder.
+- expectedResults: expected results for Research Question 1-4 (you can generate the results by yourselves if you run the python code inside the replicationPackage folder.
 - data: Including dataset From TSE 2018 paper, 50000 story text for training Doc2Vec, pretrainedVector in 5 vectorization techniques.
 - RQ3: all of the code for running semi supervised learning. We inherit and update the code from this paper: https://github.com/yanlirock/RLANS
 - Other python codes: code for running machine learning experiments.
