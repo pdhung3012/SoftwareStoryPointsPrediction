@@ -1,4 +1,4 @@
-# SoftwareStoryPointsPrediction
+# Software Effort Prediction in Agile Development withMachine Learning & Natural Language Processing
 The success of software development projects hinges upon, amongst other factors, on project and time management. One popular method used to aid time management and estimating project timelines for agile software development is the estimation number of story points, which represent the amount of development effort per individual software issues or requests in number of man hours. In this paper, we explore various text vectorization machine learning techniques to predict software development effort measured in number of story points. Our results show that the problem can be formulated as both a classification or a regression problem, and successfully solved using supervised learning. Moreover, several of our regression models achieve better accuracy than prior literature. We also demonstrate that Generative Adversarial Network (GAN) semi-supervised yields significantly better results than normal semi-supervised learning. Finally, we show that deep learning architectures such as convolutional attention recurrent neural networks yield very promising results, but require further hyperparameter tuning.
 
 # Requirements:
@@ -8,12 +8,12 @@ The success of software development projects hinges upon, amongst other factors,
 
 # Replicating Instructions:
 
-**RQ1. Classification: What is the accuracy of story points categories classification?
-**RQ2. Regression: What is the accuracy of story points prediction?
-**RQ3. Semi-supervised training: How does the semi-supervised training affect accuracy?
-**RQ4. Hyperparameter Tuning: Does hyperparameter tuning improve the accuracy?
-**RQ5. Vectorization: What text vectorization techniques are most suitable?
-**RQ6. Are deep learning models suitable for software effort estimation?
+**RQ1. Classification: What is the accuracy of story points categories classification?**
+**RQ2. Regression: What is the accuracy of story points prediction?**
+**RQ3. Semi-supervised training: How does the semi-supervised training affect accuracy?**
+**RQ4. Hyperparameter Tuning: Does hyperparameter tuning improve the accuracy?**
+**RQ5. Vectorization: What text vectorization techniques are most suitable?**
+**RQ6. Are deep learning models suitable for software effort estimation?**
 
 1.  Go to  the repo here:  https://github.com/jroghair/Software-Point-Estimation/tree/master/Deep%20Learning%20Models
 2.  Open the terminal on windows (this code assumes windows is used)
