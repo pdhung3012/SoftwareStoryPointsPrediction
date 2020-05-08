@@ -6,7 +6,7 @@ The success of software development projects hinges upon, amongst other factors,
 - Scikit-learn 0.22.2.
 - Keras 2.2.5.
 
-# Replicating Instructions:
+# Instruction for Replication:
 
 **RQ1. Classification: What is the accuracy of story points categories classification?**
 
