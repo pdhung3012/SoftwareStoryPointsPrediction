@@ -7,6 +7,7 @@ The success of software development projects hinges upon, amongst other factors,
 - Python 3.6.
 - Scikit-learn 0.22.2.
 - Keras 2.2.5.
+- PyTorch 1.5
 
 # Instruction for Replication:
 
