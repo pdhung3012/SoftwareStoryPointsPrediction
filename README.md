@@ -65,7 +65,7 @@ You will see the detail...txt as the output prediction.
 
 **RQ5. Vectorization: What text vectorization techniques are most suitable?**
 
-- You can see the results after running RQ1 and RQ2' evaluations.
+- You can see the results after running evaluations of RQ1 and RQ2.
 
 
 **RQ6. Are deep learning models suitable for software effort estimation?**
@@ -83,4 +83,4 @@ Extract the zip folder and copy the file "glove.6B.300d.txt" into the 'Deep Lear
 10. The accuracy results of the results of these models is appended to the text file "DL-Model_Accuracy.txt". Open it and scroll down to the last appended block of text.
 
 # Acknowledgements:
-We would like to credit Dr. Wei Le and classmates in COMS 665 (Spring 2020) - Iowa State University for advising us and give comments to improve the project. We also want to acknowledge authors of TSE 2018 paper (IEEE TSE2018: A deep learning model for estimating story points) for releasing the dataset and Yan Li for publishing the code for GAN Text Classification in KDD 2018 paper (https://github.com/yanlirock/RLANS).
+We would like to credit Dr. Wei Le and classmates in COMS 665 (Spring 2020) - Iowa State University for advise us and give comments to improve the project. We also want to acknowledge authors of TSE 2018 paper (IEEE TSE2018: A deep learning model for estimating story points) for releasing the dataset and Yan Li for publishing the code for GAN Text Classification in KDD 2018 paper (https://github.com/yanlirock/RLANS).
