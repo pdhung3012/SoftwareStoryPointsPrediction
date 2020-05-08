@@ -9,10 +9,15 @@ The success of software development projects hinges upon, amongst other factors,
 # Replicating Instructions:
 
 **RQ1. Classification: What is the accuracy of story points categories classification?**
+
 **RQ2. Regression: What is the accuracy of story points prediction?**
+
 **RQ3. Semi-supervised training: How does the semi-supervised training affect accuracy?**
+
 **RQ4. Hyperparameter Tuning: Does hyperparameter tuning improve the accuracy?**
+
 **RQ5. Vectorization: What text vectorization techniques are most suitable?**
+
 **RQ6. Are deep learning models suitable for software effort estimation?**
 
 1.  Go to  the repo here:  https://github.com/jroghair/Software-Point-Estimation/tree/master/Deep%20Learning%20Models
