@@ -35,38 +35,45 @@ The following code will run for evaluating story points by Machine Learning algo
 
 **RQ2. Regression: What is the accuracy of story points prediction?**
 
-- Run 'evaluateRQ2AllSystems.py'.
+To run for all systems:
+```python: evaluateRQ2AllSystems.py```
 - Input: the default is the path 'replicationPackage/data/pretrainedVector/TFIDF4/' (you can go to the code and change paths for other vectorization models)
 - Output: the accuracy of each systems in 7 ML Regression algorithms. You can see the best accuracy on each systems along with the details prediction in 'details/' folder.
-If you want to run on a specific system such as Moodle, run 'evaluateRQ2Moodle.py'.
+
+If you want to run on a specific system such as Moodle, run: 
+```python evaluateRQ2Moodle.py```
 
 **RQ3. Semi-supervised training: How does the semi-supervised training affect accuracy?**
 
 - Go inside the RQ3 sub-folder.
 
 First, you need to run the language model creation for unlabeled data:
-- Run 'python language_model_training.py --cuda --batch_size=32 --lr=0.01 --reduce_rate=0.9 --save='/ag_lm_model/''
+```python language_model_training.py --cuda --batch_size=32 --lr=0.01 --reduce_rate=0.9 --save='/ag_lm_model/'' ```
 
 Next, You can run 3 following configurations:
 - For supervised classification, run:
-python classifier_training.py --cuda --lr=0.001 --batch_size=128 --save='/classify_no_pre/' --pre_train='' --number_per_class=1000 --reduce_rate=0.95
+```python classifier_training.py --cuda --lr=0.001 --batch_size=128 --save='/classify_no_pre/' --pre_train='' --number_per_class=1000 --reduce_rate=0.95```
 - For original semi supervised classification, run:
-python classifier_training.py --cuda --lr=0.001 --batch_size=128 --save='/classify_with_pre/' --pre_train='/ag_lm_model' --number_per_class=1000 --reduce_rate=0.95
+```python classifier_training.py --cuda --lr=0.001 --batch_size=128 --save='/classify_with_pre/' --pre_train='/ag_lm_model' --number_per_class=1000 --reduce_rate=0.95```
 
 - For GAN semi supervised classification, run:
-python Adversarial_training.py --cuda --lr=0.001 --batch_size=128 --save='/ag_adv_model/' --pre_train='/ag_lm_model' --number_per_class=1000 --reduce_rate=0.95
+```python Adversarial_training.py --cuda --lr=0.001 --batch_size=128 --save='/ag_adv_model/' --pre_train='/ag_lm_model' --number_per_class=1000 --reduce_rate=0.95```
 
 You will see the detail...txt as the output prediction.
 
 
 **RQ4. Hyperparameter Tuning: Does hyperparameter tuning improve the accuracy?**
 
-- For RQ 4.1, run 'evaluateRQ4-1.py'. Output: the tuning result on classification of 'talendesb' system.
-- For RQ 4.2, run 'evaluateRQ4-2.py'. Output: the tuning result on regression of 'talendesb' system.
+- For RQ 4.1:
+```python evaluateRQ4-1.py``` 
+Output: the tuning result on classification of 'talendesb' system.
+- For RQ 4.2: 
+```python evaluateRQ4-2.py``` 
+Output: the tuning result on regression of 'talendesb' system.
 
 **RQ5. Vectorization: What text vectorization techniques are most suitable?**
 
-- You can see the results after running evaluations of RQ1 and RQ2.
+You can see the results after running evaluations of RQ1 and RQ2.
 
 
 **RQ6. Are deep learning models suitable for software effort estimation?**
@@ -79,8 +86,9 @@ You will see the detail...txt as the output prediction.
 The direct link is here: http://nlp.stanford.edu/data/glove.6B.zip
 Extract the zip folder and copy the file "glove.6B.300d.txt" into the 'Deep Learning Models" folder.
 7. Back to the terminal, ensure you are in the  'Deep Learning Models" folder, if not change directory to it.
-8.  You can preprocess the data (done already) by typing 'python  Data_Processing.py'
-9. Now that the data is cleaned, you can model it with existing implementations of a basic CNN and RNN models by typing "python Modeling.py"
+8.  You can preprocess the data (done already) by typing:
+```python  Data_Processing.py```
+9. Now that the data is cleaned, you can model it with existing implementations of a basic CNN and RNN models by typing: ```python Modeling.py```
 10. The accuracy results of the results of these models is appended to the text file "DL-Model_Accuracy.txt". Open it and scroll down to the last appended block of text.
 
 # Acknowledgements:
