@@ -1,0 +1,58 @@
+Result for DecisionTreeRegressor(ccp_alpha=0.0, criterion='mse', max_depth=None,
+                      max_features=None, max_leaf_nodes=None,
+                      min_impurity_decrease=0.0, min_impurity_split=None,
+                      min_samples_leaf=1, min_samples_split=2,
+                      min_weight_fraction_leaf=0.0, presort='deprecated',
+                      random_state=None, splitter='best')
+MAE 1.512012012012012
+MQE 7.77027027027027
+Result for RandomForestRegressor(bootstrap=True, ccp_alpha=0.0, criterion='mse',
+                      max_depth=None, max_features='auto', max_leaf_nodes=None,
+                      max_samples=None, min_impurity_decrease=0.0,
+                      min_impurity_split=None, min_samples_leaf=1,
+                      min_samples_split=2, min_weight_fraction_leaf=0.0,
+                      n_estimators=50, n_jobs=None, oob_score=False,
+                      random_state=0, verbose=0, warm_start=False)
+MAE 1.2156156156156157
+MQE 3.9863423423423425
+Result for AdaBoostRegressor(base_estimator=None, learning_rate=1.0, loss='linear',
+                  n_estimators=50, random_state=None)
+MAE 1.6198599913239304
+MQE 4.724436251670409
+Result for XGBRegressor(alpha=10, base_score=None, booster=None, colsample_bylevel=None,
+             colsample_bynode=None, colsample_bytree=0.3, gamma=None,
+             gpu_id=None, importance_type='gain', interaction_constraints=None,
+             learning_rate=0.1, max_delta_step=None, max_depth=5,
+             min_child_weight=None, missing=nan, monotone_constraints=None,
+             n_estimators=10, n_jobs=None, num_parallel_tree=None,
+             objective='reg:linear', random_state=None, reg_alpha=None,
+             reg_lambda=None, scale_pos_weight=None, subsample=None,
+             tree_method=None, validate_parameters=False, verbosity=None)
+MAE 1.0888912091563057
+MQE 4.41939061430797
+Result for LinearSVR(C=1.0, dual=True, epsilon=0.0, fit_intercept=True,
+          intercept_scaling=1.0, loss='epsilon_insensitive', max_iter=1000,
+          random_state=2, tol=0.0001, verbose=0)
+MAE 1.0304111599043593
+MQE 4.102680001086757
+Result for MLPRegressor(activation='relu', alpha=1, batch_size='auto', beta_1=0.9,
+             beta_2=0.999, early_stopping=False, epsilon=1e-08,
+             hidden_layer_sizes=(100,), learning_rate='constant',
+             learning_rate_init=0.001, max_fun=15000, max_iter=200,
+             momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True,
+             power_t=0.5, random_state=None, shuffle=True, solver='adam',
+             tol=0.0001, validation_fraction=0.1, verbose=False,
+             warm_start=False)
+MAE 1.1623083683424371
+MQE 3.7281370535706095
+Result for GradientBoostingRegressor(alpha=0.9, ccp_alpha=0.0, criterion='friedman_mse',
+                          init=None, learning_rate=0.1, loss='ls', max_depth=5,
+                          max_features=None, max_leaf_nodes=None,
+                          min_impurity_decrease=0.0, min_impurity_split=None,
+                          min_samples_leaf=1, min_samples_split=2,
+                          min_weight_fraction_leaf=0.0, n_estimators=100,
+                          n_iter_no_change=None, presort='deprecated',
+                          random_state=2, subsample=1.0, tol=0.0001,
+                          validation_fraction=0.1, verbose=0, warm_start=False)
+MAE 1.1548792630947944
+MQE 3.999320446346701

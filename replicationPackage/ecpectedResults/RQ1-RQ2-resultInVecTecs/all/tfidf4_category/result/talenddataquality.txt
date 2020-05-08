@@ -1,0 +1,208 @@
+Result for GaussianNB(priors=None, var_smoothing=1e-09)
+0.4626733395891982
+[[103 203 104  11]
+ [ 23 445 225  54]
+ [  2  83  50  17]
+ [  0  31  15  15]]
+              precision    recall  f1-score   support
+
+           0       0.80      0.24      0.38       421
+           1       0.58      0.60      0.59       747
+           2       0.13      0.33      0.18       152
+           3       0.15      0.25      0.19        61
+
+    accuracy                           0.44      1381
+   macro avg       0.42      0.35      0.33      1381
+weighted avg       0.58      0.44      0.46      1381
+
+Result for LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                   intercept_scaling=1, l1_ratio=None, max_iter=100,
+                   multi_class='auto', n_jobs=None, penalty='l2',
+                   random_state=1234, solver='lbfgs', tol=0.0001, verbose=0,
+                   warm_start=False)
+0.6227504952559693
+[[124 297   0   0]
+ [ 10 737   0   0]
+ [  0 152   0   0]
+ [  1  60   0   0]]
+              precision    recall  f1-score   support
+
+           0       0.92      0.29      0.45       421
+           1       0.59      0.99      0.74       747
+           2       0.00      0.00      0.00       152
+           3       0.00      0.00      0.00        61
+
+    accuracy                           0.62      1381
+   macro avg       0.38      0.32      0.30      1381
+weighted avg       0.60      0.62      0.54      1381
+
+Result for DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion='gini',
+                       max_depth=None, max_features=None, max_leaf_nodes=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, presort='deprecated',
+                       random_state=None, splitter='best')
+0.47354811802731733
+[[211 167  27  16]
+ [173 455  83  36]
+ [ 29  88  28   7]
+ [ 10  38  11   2]]
+              precision    recall  f1-score   support
+
+           0       0.50      0.50      0.50       421
+           1       0.61      0.61      0.61       747
+           2       0.19      0.18      0.19       152
+           3       0.03      0.03      0.03        61
+
+    accuracy                           0.50      1381
+   macro avg       0.33      0.33      0.33      1381
+weighted avg       0.50      0.50      0.50      1381
+
+Result for RandomForestClassifier(bootstrap=True, ccp_alpha=0.0, class_weight=None,
+                       criterion='gini', max_depth=None, max_features='auto',
+                       max_leaf_nodes=None, max_samples=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=50,
+                       n_jobs=None, oob_score=False, random_state=1234,
+                       verbose=0, warm_start=False)
+0.6191116671879887
+[[151 266   4   0]
+ [ 44 693   6   4]
+ [  4 143   3   2]
+ [  1  56   2   2]]
+              precision    recall  f1-score   support
+
+           0       0.76      0.36      0.49       421
+           1       0.60      0.93      0.73       747
+           2       0.20      0.02      0.04       152
+           3       0.25      0.03      0.06        61
+
+    accuracy                           0.61      1381
+   macro avg       0.45      0.33      0.33      1381
+weighted avg       0.59      0.61      0.55      1381
+
+Result for AdaBoostClassifier(algorithm='SAMME.R', base_estimator=None, learning_rate=1.0,
+                   n_estimators=50, random_state=None)
+0.5626368470441038
+[[171 238   8   4]
+ [103 618  17   9]
+ [ 10 130   8   4]
+ [  7  46   5   3]]
+              precision    recall  f1-score   support
+
+           0       0.59      0.41      0.48       421
+           1       0.60      0.83      0.69       747
+           2       0.21      0.05      0.08       152
+           3       0.15      0.05      0.07        61
+
+    accuracy                           0.58      1381
+   macro avg       0.39      0.33      0.33      1381
+weighted avg       0.53      0.58      0.53      1381
+
+Result for LinearDiscriminantAnalysis(n_components=None, priors=None, shrinkage=None,
+                           solver='svd', store_covariance=False, tol=0.0001)
+0.6082264623084142
+[[182 232   6   1]
+ [ 76 614  38  19]
+ [  4 121  20   7]
+ [  1  46   3  11]]
+              precision    recall  f1-score   support
+
+           0       0.69      0.43      0.53       421
+           1       0.61      0.82      0.70       747
+           2       0.30      0.13      0.18       152
+           3       0.29      0.18      0.22        61
+
+    accuracy                           0.60      1381
+   macro avg       0.47      0.39      0.41      1381
+weighted avg       0.58      0.60      0.57      1381
+
+Result for QuadraticDiscriminantAnalysis(priors=None, reg_param=0.0,
+                              store_covariance=False, tol=0.0001)
+0.601000938379731
+[[151 249  21   0]
+ [ 40 654  52   1]
+ [  9 129  14   0]
+ [  2  54   5   0]]
+              precision    recall  f1-score   support
+
+           0       0.75      0.36      0.48       421
+           1       0.60      0.88      0.71       747
+           2       0.15      0.09      0.11       152
+           3       0.00      0.00      0.00        61
+
+    accuracy                           0.59      1381
+   macro avg       0.38      0.33      0.33      1381
+weighted avg       0.57      0.59      0.55      1381
+
+Result for LinearSVC(C=1.0, class_weight=None, dual=True, fit_intercept=True,
+          intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+          multi_class='ovr', penalty='l2', random_state=1234, tol=0.0001,
+          verbose=0)
+0.61766239182567
+[[159 262   0   0]
+ [ 59 683   2   3]
+ [  2 146   2   2]
+ [  1  58   2   0]]
+              precision    recall  f1-score   support
+
+           0       0.72      0.38      0.50       421
+           1       0.59      0.91      0.72       747
+           2       0.33      0.01      0.03       152
+           3       0.00      0.00      0.00        61
+
+    accuracy                           0.61      1381
+   macro avg       0.41      0.33      0.31      1381
+weighted avg       0.58      0.61      0.54      1381
+
+Result for MLPClassifier(activation='relu', alpha=1, batch_size='auto', beta_1=0.9,
+              beta_2=0.999, early_stopping=False, epsilon=1e-08,
+              hidden_layer_sizes=(100,), learning_rate='constant',
+              learning_rate_init=0.001, max_fun=15000, max_iter=200,
+              momentum=0.9, n_iter_no_change=10, nesterovs_momentum=True,
+              power_t=0.5, random_state=None, shuffle=True, solver='adam',
+              tol=0.0001, validation_fraction=0.1, verbose=False,
+              warm_start=False)
+0.6206078615368574
+[[122 299   0   0]
+ [  7 740   0   0]
+ [  0 152   0   0]
+ [  1  60   0   0]]
+              precision    recall  f1-score   support
+
+           0       0.94      0.29      0.44       421
+           1       0.59      0.99      0.74       747
+           2       0.00      0.00      0.00       152
+           3       0.00      0.00      0.00        61
+
+    accuracy                           0.62      1381
+   macro avg       0.38      0.32      0.30      1381
+weighted avg       0.61      0.62      0.54      1381
+
+Result for GradientBoostingClassifier(ccp_alpha=0.0, criterion='friedman_mse', init=None,
+                           learning_rate=0.1, loss='deviance', max_depth=5,
+                           max_features=None, max_leaf_nodes=None,
+                           min_impurity_decrease=0.0, min_impurity_split=None,
+                           min_samples_leaf=1, min_samples_split=2,
+                           min_weight_fraction_leaf=0.0, n_estimators=100,
+                           n_iter_no_change=None, presort='deprecated',
+                           random_state=1234, subsample=1.0, tol=0.0001,
+                           validation_fraction=0.1, verbose=0,
+                           warm_start=False)
+0.6010426441455532
+[[173 238   8   2]
+ [ 75 646  19   7]
+ [  5 136   7   4]
+ [  4  51   3   3]]
+              precision    recall  f1-score   support
+
+           0       0.67      0.41      0.51       421
+           1       0.60      0.86      0.71       747
+           2       0.19      0.05      0.07       152
+           3       0.19      0.05      0.08        61
+
+    accuracy                           0.60      1381
+   macro avg       0.41      0.34      0.34      1381
+weighted avg       0.56      0.60      0.55      1381
+
