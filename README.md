@@ -26,14 +26,14 @@ The following code will run for evaluating story points by Machine Learning algo
 
 **RQ1. Classification: What is the accuracy of story points categories classification?**
 
-- Run evaluateRQ1.py.
+- Run 'evaluateRQ1.py'.
 - Input: the default is the path 'replicationPackage/data/pretrainedVector/TFIDF4' (you can go to the code and change paths for other vectorization models)
 - Output: the accuracy of each systems in 10 ML Classification algorithms. You can see the best accuracy on each systems along with the details prediction in 'details/' folder.
 
 
 **RQ2. Regression: What is the accuracy of story points prediction?**
 
-- Run evaluateRQ2.py.
+- Run 'evaluateRQ2.py'.
 - Input: the default is the path 'replicationPackage/data/pretrainedVector/TFIDF4' (you can go to the code and change paths for other vectorization models)
 - Output: the accuracy of each systems in 7 ML Regression algorithms. You can see the best accuracy on each systems along with the details prediction in 'details/' folder.
 
@@ -59,7 +59,7 @@ You will see the detail...txt as the output prediction.
 **RQ4. Hyperparameter Tuning: Does hyperparameter tuning improve the accuracy?**
 
 - For RQ 4.1, run 'evaluateRQ4-1.py'. Output: the tuning result on classification of 'talendesb' system.
-- For RQ 4.1, run 'evaluateRQ4-2.py'. Output: the tuning result on regression of 'talendesb' system.
+- For RQ 4.2, run 'evaluateRQ4-2.py'. Output: the tuning result on regression of 'talendesb' system.
 
 **RQ5. Vectorization: What text vectorization techniques are most suitable?**
 
