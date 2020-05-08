@@ -1,5 +1,6 @@
 # Software Effort Prediction in Agile Development withMachine Learning & Natural Language Processing
 The success of software development projects hinges upon, amongst other factors, on project and time management. One popular method used to aid time management and estimating project timelines for agile software development is the estimation number of story points, which represent the amount of development effort per individual software issues or requests in number of man hours. In this paper, we explore various text vectorization machine learning techniques to predict software development effort measured in number of story points. Our results show that the problem can be formulated as both a classification or a regression problem, and successfully solved using supervised learning. Moreover, several of our regression models achieve better accuracy than prior literature. We also demonstrate that Generative Adversarial Network (GAN) semi-supervised yields significantly better results than normal semi-supervised learning. Finally, we show that deep learning architectures such as convolutional attention recurrent neural networks yield very promising results, but require further hyperparameter tuning.
+**Authors: Hung Phan, Eliska Koberdanz, Jeremiah Roghair** from Department of Computer Science, Iowa State University.
 
 # Requirements:
 - Python 3.6.
@@ -30,4 +31,7 @@ Extract the zip folder and copy the file "glove.6B.300d.txt" into the 'Deep Lear
 7. Back to the terminal, ensure you are in the  'Deep Learning Models" folder, if not change directory to it.
 8.  You can preprocess the data (done already) by typing 'python  Data_Processing.py'
 9. Now that the data is cleaned, you can model it with existing implementations of a basic CNN and RNN models by typing "python Modeling.py"
-10. The accuracy results of the results of these models is appended to the text file "DL-Model_Accuracy.txt". Open it and scroll down to the last appended block of text. 
+10. The accuracy results of the results of these models is appended to the text file "DL-Model_Accuracy.txt". Open it and scroll down to the last appended block of text.
+
+# Acknowledgements:
+We would like to credit Dr. Wei Le and classmates in COMS 665 (Spring 2020) - Iowa State University for advising us and give comments to improve the project. We also want to acknowledge authors of TSE 2018 paper (IEEE TSE2018: A deep learning model for estimating story points) for releasing the dataset.
