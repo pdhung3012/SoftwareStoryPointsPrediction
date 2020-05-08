@@ -7,11 +7,23 @@ The success of software development projects hinges upon, amongst other factors,
 - Python 3.6.
 - Scikit-learn 0.22.2.
 - Keras 2.2.5.
-- PyTorch 1.5
+- PyTorch 1.5.
+- TensorFlow 2.0.
 
 # Instruction for Replication:
 
+We put all of our code, data and result inside replicationPackage folder. This folder has following items:
+
+- preprocessCode: the code for vectorizing software features of TSE 2018 dataset.
+- expectedResults: expected results for Research Question 1-4 (you can generate the results by yourselves if you run the python code in this folder.
+- data: Including dataset From TSE 2018 paper, 50000 story text for training Doc2Vec, pretrainedVector in 5 vectorization techniques.
+- RQ3: all of the code for running semi supervised learning. We inherit and update the code from this paper: https://github.com/yanlirock/RLANS
+- Other python codes: code for running machine learning experiments.
+We set the default of any result you generate at the 'result' folder. However, you can go to the code and change the default paths to your expected locations.
+
 **RQ1. Classification: What is the accuracy of story points categories classification?**
+
+
 
 **RQ2. Regression: What is the accuracy of story points prediction?**
 
