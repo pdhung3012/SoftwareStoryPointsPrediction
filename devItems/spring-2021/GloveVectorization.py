@@ -24,7 +24,7 @@ glove2word2vec(fpGlove, fpW2v)
 
 
 # Load word2vec model (trained on Google corpus)
-model = gensim.models.KeyedVectors.load_word2vec_format(fpW2v, binary=True)
+model = gensim.models.KeyedVectors.load_word2vec_format(fpW2v)
 
 arrFiles = [f for f in listdir(fopDataset) if isfile(join(fopDataset, f))]
 for filename in os.listdir(fopDataset):
