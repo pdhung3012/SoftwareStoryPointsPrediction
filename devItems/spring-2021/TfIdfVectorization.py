@@ -80,7 +80,7 @@ nlp = stanza.Pipeline() # This sets up a default neural pipeline in English
 
 
 for filename in os.listdir(fopDataset):
-    if not filename.endswith('csv'):
+    if not filename.endswith('.csv'):
         continue
     #if not file.endswith('moodle.csv'):
     #    continue
@@ -131,7 +131,7 @@ for filename in os.listdir(fopDataset):
             csv.write('\n')
     csv.close()
     # get vector using TF-IDF
-    vectorizer = TfidfVectorizer(ngram_range=(1, 4))
+    vectorizer = TfidfVectorizer(ngram_range=(1, 2))
     X = vectorizer.fit_transform(text_after_tokenize)
     X = X.toarray()
 
@@ -140,7 +140,7 @@ for filename in os.listdir(fopDataset):
     X = pca.fit_transform(X)
     # srp=GaussianRandomProjection(n_components=3)
     # X=srp.fit_transform(X)
-    print('end vectorize')
+   # print('end vectorize')
 
     lenVectorOfWord = len(X[0])
 
