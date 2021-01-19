@@ -8,16 +8,23 @@ import nltk
 nltk.download('stopwords')
 
 fopDataset='../dataset/'
-fopW2V='../../../resultsSEE/trainedModels/glove.840B.300d.bin'
+fpGlove='../../../resultsSEE/trainedModels/glove.840B.300d.txt'
+fpW2v='../../../resultsSEE/trainedModels/glove.840B.300d.w2v.txt'
 fopVector='../results/GloveML/vector/'
 
 createDirIfNotExist(fopVector)
 import numpy as np
 import gensim
+from gensim.scripts.glove2word2vec import glove2word2vec
+from gensim.test.utils import datapath, get_tmpfile
+
+glove_file = datapath(fpGlove)
+tmp_file = get_tmpfile('temp_w2v.txt')
+glove2word2vec(fpGlove, fpW2v)
 
 
 # Load word2vec model (trained on Google corpus)
-model = gensim.models.KeyedVectors.load_word2vec_format(fopW2V, binary=True)
+model = gensim.models.KeyedVectors.load_word2vec_format(fpW2v, binary=True)
 
 arrFiles = [f for f in listdir(fopDataset) if isfile(join(fopDataset, f))]
 for filename in os.listdir(fopDataset):
