@@ -79,26 +79,27 @@ createDirIfNotExist(fopTextPreprocess)
 nlp = stanza.Pipeline() # This sets up a default neural pipeline in English
 
 
-for file in arrFiles:
-    # if not file.endswith('csv'):
-    #     continue
+for filename in os.listdir(fopDataset):
+    if not filename.endswith('csv'):
+        continue
     #if not file.endswith('moodle.csv'):
     #    continue
-    fileCsv = fopDataset + file
-    fpVectorItemCate=fopVectorAllSystems+file.replace('.csv','')+'_category.csv'
-    fpVectorItemReg = fopVectorAllSystems + file.replace('.csv','') + '_regression.csv'
-    fpTextInfo = fopTextPreprocess + file.replace('.csv', '') + '_textInfo.csv'
+    fileCsv = fopDataset + filename
+   # fpVectorItemCate=fopVectorAllSystems+filename.replace('.csv','')+'_category.csv'
+    fpVectorItemReg = fopVectorAllSystems + filename.replace('.csv','') + '_regression.csv'
+    fpTextInfo = fopTextPreprocess + filename.replace('.csv', '') + '_textInfo.csv'
 
     raw_data = pd.read_csv(fileCsv)
     raw_data_2 = pd.read_csv(fileCsv)
     columnId=raw_data['issuekey']
     columnRegStory=raw_data_2['storypoint']
+    '''
     raw_data.loc[raw_data.storypoint <= 2, 'storypoint'] = 0  # small
     raw_data.loc[(raw_data.storypoint > 2) & (raw_data.storypoint <= 8), 'storypoint'] = 1  # medium
     raw_data.loc[(raw_data.storypoint > 8) & (raw_data.storypoint <= 15), 'storypoint'] = 2  # large
     raw_data.loc[raw_data.storypoint > 15, 'storypoint'] = 3  # very large
     columnCateStory = raw_data['storypoint']
-
+    '''
     titles_and_descriptions = []
     for i in range(0, len(raw_data['description'])):
         strContent = ' '.join([str(raw_data['title'][i]),' . ', str(raw_data['description'][i])])
@@ -151,8 +152,8 @@ for file in arrFiles:
         if i!=lenVectorOfWord-1:
             columnTitleRow = ''.join([columnTitleRow,  ","])
     columnTitleRow = ''.join([columnTitleRow, "\n"])
-    csv = open(fpVectorItemCate, 'w')
-    csv.write(columnTitleRow)
+    #csv = open(fpVectorItemCate, 'w')
+    #csv.write(columnTitleRow)
 
     csv2 = open(fpVectorItemReg, 'w')
     csv2.write(columnTitleRow)
@@ -168,20 +169,20 @@ for file in arrFiles:
         vector= X[i]
         corpusVector.append(vector)
         # strVector=','.join(vector)
-        strCate=str(columnCateStory[i])
+        #strCate=str(columnCateStory[i])
         strReg=str(columnRegStory[i])
         # strRow=''.join([str(i+1),',','S-'+str(columnStoryPoints[i]),])
         # strRow = ''.join([str(i + 1), ',', 'S-' + strCate, ])
-        strRow = ''.join([str(i + 1), ',', '' + strCate, ])
+       # strRow = ''.join([str(i + 1), ',', '' + strCate, ])
         strRow2 = ''.join([str(i + 1), ',', '' + strReg, ])
         for j in range(0,lenVectorOfWord):
-            strRow=''.join([strRow,',',str(vector[j])])
+         #   strRow=''.join([strRow,',',str(vector[j])])
             strRow2 = ''.join([strRow2, ',', str(vector[j])])
-        strRow = ''.join([strRow, '\n'])
+      #  strRow = ''.join([strRow, '\n'])
         strRow2 = ''.join([strRow2, '\n'])
-        csv.write(strRow)
+     #   csv.write(strRow)
         csv2.write(strRow2)
-    csv.close()
+    #csv.close()
     csv2.close()
-    print('Finish {}'.format(file))
+    print('Finish {}'.format(filename))
 
