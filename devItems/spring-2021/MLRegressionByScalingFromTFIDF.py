@@ -6,7 +6,7 @@ Created on Fri Mar  1 18:19:24 2019
 """
 #nameSystem='titanium'
 fopVectorAllSystems = '../results/TfidfML/vector/'
-fopOverallResultReg= '../results/TfidfML/classMLResult/'
+fopOverallResultReg= '../results/TfidfML/regMLResult/'
 
 
 # import modules
@@ -30,11 +30,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import xgboost as xgb
 from sklearn.metrics import mean_squared_error,mean_absolute_error
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import *
-from sklearn.svm import *
-from sklearn.neural_network import *
-from xgboost import XGBClassifier
 
 from UtilFunctions import createDirIfNotExist
 
@@ -144,22 +139,10 @@ for file in arrFiles:
 
     # create a list of classifiers
     random_seed = 100
-    '''
-    classifiers = [GaussianNB(), LogisticRegression(random_state=random_seed),DecisionTreeClassifier(),
-                   RandomForestClassifier(random_state=random_seed, n_estimators=50), AdaBoostClassifier(), LinearDiscriminantAnalysis(),QuadraticDiscriminantAnalysis(),
-                   LinearSVC(random_state=random_seed), MLPClassifier(alpha=1), GradientBoostingClassifier(random_state=random_seed,  max_depth=5)]
-    arrClassifierName = ['GaussNB', 'LR', 'DTC', 'RFC', 'ABC', 'LDA', 'QDA', 'LVC', 'MLPC', 'GraBC']
-    '''
-
-
-    classifiers = [DecisionTreeClassifier(),
-                    AdaBoostClassifier(),
-                   LinearDiscriminantAnalysis(),XGBClassifier(),
-                   LinearSVC(random_state=random_seed), MLPClassifier(alpha=1),
-                   GradientBoostingClassifier(random_state=random_seed, max_depth=5)]
-    arrClassifierName = ['DTC', 'ABC', 'LDA', 'XGBC','LSVC', 'MLPC', 'GraBC']
-
-    '''
+    # classifiers = [GaussianNB(), LogisticRegression(random_state=random_seed),DecisionTreeClassifier(),
+    #                RandomForestClassifier(random_state=random_seed, n_estimators=50), AdaBoostClassifier(), LinearDiscriminantAnalysis(),QuadraticDiscriminantAnalysis(),
+    #                LinearSVC(random_state=random_seed), MLPClassifier(alpha=1), GradientBoostingClassifier(random_state=random_seed,  max_depth=5)]
+    # RandomForestRegressor(random_state=2, n_estimators=1000),
     classifiers = [DecisionTreeRegressor(),
                   AdaBoostRegressor(),  xgb.XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
                 max_depth = 5, alpha = 10, n_estimators = 10),
@@ -167,12 +150,12 @@ for file in arrFiles:
                    MLPRegressor(alpha=1,hidden_layer_sizes=(5,5)),
                    GradientBoostingRegressor(random_state=random_seed, max_depth=3)
                   ]
-    '''
+
     # fit and evaluate for 10-cv
     index = 0
     # group = df_all['label']
     # 'RFR',
-    #arrClassifierName = ['DTR',  'ABR', 'XGBR', 'LSVR', 'MLPR', 'GBR']
+    arrClassifierName = ['DTR',  'ABR', 'XGBR', 'LSVR', 'MLPR', 'GBR']
 
     arrXBar = []
     arrMAE = []
@@ -187,67 +170,49 @@ for file in arrFiles:
 
     for classifier in classifiers:
         index=index+1
-        try:
-            filePredict = ''.join([fopOutputItemDetail, file,'_',arrClassifierName[index-1], '.txt'])
-            print("********", "\n", "10 fold CV Results Regression with: ", str(classifier))
+        # try:
+        filePredict = ''.join([fopOutputItemDetail, file,'_',arrClassifierName[index-1], '.txt'])
+        print("********", "\n", "10 fold CV Results Regression with: ", str(classifier))
 
-            X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2,shuffle = False, stratify = None)
-            dictReverse={}
-            #y_train=convertNormalLabelToTopLabel(y_train)
-            # print(dictReverse)
+        X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2,shuffle = False, stratify = None)
+        dictReverse={}
+        y_train=convertNormalLabelToTopLabel(y_train)
+        classifier.fit(X_train, y_train)
+        predicted = classifier.predict(X_test)
+        predicted=convertTopLabelToNormalLabel(predicted)
+        # print(predicted)
+        # cross_val = cross_val_score(classifier, all_data, all_label, cv=k_fold, n_jobs=1)
+        # predicted = cross_val_predict(classifier, all_data, all_label, cv=k_fold)
+        # weightAvg = precision_score(all_label, predicted, average='weighted') * 100
+        # maeAccuracy = mean_absolute_error(all_label, predicted)
+        # mqeAccuracy = mean_squared_error(all_label, predicted)
+        maeAccuracy = mean_absolute_error(y_test, predicted)
+        mqeAccuracy = mean_squared_error(y_test, predicted)
+        # maeAccuracy = mean_absolute_error(all_label, predicted)
 
-            # if(index==5):
-            #     from sklearn.preprocessing import StandardScaler
-            #     scaler = StandardScaler()
-            #     scaler.fit(X_train)
-            #     X_train = scaler.transform(X_train)
-            #     X_test = scaler.transform(X_test)
-            #     for num_iteration in range(1, 199):
-            #         classifier.partial_fit(X_train, y_train)
-            # else:
-            #     classifier.fit(X_train, y_train)
-            classifier.fit(X_train, y_train)
+        print('{:.2f}'.format(maeAccuracy))
 
-            predicted = classifier.predict(X_test)
-            # abs_predicted=[]
-            # for item in predicted:
-            #     abs_predicted.append(math.fabs(item))
-            # predicted=abs_predicted
+        np.savetxt(filePredict, predicted, fmt='%s', delimiter=',')
+        o2 = open(fpResultAll, 'a')
+        o2.write('Result for ' + str(classifier) + '\n')
+        o2.write('MAE {}\nMQE {}\n'.format(maeAccuracy,mqeAccuracy))
 
-            #predicted=convertTopLabelToNormalLabel(predicted)
-            # print(predicted)
-            # cross_val = cross_val_score(classifier, all_data, all_label, cv=k_fold, n_jobs=1)
-            # predicted = cross_val_predict(classifier, all_data, all_label, cv=k_fold)
-            # weightAvg = precision_score(all_label, predicted, average='weighted') * 100
-            # maeAccuracy = mean_absolute_error(all_label, predicted)
-            # mqeAccuracy = mean_squared_error(all_label, predicted)
-            maeAccuracy = mean_absolute_error(y_test, predicted)
-            mqeAccuracy = mean_squared_error(y_test, predicted)
-            # maeAccuracy = mean_absolute_error(all_label, predicted)
+        # o2.write(str(sum(cross_val) / float(len(cross_val))) + '\n')
+        # o2.write(str(confusion_matrix(all_label, predicted)) + '\n')
+        # o2.write(str(classification_report(all_label, predicted)) + '\n')
+        o2.close()
 
-            print('{:.2f}'.format(maeAccuracy))
-
-            np.savetxt(filePredict, predicted, fmt='%s', delimiter=',')
-            o2 = open(fpResultAll, 'a')
-            o2.write('Result for ' + str(classifier) + '\n')
-            o2.write('MAE {}\nMQE {}\n'.format(maeAccuracy,mqeAccuracy))
-
-            # o2.write(str(sum(cross_val) / float(len(cross_val))) + '\n')
-            # o2.write(str(confusion_matrix(all_label, predicted)) + '\n')
-            # o2.write(str(classification_report(all_label, predicted)) + '\n')
-            o2.close()
-
-            strClassX = str(arrClassifierName[index - 1])
-            arrIndex.append(index)
-            arrXBar.append(strClassX)
-            arrMAE.append(maeAccuracy)
-            arrStrMAEAvg.append('{:.2f}'.format(maeAccuracy))
+        strClassX = str(arrClassifierName[index - 1])
+        arrIndex.append(index)
+        arrXBar.append(strClassX)
+        arrMAE.append(maeAccuracy)
+        arrStrMAEAvg.append('{:.2f}'.format(maeAccuracy))
         # break
-        except Exception as inst:
-            print("Error ", index)
-            print(type(inst))  # the exception instance
-            print(inst.args)  # arguments stored in .args
-            print(inst)
+        # except Exception as inst:
+        #     print("Error ", index)
+        #     print(type(inst))  # the exception instance
+        #     print(inst.args)  # arguments stored in .args
+        #     print(inst)
 
     arrAlgm = np.array(arrMAE)
     bestMAE=np.amax(arrAlgm)

@@ -176,37 +176,15 @@ for file in arrFiles:
 
         X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2,shuffle = False, stratify = None)
         dictReverse={}
-        y_train=convertNormalLabelToTopLabel(y_train)
-        # print(dictReverse)
+        #y_train=convertNormalLabelToTopLabel(y_train)
 
-        # if(index==5):
-        #     from sklearn.preprocessing import StandardScaler
-        #     scaler = StandardScaler()
-        #     scaler.fit(X_train)
-        #     X_train = scaler.transform(X_train)
-        #     X_test = scaler.transform(X_test)
-        #     for num_iteration in range(1, 199):
-        #         classifier.partial_fit(X_train, y_train)
-        # else:
-        #     classifier.fit(X_train, y_train)
         classifier.fit(X_train, y_train)
 
         predicted = classifier.predict(X_test)
-        # abs_predicted=[]
-        # for item in predicted:
-        #     abs_predicted.append(math.fabs(item))
-        # predicted=abs_predicted
 
-        predicted=convertTopLabelToNormalLabel(predicted)
-        # print(predicted)
-        # cross_val = cross_val_score(classifier, all_data, all_label, cv=k_fold, n_jobs=1)
-        # predicted = cross_val_predict(classifier, all_data, all_label, cv=k_fold)
-        # weightAvg = precision_score(all_label, predicted, average='weighted') * 100
-        # maeAccuracy = mean_absolute_error(all_label, predicted)
-        # mqeAccuracy = mean_squared_error(all_label, predicted)
+        #predicted=convertTopLabelToNormalLabel(predicted)
         maeAccuracy = mean_absolute_error(y_test, predicted)
         mqeAccuracy = mean_squared_error(y_test, predicted)
-        # maeAccuracy = mean_absolute_error(all_label, predicted)
 
         print('{:.2f}'.format(maeAccuracy))
 
