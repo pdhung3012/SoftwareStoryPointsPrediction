@@ -175,7 +175,7 @@ for file in arrFiles:
 
         X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2,shuffle = False, stratify = None)
         dictReverse={}
-        y_train=convertNormalLabelToTopLabel(y_train)
+        #y_train=convertNormalLabelToTopLabel(y_train)
         # print(dictReverse)
 
         # if(index==5):
@@ -196,7 +196,7 @@ for file in arrFiles:
         #     abs_predicted.append(math.fabs(item))
         # predicted=abs_predicted
 
-        predicted=convertTopLabelToNormalLabel(predicted)
+        #predicted=convertTopLabelToNormalLabel(predicted)
         # print(predicted)
         # cross_val = cross_val_score(classifier, all_data, all_label, cv=k_fold, n_jobs=1)
         # predicted = cross_val_predict(classifier, all_data, all_label, cv=k_fold)
