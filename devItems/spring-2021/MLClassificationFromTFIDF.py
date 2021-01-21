@@ -34,6 +34,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import *
 from sklearn.svm import *
 from sklearn.neural_network import *
+from xgboost import XGBClassifier
 
 from UtilFunctions import createDirIfNotExist
 
@@ -143,10 +144,21 @@ for file in arrFiles:
 
     # create a list of classifiers
     random_seed = 100
+    '''
     classifiers = [GaussianNB(), LogisticRegression(random_state=random_seed),DecisionTreeClassifier(),
                    RandomForestClassifier(random_state=random_seed, n_estimators=50), AdaBoostClassifier(), LinearDiscriminantAnalysis(),QuadraticDiscriminantAnalysis(),
                    LinearSVC(random_state=random_seed), MLPClassifier(alpha=1), GradientBoostingClassifier(random_state=random_seed,  max_depth=5)]
     arrClassifierName = ['GaussNB', 'LR', 'DTC', 'RFC', 'ABC', 'LDA', 'QDA', 'LVC', 'MLPC', 'GraBC']
+    '''
+
+
+    classifiers = [DecisionTreeClassifier(),
+                    AdaBoostClassifier(),
+                   LinearDiscriminantAnalysis(),XGBClassifier(),
+                   LinearSVC(random_state=random_seed), MLPClassifier(alpha=1),
+                   GradientBoostingClassifier(random_state=random_seed, max_depth=5)]
+    arrClassifierName = ['DTC', 'ABC', 'LDA', 'XGBC','LSVC', 'MLPC', 'GraBC']
+
     '''
     classifiers = [DecisionTreeRegressor(),
                   AdaBoostRegressor(),  xgb.XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
