@@ -78,8 +78,11 @@ createDirIfNotExist(fopTextPreprocess)
 
 nlp = stanza.Pipeline() # This sets up a default neural pipeline in English
 
+list_dir = os.listdir(fopDataset)   # Convert to lower case
+list_dir =sorted(list_dir)
+print(str(list_dir))
 
-for filename in os.listdir(fopDataset):
+for filename in list_dir:
     if not filename.endswith('.csv'):
         continue
     #if not file.endswith('moodle.csv'):
