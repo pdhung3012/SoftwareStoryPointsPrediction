@@ -86,7 +86,7 @@ dataset = MyDataset(1000, transforms=NormalizeAdj())
 # Parameters
 F = dataset.n_node_features  # Dimension of node features
 n_out = dataset.n_labels  # Dimension of the target
-
+print('features: {}\nnout: {}\n{}'.format(F,n_out,dataset[0].y))
 # Train/valid/test split
 idxs = np.random.permutation(len(dataset))
 split_va, split_te = int(0.8 * len(dataset)), int(0.9 * len(dataset))
