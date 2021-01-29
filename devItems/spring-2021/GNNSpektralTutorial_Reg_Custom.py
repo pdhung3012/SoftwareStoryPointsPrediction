@@ -25,7 +25,7 @@ batch_size = 32  # Batch size
 # LOAD DATA
 ################################################################################
 dataset = QM9(amount=1000)  # Set amount=None to train on whole dataset
-
+print('info \n{}\n{}\n'.format(dataset[0].y,dataset[1].y))
 # Parameters
 F = dataset.n_node_features  # Dimension of node features
 S = dataset.n_edge_features  # Dimension of edge features
