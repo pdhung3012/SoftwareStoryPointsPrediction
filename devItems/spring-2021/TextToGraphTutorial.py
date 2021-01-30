@@ -3,11 +3,28 @@ from spacy.lang.en import English
 import networkx as nx
 import matplotlib.pyplot as plt
 
+def initDefaultTextEnvi():
+    nlp_model = spacy.load('en_core_web_sm')
+    nlp = English()
+    nlp.add_pipe(nlp.create_pipe('sentencizer'))
+    return nlp_model,nlp
+
+def getSentences(text,nlp):
+    result=None
+    try:
+        document = nlp(text)
+        result= [sent.string.strip() for sent in document.sents]
+    except Exception as e:
+        print('sone error occured {}'.format(str(e)))
+    return result
+
+'''
 def getSentences(text):
     nlp = English()
     nlp.add_pipe(nlp.create_pipe('sentencizer'))
     document = nlp(text)
     return [sent.string.strip() for sent in document.sents]
+'''
 
 def printToken(token):
     print(token.text, "->", token.dep_)
@@ -30,7 +47,7 @@ def processSubjectObjectPairs(tokens):
     subjectConstruction = ''
     objectConstruction = ''
     for token in tokens:
-        printToken(token)
+#        printToken(token)
         if "punct" in token.dep_:
             continue
         if isRelationCandidate(token):
@@ -49,12 +66,35 @@ def processSubjectObjectPairs(tokens):
             object = appendChunk(objectConstruction, object)
             objectConstruction = ''
 
-    print (subject.strip(), ",", relation.strip(), ",", object.strip())
+    #print (subject.strip(), ",", relation.strip(), ",", object.strip())
     return (subject.strip(), relation.strip(), object.strip())
 
-def processSentence(sentence):
+def processSentence(sentence,nlp_model):
     tokens = nlp_model(sentence)
     return processSubjectObjectPairs(tokens)
+
+def returnIDOrGenNewID(content,dictVocab):
+    result=-1
+    if content in dictVocab.keys():
+        result=dictVocab[content]
+    else:
+        result=len(dictVocab.keys)+1
+    return result
+
+def extractGraphKeyFromTriple(triples,dictVocab):
+    G = nx.Graph()
+    for triple in triples:
+#        print('aaaa {}'.format(triple[0]))
+        key0 = returnIDOrGenNewID(triple[0], dictVocab)
+        key1 = returnIDOrGenNewID(triple[1], dictVocab)
+        key2 = returnIDOrGenNewID(triple[2], dictVocab)
+        G.add_node(key0)
+        G.add_node(key1)
+        G.add_node(key2)
+        G.add_edge(key0, key1)
+        G.add_edge(key1, key2)
+    return G
+
 
 def printGraph(triples):
     G = nx.Graph()
@@ -89,14 +129,18 @@ if __name__ == "__main__":
            "London is the biggest city in Britain. London has a population of 7,172,036."
     '''
 
-    text = "London is the capital and largest city of England and the United Kingdom."
+    text = "London hated you and him. et move to a new city."
 
-    sentences = getSentences(text)
-    nlp_model = spacy.load('en_core_web_sm')
+    nlp_model,nlp=initDefaultTextEnvi()
+    sentences = getSentences(text,nlp)
+    #nlp_model = spacy.load('en_core_web_sm')
 
     triples = []
     print (text)
     for sentence in sentences:
-        triples.append(processSentence(sentence))
+        triples.append(processSentence(sentence,nlp_model))
 
-    printGraph(triples)
+    dictVocab={}
+
+    graph1=printGraphAndReturn(triples,dictVocab)
+
