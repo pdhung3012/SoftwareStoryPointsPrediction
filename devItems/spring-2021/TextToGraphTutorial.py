@@ -78,7 +78,8 @@ def returnIDOrGenNewID(content,dictVocab):
     if content in dictVocab.keys():
         result=dictVocab[content]
     else:
-        result=len(dictVocab.keys)+1
+        result=len(dictVocab.keys())+1
+        dictVocab[content]=result
     return result
 
 def extractGraphKeyFromTriple(triples,dictVocab):
@@ -95,7 +96,7 @@ def extractGraphKeyFromTriple(triples,dictVocab):
         G.add_edge(key1, key2)
     return G
 
-
+'''
 def printGraph(triples):
     G = nx.Graph()
     for triple in triples:
@@ -112,6 +113,19 @@ def printGraph(triples):
             labels={node: node for node in G.nodes()})
     plt.axis('off')
     plt.show()
+'''
+
+def extractGraphFromText(content,dictVocab,nlp_model,nlp):
+    g=None
+    sentences = getSentences(text, nlp)
+    # nlp_model = spacy.load('en_core_web_sm')
+
+    triples = []
+    print(text)
+    for sentence in sentences:
+        triples.append(processSentence(sentence, nlp_model))
+    g = extractGraphKeyFromTriple(triples, dictVocab)
+    return g
 
 if __name__ == "__main__":
 
@@ -132,15 +146,8 @@ if __name__ == "__main__":
     text = "London hated you and him. et move to a new city."
 
     nlp_model,nlp=initDefaultTextEnvi()
-    sentences = getSentences(text,nlp)
-    #nlp_model = spacy.load('en_core_web_sm')
-
-    triples = []
-    print (text)
-    for sentence in sentences:
-        triples.append(processSentence(sentence,nlp_model))
-
     dictVocab={}
 
-    graph1=printGraphAndReturn(triples,dictVocab)
+    extractGraphFromText(text,dictVocab,nlp_model,nlp)
+    print('len vocab {}'.format(len(dictVocab.keys())))
 
