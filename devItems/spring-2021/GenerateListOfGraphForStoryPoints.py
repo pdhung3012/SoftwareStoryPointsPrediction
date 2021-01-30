@@ -1,3 +1,13 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+import pandas as pd
+from nltk.tokenize import word_tokenize
+import os
+import numpy as np
+import gensim
+from sklearn.decomposition import PCA
+from sklearn.random_projection import GaussianRandomProjection
+
+
 import spacy
 from spacy.lang.en import English
 import networkx as nx
@@ -28,6 +38,15 @@ def getSentences(text):
     document = nlp(text)
     return [sent.string.strip() for sent in document.sents]
 '''
+
+def preprocess(textInLine):
+    text = textInLine.lower()
+    doc = word_tokenize(text)
+    # doc = [word for word in doc if word in words]
+    # doc = [word for word in doc if word.isalpha()]
+    return ' '.join(doc)
+
+from UtilFunctions import createDirIfNotExist
 
 def printToken(token):
     print(token.text, "->", token.dep_)
@@ -99,62 +118,49 @@ def extractGraphKeyFromTriple(triples,dictVocab):
         G.add_edge(key1, key2)
     return G
 
-'''
-def printGraph(triples):
-    G = nx.Graph()
-    for triple in triples:
-        G.add_node(triple[0])
-        G.add_node(triple[1])
-        G.add_node(triple[2])
-        G.add_edge(triple[0], triple[1])
-        G.add_edge(triple[1], triple[2])
 
-    pos = nx.spring_layout(G)
-    plt.figure()
-    nx.draw(G, pos, edge_color='black', width=1, linewidths=1,
-            node_size=500, node_color='seagreen', alpha=0.9,
-            labels={node: node for node in G.nodes()})
-    plt.axis('off')
-    plt.show()
-'''
-
-def extractGraphSpekFromText(content,dictVocab,nlp_model,nlp):
+def extractGraphSpekFromText(content,label,dictVocab,nlp_model,nlp):
     g=None
-    sentences = getSentences(text, nlp)
+    sentences = getSentences(content, nlp)
     # nlp_model = spacy.load('en_core_web_sm')
 
     triples = []
-    print(text)
     for sentence in sentences:
         triples.append(processSentence(sentence, nlp_model))
     g = extractGraphKeyFromTriple(triples, dictVocab)
     adjacency_matrix = nx.adjacency_matrix(g)
     graphSpek = Graph()
     graphSpek.a = adjacency_matrix
+    graphSpek.y=label
     return graphSpek
 
 if __name__ == "__main__":
 
-    '''
-    text = "London is the capital and largest city of England and the United Kingdom. Standing on the River " \
-           "Thames in the south-east of England, at the head of its 50-mile (80 km) estuary leading to " \
-           "the North Sea, London has been a major settlement for two millennia. " \
-           "Londinium was founded by the Romans. The City of London, " \
-           "London's ancient core − an area of just 1.12 square miles (2.9 km2) and colloquially known as " \
-           "the Square Mile − retains boundaries that follow closely its medieval limits." \
-           "The City of Westminster is also an Inner London borough holding city status. " \
-           "Greater London is governed by the Mayor of London and the London Assembly." \
-           "London is located in the southeast of England." \
-           "Westminster is located in London." \
-           "London is the biggest city in Britain. London has a population of 7,172,036."
-    '''
+    fopDataset = '../dataset/'
+    fnSystem='mulestudio.csv'
+    fileCsv = fopDataset + fnSystem
 
-    text = "London hated you and him. et move to a new city."
+    raw_data = pd.read_csv(fileCsv)
+    raw_data_2 = pd.read_csv(fileCsv)
+    columnId = raw_data['issuekey']
+    columnRegStory = raw_data_2['storypoint']
+    titles_and_descriptions = []
+    for i in range(0, len(raw_data['description'])):
+        strContent = ' '.join([str(raw_data['title'][i]), ' . ', str(raw_data['description'][i])])
+        strContent=preprocess(strContent)
+        titles_and_descriptions.append(str(strContent))
 
     nlp_model,nlp=initDefaultTextEnvi()
     dictVocab={}
 
-    g=extractGraphSpekFromText(text,dictVocab,nlp_model,nlp)
-    print('gaa {}\n\n{}'.format((g.a), g.y))
-    print('len vocab {}'.format(len(dictVocab.keys())))
+    listGraphs=[]
+
+    for i in range(0,len(titles_and_descriptions)):
+        itemLabel=columnRegStory[i]
+        graphSpek=extractGraphSpekFromText(titles_and_descriptions[i],itemLabel,dictVocab,nlp_model,nlp)
+        listGraphs.append(graphSpek)
+
+
+    #g=extractGraphSpekFromText(text,dictVocab,nlp_model,nlp)
+
 
