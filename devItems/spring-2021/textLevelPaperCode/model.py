@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 import word2vec
 
+fopDataset='../../../../dataPapers/dataTextLevelPaper/'
 
 def gcn_msg(edge):
     return {'m': edge.src['h'], 'w': edge.data['w']}
@@ -60,7 +61,7 @@ class Model(torch.nn.Module):
 
         self.hidden_size_node = hidden_size_node
 
-        self.node_hidden.weight.data.copy_(torch.tensor(self.load_word2vec('glove.6B.200d.vec.txt')))
+        self.node_hidden.weight.data.copy_(torch.tensor(self.load_word2vec(fopDataset+'glove.6B.200d.vec.txt')))
         self.node_hidden.weight.requires_grad = True
 
         self.len_vocab = len(vocab)
@@ -88,7 +89,15 @@ class Model(torch.nn.Module):
         return result
 
     def load_word2vec(self, word2vec_file):
-        model = word2vec.load(word2vec_file)
+        #model = word2vec.load(word2vec_file)
+        from gensim.models.keyedvectors import KeyedVectors
+        from gensim.test.utils import datapath, get_tmpfile
+        from gensim.models import KeyedVectors
+        from gensim.scripts.glove2word2vec import glove2word2vec
+
+        fpTmp=fopDataset+'tempModel.txt'
+        glove2word2vec(word2vec_file, fpTmp)
+        model = KeyedVectors.load_word2vec_format(fpTmp)
 
         embedding_matrix = []
 

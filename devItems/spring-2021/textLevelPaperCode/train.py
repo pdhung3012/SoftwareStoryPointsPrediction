@@ -12,6 +12,8 @@ from pmi import cal_PMI
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
+fopDataset='../../../../dataPapers/dataTextLevelPaper/'
+
 
 def edges_mapping(vocab_len, content, ngram):
     count = 1
@@ -206,7 +208,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
     parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
     parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')
-    parser.add_argument('--dataset', required=True, type=str, help='dataset')
+    parser.add_argument('--dataset', required=False, type=str,default='r8', help='dataset')
     parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
     parser.add_argument('--rand', required=False, type=int, default=7, help='rand_seed')
 

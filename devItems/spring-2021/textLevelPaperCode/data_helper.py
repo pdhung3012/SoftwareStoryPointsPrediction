@@ -2,7 +2,7 @@ import os
 import torch
 import csv
 
-
+fopDataset='../../../../dataPapers/dataTextLevelPaper/'
 class DataHelper(object):
     def __init__(self, dataset, mode='train', vocab=None):
         allowed_data = ['r8', '20ng', 'r52', 'mr', 'oh']
@@ -14,7 +14,7 @@ class DataHelper(object):
 
         self.mode = mode
 
-        self.base = os.path.join('data', self.dataset)
+        self.base = os.path.join(fopDataset, self.dataset)
 
         self.current_set = os.path.join(self.base, '%s-%s-stemmed.txt' % (self.dataset, self.mode))
 
