@@ -13,13 +13,14 @@ import sys
 from scipy.spatial.distance import cosine
 
 fopDataset='../../../../dataPapers/dataTextGCN/'
-
+'''
 if len(sys.argv) != 2:
 	sys.exit("Use: python build_graph.py <dataset>")
+'''
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
 # build corpus
-dataset = sys.argv[1]
+dataset = '20ng'
 
 if dataset not in datasets:
 	sys.exit("wrong dataset name")

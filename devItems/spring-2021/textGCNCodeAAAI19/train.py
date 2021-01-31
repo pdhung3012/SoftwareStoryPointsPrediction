@@ -2,7 +2,7 @@ from __future__ import division
 from __future__ import print_function
 
 import time
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 from sklearn import metrics
 from utils import *
@@ -12,13 +12,15 @@ import os
 import sys
 
 fopDataset='../../../../dataPapers/dataTextGCN/'
+tf.compat.v1.disable_eager_execution()
 
-
+'''
 if len(sys.argv) != 2:
 	sys.exit("Use: python train.py <dataset>")
+'''
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
-dataset = sys.argv[1]
+dataset = '20ng'
 
 if dataset not in datasets:
 	sys.exit("wrong dataset name")

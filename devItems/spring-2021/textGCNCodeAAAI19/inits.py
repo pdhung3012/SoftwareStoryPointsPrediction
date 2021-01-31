@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
+import tensorflow.compat.v1 as tf
 
 def uniform(shape, scale=0.05, name=None):
     """Uniform init."""
