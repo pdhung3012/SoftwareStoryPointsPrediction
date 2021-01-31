@@ -62,18 +62,23 @@ nLenSEE=len(listGraphs)
 dataset = QM9(amount=nLenSEE)  # Set amount=None to train on whole dataset
 oldds=dataset
 
-'''
+print('type {}'.format(type(dataset)))
 for i in range(0,nLenSEE):
-    dataset[i]=listGraphs[i]
-    dataset[i].y=oldds[i].y
-'''
+   # print('aaa {} {}'.format(i, dataset[i].a))
+    dataset[i].a=listGraphs[i].a
+    #print('bbb {} {}'.format(i,dataset[i].a))
+    if i==0:
+        break
+
+#    dataset[i].y=oldds[i].y
+
 
 print('info \n{}\n{}\n'.format(dataset[0].y,dataset[1].y))
 # Parameters
 F = dataset.n_node_features  # Dimension of node features
 S = dataset.n_edge_features  # Dimension of edge features
 n_out = dataset.n_labels  # Dimension of the target
-print('nout {}'.format(n_out))
+print('nout {} {} {}'.format(F,S,n_out))
 
 # Train/test split
 idxs = np.random.permutation(len(dataset))

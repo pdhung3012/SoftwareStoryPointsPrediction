@@ -81,7 +81,7 @@ def returnIDOrGenNewID(content,dictVocab):
     if content in dictVocab.keys():
         result=dictVocab[content]
     else:
-        result=len(dictVocab.keys())+1
+        result=len(dictVocab.keys())
         dictVocab[content]=result
     return result
 
