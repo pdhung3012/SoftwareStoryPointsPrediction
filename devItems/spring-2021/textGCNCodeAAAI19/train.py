@@ -20,7 +20,7 @@ if len(sys.argv) != 2:
 '''
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
-dataset = 'mofm'
+dataset = 'R8'
 
 '''
 if dataset not in datasets:
@@ -156,7 +156,7 @@ for i in range(len(test_mask)):
         test_labels.append(labels[i])
 
 print('test label {}'.format(test_labels))
-input('abc ')
+input('continue ')
 
 print("Test Precision, Recall and F1-Score...")
 print(metrics.classification_report(test_labels, test_pred, digits=4))
@@ -164,6 +164,7 @@ print("Macro average Test Precision, Recall and F1-Score...")
 print(metrics.precision_recall_fscore_support(test_labels, test_pred, average='macro'))
 print("Micro average Test Precision, Recall and F1-Score...")
 print(metrics.precision_recall_fscore_support(test_labels, test_pred, average='micro'))
+input('continue 2 ')
 
 # doc and word embeddings
 print('embeddings:')
@@ -171,9 +172,11 @@ word_embeddings = outs[3][train_size: adj.shape[0] - test_size]
 train_doc_embeddings = outs[3][:train_size]  # include val docs
 test_doc_embeddings = outs[3][adj.shape[0] - test_size:]
 
+'''
 print(len(word_embeddings), len(train_doc_embeddings),
       len(test_doc_embeddings))
 print(word_embeddings)
+'''
 
 f = open(fopDataset+'/corpus/' + dataset + '_vocab.txt', 'r')
 words = f.readlines()
