@@ -20,10 +20,11 @@ if len(sys.argv) != 2:
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
 # build corpus
-dataset = '20ng'
-
+dataset = 'msfm'
+'''
 if dataset not in datasets:
 	sys.exit("wrong dataset name")
+'''
 
 # Read Word Vectors
 # word_vector_file = 'data/glove.6B/glove.6B.300d.txt'

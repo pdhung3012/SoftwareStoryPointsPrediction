@@ -20,11 +20,12 @@ if len(sys.argv) != 2:
 '''
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
-dataset = '20ng'
+dataset = 'msfm'
 
+'''
 if dataset not in datasets:
 	sys.exit("wrong dataset name")
-
+'''
 
 # Set random seed
 seed = random.randint(1, 200)

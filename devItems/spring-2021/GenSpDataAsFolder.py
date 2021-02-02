@@ -137,7 +137,8 @@ def extractGraphSpekFromText(content,label,dictVocab,nlp_model,nlp):
 if __name__ == "__main__":
 
     fopDataset = '../../dataset/'
-    fopOutputDs = '../../../../dataPapers/msfm/'
+    fopOutputDs = '../../../../dataPapers/dataTextGCN/msfm/'
+    fpOutputTextIndex = '../../../../dataPapers/dataTextGCN/msfm.txt'
     fnSystem='mulestudio.csv'
     fileCsv = fopDataset + fnSystem
 
@@ -163,14 +164,7 @@ if __name__ == "__main__":
     createDirIfNotExist(fopOutTrain)
     createDirIfNotExist(fopOutTest)
 
-    for i in range(0,len(X_train)):
-        strDocId=str(i+1)
-        strLbl=str(y_train[i])
-        fopItem=fopOutTrain+strLbl+"/"
-        createDirIfNotExist(fopItem)
-        fff=open(fopItem+strDocId,'w')
-        fff.write(X_train[i])
-        fff.close()
+    listIndexStr=[]
 
     for i in range(0,len(X_test)):
         strDocId=str(i+1)
@@ -181,6 +175,24 @@ if __name__ == "__main__":
         fff=open(fopItem+strDocId,'w')
         fff.write(X_test[i])
         fff.close()
+        strLine='/home/hungphd/git/dataPapers/dataTextGCN/msfm/test/'+strDocId+'\ttest\t'+strLbl
+        listIndexStr.append(strLine)
+
+    for i in range(0,len(X_train)):
+        strDocId=str(i+1)
+        strLbl=str(y_train[i])
+        fopItem=fopOutTrain+strLbl+"/"
+        createDirIfNotExist(fopItem)
+        fff=open(fopItem+strDocId,'w')
+        fff.write(X_train[i])
+        fff.close()
+        strLine='/home/hungphd/git/dataPapers/dataTextGCN/msfm/train/'+strDocId+'\ttrain\t'+strLbl
+        listIndexStr.append(strLine)
+
+fff=open(fpOutputTextIndex,'w')
+fff.write('\n'.join(listIndexStr))
+fff.close()
+
 
 print('Done')
 
