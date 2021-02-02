@@ -12,7 +12,7 @@ import os
 import sys
 
 fopDataset='../../../../dataPapers/dataTextGCN/'
-tf.compat.v1.disable_eager_execution()
+tf.disable_eager_execution()
 
 '''
 if len(sys.argv) != 2:
@@ -153,6 +153,9 @@ for i in range(len(test_mask)):
     if test_mask[i]:
         test_pred.append(pred[i])
         test_labels.append(labels[i])
+
+print('test label {}'.format(test_labels))
+input('abc ')
 
 print("Test Precision, Recall and F1-Score...")
 print(metrics.classification_report(test_labels, test_pred, digits=4))
