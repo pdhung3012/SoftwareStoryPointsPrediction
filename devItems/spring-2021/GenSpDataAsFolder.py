@@ -137,9 +137,11 @@ def extractGraphSpekFromText(content,label,dictVocab,nlp_model,nlp):
 if __name__ == "__main__":
 
     fopDataset = '../../dataset/'
-    fopOutputDs = '../../../../dataPapers/dataTextGCN/msfm/'
-    fpOutputTextIndex = '../../../../dataPapers/dataTextGCN/msfm.txt'
-    fnSystem='mulestudio.csv'
+    fopOutputDs = '../../../../dataPapers/dataTextGCN/mofm/'
+    fpOutputTextIndex = '../../../../dataPapers/dataTextGCN/mofm.txt'
+    fopRoot='/home/hungphd/git/dataPapers/dataTextGCN/'
+    fnSystemAbbrev='msfm'
+    fnSystem='moodle.csv'
     fileCsv = fopDataset + fnSystem
 
     raw_data = pd.read_csv(fileCsv)
@@ -175,7 +177,7 @@ if __name__ == "__main__":
         fff=open(fopItem+strDocId,'w')
         fff.write(X_test[i])
         fff.close()
-        strLine='/home/hungphd/git/dataPapers/dataTextGCN/msfm/test/'+strDocId+'\ttest\t'+strLbl
+        strLine=fopRoot+fnSystemAbbrev+'/test/'+strDocId+'\ttest\t'+strLbl
         listIndexStr.append(strLine)
 
     for i in range(0,len(X_train)):
@@ -186,7 +188,7 @@ if __name__ == "__main__":
         fff=open(fopItem+strDocId,'w')
         fff.write(X_train[i])
         fff.close()
-        strLine='/home/hungphd/git/dataPapers/dataTextGCN/msfm/train/'+strDocId+'\ttrain\t'+strLbl
+        strLine=fopRoot+fnSystemAbbrev+'/train/'+strDocId+'\ttrain\t'+strLbl
         listIndexStr.append(strLine)
 
 fff=open(fpOutputTextIndex,'w')
