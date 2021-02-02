@@ -10,8 +10,11 @@ from models import GCN, MLP
 import random
 import os
 import sys
+from sklearn.metrics import mean_squared_error,mean_absolute_error
+
 
 fopDataset='../../../../dataPapers/dataTextGCN/'
+
 tf.disable_eager_execution()
 
 '''
@@ -20,8 +23,13 @@ if len(sys.argv) != 2:
 '''
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
-dataset = 'R8'
-
+dataset = 'mofm'
+fopCorpusLocation=fopDataset+'corpus/'
+fpCorpusLabel=fopCorpusLocation+dataset+'_labels.txt'
+fpCorpusTestIndex=fopDataset+dataset+'.test.index'
+fpTestLblStep2=fopDataset+dataset+'_step2Lbl.txt'
+fpTestPredStep2=fopDataset+dataset+'_step2Pred.txt'
+fpResultAll=fopDataset+dataset+'_step3Result.txt'
 '''
 if dataset not in datasets:
 	sys.exit("wrong dataset name")
@@ -77,6 +85,17 @@ elif FLAGS.model == 'dense':
     model_func = MLP
 else:
     raise ValueError('Invalid argument for model: ' + str(FLAGS.model))
+
+#print('y train {}'.format(y_train))
+
+fff=open(fpCorpusTestIndex,'r')
+arrStr=fff.read().split('\n')
+listTestInd=[]
+for item in arrStr:
+    listTestInd.append(int(item))
+#listTestInd=sorted(listTestInd)
+print('list test ind {}'.format(listTestInd))
+#input('ssss')
 
 # Define placeholders
 placeholders = {
@@ -147,16 +166,69 @@ test_cost, test_acc, pred, labels, test_duration = evaluate(
 print("Test set results:", "cost=", "{:.5f}".format(test_cost),
       "accuracy=", "{:.5f}".format(test_acc), "time=", "{:.5f}".format(test_duration))
 
+fff=open(fpCorpusLabel,'r')
+strAllLbl=fff.read()
+fff.close()
+arrAllLbl=strAllLbl.split('\n')
+dictLabel={}
+for i in range(0,len(arrAllLbl)):
+    dictLabel[i]=arrAllLbl[i]
+
+
 test_pred = []
 test_labels = []
 print(len(test_mask))
+dictTestLabel= {}
+dictTestPred= {}
 for i in range(len(test_mask)):
     if test_mask[i]:
         test_pred.append(pred[i])
         test_labels.append(labels[i])
 
-print('test label {}'.format(test_labels))
+
+for index in range(0,len(test_labels)):
+    itemInt = listTestInd[index]
+    dictTestLabel[itemInt] = dictLabel[test_labels[index]]
+    dictTestPred[itemInt] = dictLabel[test_pred[index]]
+
+
+sortedKey=sorted(dictTestLabel.keys())
+print('sorted key {}\n{}'.format(sortedKey,test_labels))
+listL=[]
+listP=[]
+'''
+for item in sortedKey:
+    listL.append(int(dictTestLabel[item]))
+    listP.append(int(dictTestPred[item]))
+'''
+'''
+listTestOut=[]
+for i in range(0,len(test_labels)):
+    listTestOut.append(dictLabel[test_labels[i]])
+'''
+'''
+fff=open(fpTestLblStep2,'w')
+fff.write('\n'.join(listL))
+fff.close()
+fff=open(fpTestPredStep2,'w')
+fff.write('\n'.join(listP))
+fff.close()
+'''
+
+'''
+maeAccuracy = mean_absolute_error(listL, listP)
+mqeAccuracy = mean_squared_error(listL, listP)
+
+print('{:.2f}'.format(maeAccuracy))
+
+o2 = open(fpResultAll, 'w')
+o2.write('Result for GCN \n')
+o2.write('MAE {}\nMQE {}\n'.format(maeAccuracy,mqeAccuracy))
+
+
+print('test mask {}'.format(len(test_mask)))
 input('continue ')
+'''
 
 print("Test Precision, Recall and F1-Score...")
 print(metrics.classification_report(test_labels, test_pred, digits=4))

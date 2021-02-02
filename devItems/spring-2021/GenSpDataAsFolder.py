@@ -138,9 +138,12 @@ if __name__ == "__main__":
 
     fopDataset = '../../dataset/'
     fopOutputDs = '../../../../dataPapers/dataTextGCN/mofm/'
-    fpOutputTextIndex = '../../../../dataPapers/dataTextGCN/mofm.txt'
+
+    fnSystemAbbrev = 'mofm'
+    fpOutputTextIndex = '../../../../dataPapers/dataTextGCN/'+fnSystemAbbrev+'.txt'
+    fpOutputTestLbl= '../../../../dataPapers/dataTextGCN/' + fnSystemAbbrev + '_testLblStep1.txt'
     fopRoot='/home/hungphd/git/dataPapers/dataTextGCN/'
-    fnSystemAbbrev='msfm'
+
     fnSystem='moodle.csv'
     fileCsv = fopDataset + fnSystem
 
@@ -168,6 +171,7 @@ if __name__ == "__main__":
 
     listIndexStr=[]
 
+    listTestLbl=[]
     for i in range(0,len(X_test)):
         strDocId=str(i+1)
         strLbl=y_test[i]
@@ -179,6 +183,7 @@ if __name__ == "__main__":
         fff.close()
         strLine=fopRoot+fnSystemAbbrev+'/test/'+strDocId+'\ttest\t'+strLbl
         listIndexStr.append(strLine)
+        listTestLbl.append(strLbl)
 
     for i in range(0,len(X_train)):
         strDocId=str(i+1)
@@ -194,8 +199,11 @@ if __name__ == "__main__":
 fff=open(fpOutputTextIndex,'w')
 fff.write('\n'.join(listIndexStr))
 fff.close()
+fff=open(fpOutputTestLbl,'w')
+fff.write('\n'.join(listTestLbl))
+fff.close()
 
-
+print('train {} test {}'.format(len(y_train),len(y_test)))
 print('Done')
 
 
