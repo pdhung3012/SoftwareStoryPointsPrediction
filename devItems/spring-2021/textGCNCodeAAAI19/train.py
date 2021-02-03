@@ -23,7 +23,7 @@ if len(sys.argv) != 2:
 '''
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
-dataset = 'mofm'
+dataset = '20ng'
 fopCorpusLocation=fopDataset+'corpus/'
 fpCorpusLabel=fopCorpusLocation+dataset+'_labels.txt'
 fpCorpusTestIndex=fopDataset+dataset+'.test.index'

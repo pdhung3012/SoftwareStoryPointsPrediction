@@ -141,6 +141,7 @@ if __name__ == "__main__":
 
     fnSystemAbbrev = 'mofm'
     fpOutputTextIndex = '../../../../dataPapers/dataTextGCN/'+fnSystemAbbrev+'.txt'
+    fpOutputTextTrainIndex = '../../../../dataPapers/dataTextGCN/' + fnSystemAbbrev + '.train.txt'
     fpOutputTestLbl= '../../../../dataPapers/dataTextGCN/' + fnSystemAbbrev + '_testLblStep1.txt'
     fopRoot='/home/hungphd/git/dataPapers/dataTextGCN/'
 
@@ -170,6 +171,7 @@ if __name__ == "__main__":
     createDirIfNotExist(fopOutTest)
 
     listIndexStr=[]
+    listIndexTrainStr = []
 
     listTestLbl=[]
     for i in range(0,len(X_test)):
@@ -195,9 +197,13 @@ if __name__ == "__main__":
         fff.close()
         strLine=fopRoot+fnSystemAbbrev+'/train/'+strDocId+'\ttrain\t'+strLbl
         listIndexStr.append(strLine)
+        listIndexTrainStr.append(strLine)
 
 fff=open(fpOutputTextIndex,'w')
 fff.write('\n'.join(listIndexStr))
+fff.close()
+fff=open(fpOutputTextTrainIndex,'w')
+fff.write('\n'.join(listIndexTrainStr))
 fff.close()
 fff=open(fpOutputTestLbl,'w')
 fff.write('\n'.join(listTestLbl))

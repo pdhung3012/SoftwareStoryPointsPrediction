@@ -80,7 +80,7 @@ test_ids = []
 for test_name in doc_test_list:
     test_id = doc_name_list.index(test_name)
     test_ids.append(test_id)
-print(test_ids)
+#print(test_ids)
 random.shuffle(test_ids)
 
 test_ids_str = '\n'.join(str(index) for index in test_ids)
@@ -88,7 +88,9 @@ f = open(fopDataset+ dataset + '.test.index', 'w')
 f.write(test_ids_str)
 f.close()
 
+#change code at here
 ids = train_ids + test_ids
+#ids = train_ids
 print(ids)
 print(len(ids))
 

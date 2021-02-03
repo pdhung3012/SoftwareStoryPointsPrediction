@@ -20,7 +20,7 @@ if len(sys.argv) != 2:
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
 # build corpus
-dataset = 'mofm'
+dataset = '20ng'
 '''
 if dataset not in datasets:
 	sys.exit("wrong dataset name")
