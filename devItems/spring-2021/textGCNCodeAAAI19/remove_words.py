@@ -10,7 +10,7 @@ if len(sys.argv) != 2:
 '''
 
 datasets = ['20ng', 'R8', 'R52', 'ohsumed', 'mr']
-dataset = '20ng'
+dataset = 'ohsumed'
 
 '''
 if dataset not in datasets:

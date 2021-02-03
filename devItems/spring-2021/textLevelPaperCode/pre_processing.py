@@ -3,6 +3,7 @@ import random,re, os, nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
+fopData='../../../../dataPapers/dataTextLevelPaper/'
 
 def clean_str(string):
     """
@@ -41,10 +42,10 @@ def remove_short(string):
 def stem_corpus():
     stemmer = WordNetLemmatizer()
 
-    with open('data/mr/text_train.txt') as f:
+    with open(fopData+'/mr/text_train.txt') as f:
         raw_text = f.read()
 
-    with open('data/mr/label_train.txt') as f:
+    with open(fopData+'/mr/label_train.txt') as f:
         raw_labels = f.read()
 
     labels = []
@@ -79,16 +80,16 @@ def stem_corpus():
 
 def cut_datasets():
     for dataset in ['r8', 'r52', 'oh']:
-        with open(os.path.join('.', 'data', dataset, dataset+'-stemmed.txt')) as f:
+        with open(os.path.join(fopData, dataset, dataset+'-stemmed.txt')) as f:
             all_cases = f.read().split('\n')
             print('datasets: ', dataset, ', total length:', len(all_cases))
             cut_index = int(len(all_cases) * 0.9)
             train_cases = all_cases[:cut_index]
             dev_cases = all_cases[cut_index+1:]
 
-        with open(os.path.join('.', 'data', dataset, dataset+'-train-stemmed.txt'), 'w') as f:
+        with open(os.path.join(fopData, dataset, dataset+'-train-stemmed.txt'), 'w') as f:
             f.write('\n'.join(train_cases))
-        with open(os.path.join('.', 'data', dataset, dataset+'-dev-stemmed.txt'), 'w') as f:
+        with open(os.path.join(fopData, dataset, dataset+'-dev-stemmed.txt'), 'w') as f:
             f.write('\n'.join(dev_cases))
 
 

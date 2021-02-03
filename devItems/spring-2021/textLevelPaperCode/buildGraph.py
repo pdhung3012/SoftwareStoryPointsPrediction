@@ -1,6 +1,8 @@
 import dgl
 import torch
 
+fopData='../../../../dataPapers/dataTextLevelPaper/'
+
 class GraphBuilder(object):
     def __init__(self, words, hiddenSizeNode):
         self.graph = dgl.DGLGraph()
