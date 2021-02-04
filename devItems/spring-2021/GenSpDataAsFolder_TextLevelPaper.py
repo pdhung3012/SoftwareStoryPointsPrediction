@@ -178,7 +178,7 @@ if __name__ == "__main__":
     fpTextTest = fopOutputDs + fnSystemAbbrev + '-test-stemmed.txt'
     fpTextVocab = fopOutputDs + 'vocab.txt'
     fpTextVocab5 = fopOutputDs + 'vocab-5.txt'
-    fpTextLabel = fopOutputDs + 'labels.txt'
+    fpTextLabel = fopOutputDs + 'label.txt'
     fpTextFreq = fopOutputDs + 'freq.csv'
 
     lUniqueLabel=unique(colTest)
@@ -187,6 +187,7 @@ if __name__ == "__main__":
     fff.close()
 
     dictVocab={}
+    dictVocab['UNK']=0
     for item in X_train_1:
         arrTokens=word_tokenize(item)
         for it in arrTokens:

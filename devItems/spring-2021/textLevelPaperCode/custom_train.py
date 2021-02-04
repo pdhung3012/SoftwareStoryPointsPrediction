@@ -7,7 +7,7 @@ import sys, random
 import argparse
 import time, datetime
 import os
-from pmi import cal_PMI
+from custom_pmi import cal_PMI
 
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
