@@ -139,115 +139,127 @@ if __name__ == "__main__":
 
     fopDataset = '../dataset/'
     fopFatherFolder = '../../../dataPapers/dataTextLevelPaper/'
-    fnSystemAbbrev = 'moodle'
-    fopOutputDs = fopFatherFolder+fnSystemAbbrev+'/'
+
+    fopRoot = '/home/hungphd/git/dataPapers/dataTextGCN/'
+
+    list_dir = os.listdir(fopDataset)  # Convert to lower case
+    list_dir = sorted(list_dir)
+
+    for filename in list_dir:
+        if not filename.endswith('.csv'):
+            continue
+        fnSystem = filename
+        fnSystemAbbrev = filename.replace('.csv', '')
+
+        fopOutputDs = fopFatherFolder+fnSystemAbbrev+'/'
 
 
 
-    fpOutputTextIndex = fopFatherFolder+fnSystemAbbrev+'.txt'
-    fpOutputTextTrainIndex = fopFatherFolder + fnSystemAbbrev + '.train.txt'
-    fpOutputTestLbl= fopFatherFolder + fnSystemAbbrev + '_testLblStep1.txt'
-    fopRoot=fopFatherFolder
+        fpOutputTextIndex = fopFatherFolder+fnSystemAbbrev+'.txt'
+        fpOutputTextTrainIndex = fopFatherFolder + fnSystemAbbrev + '.train.txt'
+        fpOutputTestLbl= fopFatherFolder + fnSystemAbbrev + '_testLblStep1.txt'
+        fopRoot=fopFatherFolder
 
-    fnSystem=fnSystemAbbrev+'.csv'
-    fileCsv = fopDataset + fnSystem
+        fnSystem=fnSystemAbbrev+'.csv'
+        fileCsv = fopDataset + fnSystem
 
-    raw_data = pd.read_csv(fileCsv)
-    raw_data_2 = pd.read_csv(fileCsv)
-    columnId = raw_data['issuekey']
-    columnRegStory = raw_data_2['storypoint']
-    titles_and_descriptions = []
-    colTest=[]
-    for i in range(0, len(raw_data['description'])):
-        strContent = ' '.join([str(raw_data['title'][i]), ' . ', str(raw_data['description'][i])])
-        strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').strip()
-        titles_and_descriptions.append(str(strContent))
-        colTest.append(str(columnRegStory[i]))
+        raw_data = pd.read_csv(fileCsv)
+        raw_data_2 = pd.read_csv(fileCsv)
+        columnId = raw_data['issuekey']
+        columnRegStory = raw_data_2['storypoint']
+        titles_and_descriptions = []
+        colTest=[]
+        for i in range(0, len(raw_data['description'])):
+            strContent = ' '.join([str(raw_data['title'][i]), ' . ', str(raw_data['description'][i])])
+            strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').strip()
+            titles_and_descriptions.append(str(strContent))
+            colTest.append(str(columnRegStory[i]))
 
-    X_train_1, X_test, y_train_1, y_test = train_test_split(titles_and_descriptions, colTest, test_size=0.2, shuffle=False,
-                                                        stratify=None)
-    '''
-    X_train, X_dev, y_train, y_dev = train_test_split(X_train_1, y_train_1, test_size=0.2,
-                                                            shuffle=False,
+        X_train_1, X_test, y_train_1, y_test = train_test_split(titles_and_descriptions, colTest, test_size=0.2, shuffle=False,
                                                             stratify=None)
-                                                            '''
-    X_train=X_train_1
-    y_train=y_train_1
-    X_dev=X_test
-    y_dev=y_test
 
-    #print('y test{}'.format(y_test))
+        X_train, X_dev, y_train, y_dev = train_test_split(X_train_1, y_train_1, test_size=0.2,
+                                                                shuffle=False,
+                                                                stratify=None)
+        '''                                                 
+        X_train=X_train_1
+        y_train=y_train_1
+        X_dev=X_test
+        y_dev=y_test
+        '''
 
-    createDirIfNotExist(fopOutputDs)
-    fpTextAll = fopOutputDs + fnSystemAbbrev + '-stemmed.txt'
-    fpTextTrain=fopOutputDs+fnSystemAbbrev+'-train-stemmed.txt'
-    fpTextDev = fopOutputDs + fnSystemAbbrev + '-dev-stemmed.txt'
-    fpTextTest = fopOutputDs + fnSystemAbbrev + '-test-stemmed.txt'
-    fpTextVocab = fopOutputDs + 'vocab.txt'
-    fpTextVocab5 = fopOutputDs + 'vocab-5.txt'
-    fpTextLabel = fopOutputDs + 'label.txt'
-    fpTextFreq = fopOutputDs + 'freq.csv'
+        #print('y test{}'.format(y_test))
 
-    lUniqueLabel=unique(colTest)
-    fff=open(fpTextLabel,'w')
-    fff.write('\n'.join(lUniqueLabel))
-    fff.close()
+        createDirIfNotExist(fopOutputDs)
+        fpTextAll = fopOutputDs + fnSystemAbbrev + '-stemmed.txt'
+        fpTextTrain=fopOutputDs+fnSystemAbbrev+'-train-stemmed.txt'
+        fpTextDev = fopOutputDs + fnSystemAbbrev + '-dev-stemmed.txt'
+        fpTextTest = fopOutputDs + fnSystemAbbrev + '-test-stemmed.txt'
+        fpTextVocab = fopOutputDs + 'vocab.txt'
+        fpTextVocab5 = fopOutputDs + 'vocab-5.txt'
+        fpTextLabel = fopOutputDs + 'label.txt'
+        fpTextFreq = fopOutputDs + 'freq.csv'
 
-    dictVocab={}
-    dictVocab['UNK']=0
-    for item in X_train_1:
-        arrTokens=word_tokenize(item)
-        for it in arrTokens:
-            if it == '':
-                continue
-            if not it in dictVocab.keys():
-                dictVocab[it]=1
-            else:
-                dictVocab[it]=dictVocab[it]+1
+        lUniqueLabel=unique(colTest)
+        fff=open(fpTextLabel,'w')
+        fff.write('\n'.join(lUniqueLabel))
+        fff.close()
 
-    listVoc=[]
-    listFreq=[]
+        dictVocab={}
+        dictVocab['UNK']=0
+        for item in X_train_1:
+            arrTokens=word_tokenize(item)
+            for it in arrTokens:
+                if it == '':
+                    continue
+                if not it in dictVocab.keys():
+                    dictVocab[it]=1
+                else:
+                    dictVocab[it]=dictVocab[it]+1
 
-    for key in dictVocab.keys():
-        listVoc.append(key)
-        listFreq.append('{},{}'.format(key,dictVocab[key]))
-    fff = open(fpTextVocab, 'w')
-    fff.write('\n'.join(listVoc))
-    fff.close()
-    fff = open(fpTextVocab5, 'w')
-    fff.write('\n'.join(listVoc))
-    fff.close()
-    fff = open(fpTextFreq, 'w')
-    fff.write('\n'.join(listFreq))
-    fff.close()
+        listVoc=[]
+        listFreq=[]
 
-    listTDT = []
-    for i in range(0, len(titles_and_descriptions)):
-        listTDT.append('{}\t{}'.format(colTest[i], titles_and_descriptions[i]))
-    fff = open(fpTextAll, 'w')
-    fff.write('\n'.join(listTDT))
-    fff.close()
+        for key in dictVocab.keys():
+            listVoc.append(key)
+            listFreq.append('{},{}'.format(key,dictVocab[key]))
+        fff = open(fpTextVocab, 'w')
+        fff.write('\n'.join(listVoc))
+        fff.close()
+        fff = open(fpTextVocab5, 'w')
+        fff.write('\n'.join(listVoc))
+        fff.close()
+        fff = open(fpTextFreq, 'w')
+        fff.write('\n'.join(listFreq))
+        fff.close()
 
-    listTDT=[]
-    for i in range(0,len(X_train)):
-        listTDT.append('{}\t{}'.format(y_train[i],X_train[i]))
-    fff = open(fpTextTrain, 'w')
-    fff.write('\n'.join(listTDT))
-    fff.close()
+        listTDT = []
+        for i in range(0, len(titles_and_descriptions)):
+            listTDT.append('{}\t{}'.format(colTest[i], titles_and_descriptions[i]))
+        fff = open(fpTextAll, 'w')
+        fff.write('\n'.join(listTDT))
+        fff.close()
 
-    listTDT=[]
-    for i in range(0,len(X_dev)):
-        listTDT.append('{}\t{}'.format(y_dev[i],X_dev[i]))
-    fff = open(fpTextDev, 'w')
-    fff.write('\n'.join(listTDT))
-    fff.close()
+        listTDT=[]
+        for i in range(0,len(X_train)):
+            listTDT.append('{}\t{}'.format(y_train[i],X_train[i]))
+        fff = open(fpTextTrain, 'w')
+        fff.write('\n'.join(listTDT))
+        fff.close()
 
-    listTDT=[]
-    for i in range(0,len(X_test)):
-        listTDT.append('{}\t{}'.format(y_test[i],X_test[i]))
-    fff = open(fpTextTest, 'w')
-    fff.write('\n'.join(listTDT))
-    fff.close()
+        listTDT=[]
+        for i in range(0,len(X_dev)):
+            listTDT.append('{}\t{}'.format(y_dev[i],X_dev[i]))
+        fff = open(fpTextDev, 'w')
+        fff.write('\n'.join(listTDT))
+        fff.close()
+
+        listTDT=[]
+        for i in range(0,len(X_test)):
+            listTDT.append('{}\t{}'.format(y_test[i],X_test[i]))
+        fff = open(fpTextTest, 'w')
+        fff.write('\n'.join(listTDT))
+        fff.close()
 
 
 print('Done')
