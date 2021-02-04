@@ -65,9 +65,11 @@ def dev(model, dataset):
         correct += correct_pred
         total_pred += len(content)
 
-    total_pred = float(total_pred)
-    correct = correct.float()
+    total_pred = int(total_pred)
+#    correct = correct.int()
     # print(torch.div(correct, total_pred))
+    if total_pred ==0:
+        return 0
     return torch.div(correct, total_pred)
 
 
@@ -220,7 +222,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
     parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
     parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')
-    parser.add_argument('--dataset', required=False, type=str,default='moodle', help='dataset')
+    parser.add_argument('--dataset', required=False, type=str,default=fnSystem, help='dataset')
     parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
     parser.add_argument('--rand', required=False, type=int, default=7, help='rand_seed')
 

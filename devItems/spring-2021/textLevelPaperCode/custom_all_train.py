@@ -220,9 +220,13 @@ if __name__ == '__main__':
     fff = open(fpResultSEE, 'w')
     fff.write('')
     fff.close()
+    index=0
 
     for filename in list_dir:
         if not filename.endswith('.csv'):
+            continue
+        index=index+1
+        if(index<=15):
             continue
         fnSystem = filename.replace('.csv', '')
         fpLabel = fopDataset + fnSystem + "/test_label.txt"
