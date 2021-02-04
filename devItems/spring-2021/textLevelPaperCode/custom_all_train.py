@@ -11,7 +11,7 @@ from custom_pmi import cal_PMI
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 
 NUM_ITER_EVAL = 100
-EARLY_STOP_EPOCH = 50000
+EARLY_STOP_EPOCH = 25
 
 
 
