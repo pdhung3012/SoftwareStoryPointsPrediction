@@ -165,6 +165,7 @@ class Model(torch.nn.Module):
             local_vocab = torch.tensor(list(local_vocab))
 
         sub_graph = dgl.DGLGraph()
+        sub_graph=sub_graph.to('cuda:0')
 
         sub_graph.add_nodes(len(local_vocab))
         local_node_hidden = self.node_hidden(local_vocab)
