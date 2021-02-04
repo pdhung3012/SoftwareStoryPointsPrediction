@@ -8,11 +8,16 @@ import argparse
 import time, datetime
 import os
 from custom_pmi import cal_PMI
+from sklearn.metrics import mean_squared_error,mean_absolute_error
 
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
 fopDataset='../../../../dataPapers/dataTextLevelPaper/'
+fnSystem='moodle'
+fpLabel=fopDataset+fnSystem+"/test_label.txt"
+fpPred=fopDataset+fnSystem+"/test_pred.txt"
+fpResultSEE=fopDataset+"/resultSEE.txt"
 
 
 def edges_mapping(vocab_len, content, ngram):
@@ -73,12 +78,16 @@ def test(model_name, dataset):
     total_pred = 0
     correct = 0
     iter = 0
+    list_pred=[]
+    list_label = []
     for content, label, _ in data_helper.batch_iter(batch_size=64, num_epoch=1):
         iter += 1
         model.eval()
 
         logits = model(content)
         pred = torch.argmax(logits, dim=1)
+        list_pred.append(pred)
+        list_label.append(label)
 
         correct_pred = torch.sum(pred == label)
 
@@ -88,7 +97,7 @@ def test(model_name, dataset):
     total_pred = float(total_pred)
     correct = correct.float()
     # print(torch.div(correct, total_pred))
-    return torch.div(correct, total_pred).to('cpu')
+    return torch.div(correct, total_pred).to('cpu'),list_label,list_pred
 
 
 def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
@@ -237,4 +246,18 @@ if __name__ == '__main__':
         edges = False
 
     model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
-    print('test acc: ', test(model, args.dataset).numpy())
+    result,lLabel,lPred=test(model, args.dataset)
+    print('test acc: ', result.numpy())
+    maeAccuracy = mean_absolute_error(listL, listP)
+    mqeAccuracy = mean_squared_error(listL, listP)
+
+    fff=open(fpLabel,'w')
+    fff.write('\n'.join(lLabel))
+    fff.close()
+    fff=open(fpPred,'w')
+    fff.write('\n'.join(lPred))
+    fff.close()
+    fff = open(fpResultSEE, 'w')
+    fff.write('{}\t{}\n'.format(fnSystem, maeAccuracy))
+    fff.close()
+
