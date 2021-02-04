@@ -248,8 +248,7 @@ if __name__ == '__main__':
     model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
     result,lLabel,lPred=test(model, args.dataset)
     print('test acc: ', result.numpy())
-    maeAccuracy = mean_absolute_error(listL, listP)
-    mqeAccuracy = mean_squared_error(listL, listP)
+    maeAccuracy = mean_absolute_error(lLabel, lPred)
 
     fff=open(fpLabel,'w')
     fff.write('\n'.join(lLabel))
