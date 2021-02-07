@@ -1,5 +1,5 @@
 import torch
-from model import Model
+from custom_model import Model
 from custom_data_helper import DataHelper
 import numpy as np
 import tqdm
@@ -8,17 +8,17 @@ import argparse
 import time, datetime
 import os
 from custom_pmi import cal_PMI
-from sklearn.metrics import mean_squared_error,mean_absolute_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
-fopDataset='../../../../dataPapers/dataTextLevelPaper/'
-fnSystem='moodle'
-fpLabel=fopDataset+fnSystem+"/test_label.txt"
-fpPred=fopDataset+fnSystem+"/test_pred.txt"
-fpResultSEE=fopDataset+"/resultSEE.txt"
-fpTextLabel = fopDataset+fnSystem+'/label.txt'
+fopDataset = '../../../../dataPapers/dataTextLevelPaper/'
+fnSystem = 'moodle'
+fpLabel = fopDataset + fnSystem + "/test_label.txt"
+fpPred = fopDataset + fnSystem + "/test_pred.txt"
+fpResultSEE = fopDataset + "/resultSEE.txt"
+fpTextLabel = fopDataset + fnSystem + '/label.txt'
 
 
 def edges_mapping(vocab_len, content, ngram):
@@ -26,7 +26,7 @@ def edges_mapping(vocab_len, content, ngram):
     mapping = np.zeros(shape=(vocab_len, vocab_len), dtype=np.int32)
     for doc in content:
         for i, src in enumerate(doc):
-            for dst_id in range(max(0, i-ngram), min(len(doc), i+ngram+1)):
+            for dst_id in range(max(0, i - ngram), min(len(doc), i + ngram + 1)):
                 dst = doc[dst_id]
 
                 if mapping[src, dst] == 0:
@@ -68,12 +68,12 @@ def dev(model, dataset):
     total_pred = float(total_pred)
     correct = correct.float()
     # print(torch.div(correct, total_pred))
-    if total_pred ==0:
+    if total_pred == 0:
         return 0
     return torch.div(correct, total_pred)
 
 
-def test(model_name, dataset,dictLabel):
+def test(model_name, dataset, dictLabel):
     model = torch.load(os.path.join('.', model_name + '.pkl'))
 
     data_helper = DataHelper(dataset, mode='test')
@@ -81,7 +81,7 @@ def test(model_name, dataset,dictLabel):
     total_pred = 0
     correct = 0
     iter = 0
-    list_pred=[]
+    list_pred = []
     list_label = []
     for content, label, _ in data_helper.batch_iter(batch_size=64, num_epoch=1):
         iter += 1
@@ -89,8 +89,8 @@ def test(model_name, dataset,dictLabel):
 
         logits = model(content)
         pred = torch.argmax(logits, dim=1)
-        #print('label and pred {}\n{}'.format(label,pred))
-        for i in range(0,len(label)):
+        # print('label and pred {}\n{}'.format(label,pred))
+        for i in range(0, len(label)):
             list_pred.append(int(dictLabel[int(pred[i])]))
             list_label.append(int(dictLabel[int(label[i])]))
 
@@ -102,24 +102,25 @@ def test(model_name, dataset,dictLabel):
     total_pred = float(total_pred)
     correct = correct.float()
     # print(torch.div(correct, total_pred))
-    return torch.div(correct, total_pred).to('cpu'),list_label,list_pred
+    return torch.div(correct, total_pred).to('cpu'), list_label, list_pred
 
 
 def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
     print('load data helper.')
     data_helper = DataHelper(dataset, mode='train')
-    if os.path.exists(os.path.join('.', name+'.pkl')) and name != 'temp_model':
+    if os.path.exists(os.path.join('.', name + '.pkl')) and name != 'temp_model':
         print('load model from file.')
-        model = torch.load(os.path.join('.', name+'.pkl'))
+        model = torch.load(os.path.join('.', name + '.pkl'))
     else:
         print('new model.')
         if name == 'temp_model':
             name = 'temp_model_%s' % dataset
         # edges_num, edges_matrix = edges_mapping(len(data_helper.vocab), data_helper.content, ngram)
         edges_weights, edges_mappings, count = cal_PMI(dataset=dataset)
-        
+
         model = Model(class_num=len(data_helper.labels_str), hidden_size_node=200,
-                      vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, edges_matrix=edges_mappings, edges_num=count,
+                      vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, edges_matrix=edges_mappings,
+                      edges_num=count,
                       trainable_edges=edges, pmi=edges_weights, cuda=is_cuda)
 
     print(model)
@@ -178,9 +179,9 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
                 return name
             msg = 'Epoch: {0:>6} Iter: {1:>6}, Train Loss: {5:>7.2}, Train Acc: {6:>7.2%}' \
                   + 'Val Acc: {2:>7.2%}, Time: {3}{4}' \
-                  # + ' Time: {5} {6}'
+                # + ' Time: {5} {6}'
 
-            print(msg.format(epoch, iter, val_acc, get_time_dif(start_time), improved, total_loss/ NUM_ITER_EVAL,
+            print(msg.format(epoch, iter, val_acc, get_time_dif(start_time), improved, total_loss / NUM_ITER_EVAL,
                              float(total_correct) / float(total)))
 
             total_loss = 0.0
@@ -222,7 +223,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
     parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
     parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')
-    parser.add_argument('--dataset', required=False, type=str,default=fnSystem, help='dataset')
+    parser.add_argument('--dataset', required=False, type=str, default=fnSystem, help='dataset')
     parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
     parser.add_argument('--rand', required=False, type=int, default=7, help='rand_seed')
 
@@ -243,7 +244,7 @@ if __name__ == '__main__':
         bar = True
     else:
         bar = False
-    
+
     if args.edges == 1:
         edges = True
         print('trainable edges')
@@ -259,18 +260,16 @@ if __name__ == '__main__':
         dictLabel[i] = lUn[i].strip()
 
     model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
-    #model='temp_model_'+fnSystem
-    result,lLabel,lPred=test(model, args.dataset,dictLabel)
+    # model='temp_model_'+fnSystem
+    result, lLabel, lPred = test(model, args.dataset, dictLabel)
     print('test acc: ', result.numpy())
     maeAccuracy = mean_absolute_error(lLabel, lPred)
 
-
-
-    fff=open(fpLabel,'w')
-    fff.write('\n'.join(map(str,lLabel)))
+    fff = open(fpLabel, 'w')
+    fff.write('\n'.join(map(str, lLabel)))
     fff.close()
-    fff=open(fpPred,'w')
-    fff.write('\n'.join(map(str,lPred)))
+    fff = open(fpPred, 'w')
+    fff.write('\n'.join(map(str, lPred)))
     fff.close()
     fff = open(fpResultSEE, 'w')
     fff.write('{}\t{}\n'.format(fnSystem, maeAccuracy))
