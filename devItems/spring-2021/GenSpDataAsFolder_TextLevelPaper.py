@@ -179,12 +179,13 @@ if __name__ == "__main__":
         itemC =int(colTest[i])
         if itemC not in dictTotalLabel.keys():
             dictTotalLabel[itemC]=1
-            lstItem=titles_and_descriptions[i]
+            lstItem=[]
+            lstItem.append(titles_and_descriptions[i])
             dictTotalStrContent[itemC]=lstItem
         else:
             dictTotalLabel[itemC] = dictTotalLabel[itemC]+1
             lstItem = dictTotalStrContent[itemC]
-            lstItem.append(title_and_descriptions[i])
+            lstItem.append(titles_and_descriptions[i])
 
 
     lstLogLabel=[]
@@ -211,10 +212,10 @@ if __name__ == "__main__":
                 else:
                     dictItemFreq[it] = dictItemFreq[it] + 1
 
-        dictItemFreq=dict(sorted(dictItemFreq.items(), key=lambda item: item[1]))
+        dictItemFreq=dict(sorted(dictItemFreq.items(), reverse=True, key=lambda item: item[1]))
         lstItemFreq=[]
-        for k in sorted(dictItemFreq.keys()):
-            strItem='{}\t{}'.format(k,dictItemFreq)
+        for k in dictItemFreq.keys():
+            strItem='{}\t{}'.format(k,dictItemFreq[k])
             lstItemFreq.append(strItem)
         fpLabelFreq=fopOutputLabelVocab+str(item)+'_vocab.txt'
         fff=open(fpLabelFreq,'w')
