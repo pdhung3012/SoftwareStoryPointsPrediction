@@ -147,7 +147,14 @@ if __name__ == "__main__":
     fpOutputTextIndex = fopFatherFolder+fnSystemAbbrev+'.txt'
     fpOutputTextTrainIndex = fopFatherFolder + fnSystemAbbrev + '.train.txt'
     fpOutputTestLbl= fopFatherFolder + fnSystemAbbrev + '_testLblStep1.txt'
+    fpOutputPercentLbl = fopOutputDs+'percentLabel.txt'
+    fopOutputLabelInfo = fopOutputDs + 'labelInfo/'
+    fopOutputLabelVocab = fopOutputDs + 'labelVocab/'
     fopRoot=fopFatherFolder
+
+    createDirIfNotExist(fopOutputDs)
+    createDirIfNotExist(fopOutputLabelInfo)
+    createDirIfNotExist(fopOutputLabelVocab)
 
     fnSystem=fnSystemAbbrev+'.csv'
     fileCsv = fopDataset + fnSystem
@@ -163,22 +170,90 @@ if __name__ == "__main__":
         strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').strip()
         titles_and_descriptions.append(str(strContent))
         colTest.append(str(columnRegStory[i]))
+#        if(i==100):
+#            break
+
+    dictTotalLabel= {}
+    dictTotalStrContent = {}
+    for i in range(0,len(colTest)):
+        itemC =int(colTest[i])
+        if itemC not in dictTotalLabel.keys():
+            dictTotalLabel[itemC]=1
+            lstItem=titles_and_descriptions[i]
+            dictTotalStrContent[itemC]=lstItem
+        else:
+            dictTotalLabel[itemC] = dictTotalLabel[itemC]+1
+            lstItem = dictTotalStrContent[itemC]
+            lstItem.append(title_and_descriptions[i])
+
+
+    lstLogLabel=[]
+    for item in sorted(dictTotalLabel.keys()):
+        val=dictTotalLabel[item]
+        percent=(val*1.0)/len(colTest)
+        strLabel='{}\t{}\t{}'.format(item,val,percent)
+        lstLogLabel.append(strLabel)
+
+        lstContentItem=dictTotalStrContent[item]
+        fpLabelInfo=fopOutputLabelInfo+str(item)+'_info.txt'
+        fff=open(fpLabelInfo,'w')
+        fff.write('\n'.join(lstContentItem))
+        fff.close()
+
+        dictItemFreq={}
+        for it2 in lstContentItem:
+            arrTokens = word_tokenize(it2)
+            for it in arrTokens:
+                if it == '':
+                    continue
+                if not it in dictItemFreq.keys():
+                    dictItemFreq[it] = 1
+                else:
+                    dictItemFreq[it] = dictItemFreq[it] + 1
+
+        dictItemFreq=dict(sorted(dictItemFreq.items(), key=lambda item: item[1]))
+        lstItemFreq=[]
+        for k in sorted(dictItemFreq.keys()):
+            strItem='{}\t{}'.format(k,dictItemFreq)
+            lstItemFreq.append(strItem)
+        fpLabelFreq=fopOutputLabelVocab+str(item)+'_vocab.txt'
+        fff=open(fpLabelFreq,'w')
+        fff.write('\n'.join(lstItemFreq))
+        fff.close()
+
+
+
+
+
+
+
+
+    fff=open(fpOutputPercentLbl,'w')
+    fff.write('\n'.join(lstLogLabel))
+    fff.close()
+
+
+
 
     X_train_1, X_test, y_train_1, y_test = train_test_split(titles_and_descriptions, colTest, test_size=0.2, shuffle=False,
                                                         stratify=None)
-    '''
+
+
+
+
     X_train, X_dev, y_train, y_dev = train_test_split(X_train_1, y_train_1, test_size=0.2,
                                                             shuffle=False,
                                                             stratify=None)
-                                                            '''
+
+    '''                                                        
     X_train=X_train_1
     y_train=y_train_1
     X_dev=X_test
     y_dev=y_test
+    '''
 
     #print('y test{}'.format(y_test))
 
-    createDirIfNotExist(fopOutputDs)
     fpTextAll = fopOutputDs + fnSystemAbbrev + '-stemmed.txt'
     fpTextTrain=fopOutputDs+fnSystemAbbrev+'-train-stemmed.txt'
     fpTextDev = fopOutputDs + fnSystemAbbrev + '-dev-stemmed.txt'
