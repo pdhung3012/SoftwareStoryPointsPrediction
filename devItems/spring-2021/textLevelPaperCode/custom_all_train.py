@@ -226,70 +226,76 @@ if __name__ == '__main__':
         if not filename.endswith('.csv'):
             continue
         index=index+1
+        '''
         if(index<=15):
             continue
+        '''
         fnSystem = filename.replace('.csv', '')
         fpLabel = fopDataset + fnSystem + "/test_label.txt"
         fpPred = fopDataset + fnSystem + "/test_pred.txt"
 
         fpTextLabel = fopDataset + fnSystem + '/label.txt'
+        try:
+            parser = argparse.ArgumentParser()
+            parser.add_argument('--ngram', required=False, type=int, default=4, help='ngram number')
+            parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
+            parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
+            parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')
+            parser.add_argument('--dataset', required=False, type=str,default=fnSystem, help='dataset')
+            parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
+            parser.add_argument('--rand', required=False, type=int, default=7, help='rand_seed')
 
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--ngram', required=False, type=int, default=4, help='ngram number')
-        parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
-        parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
-        parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')
-        parser.add_argument('--dataset', required=False, type=str,default=fnSystem, help='dataset')
-        parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
-        parser.add_argument('--rand', required=False, type=int, default=7, help='rand_seed')
+            args = parser.parse_args()
 
-        args = parser.parse_args()
+            print('ngram: %d' % args.ngram)
+            print('project_name: %s' % args.name)
+            print('dataset: %s' % args.dataset)
+            print('trainable_edges: %s' % args.edges)
+            # #
+            SEED = args.rand
+            torch.manual_seed(SEED)
+            torch.cuda.manual_seed(SEED)
+            np.random.seed(SEED)
+            random.seed(SEED)
 
-        print('ngram: %d' % args.ngram)
-        print('project_name: %s' % args.name)
-        print('dataset: %s' % args.dataset)
-        print('trainable_edges: %s' % args.edges)
-        # #
-        SEED = args.rand
-        torch.manual_seed(SEED)
-        torch.cuda.manual_seed(SEED)
-        np.random.seed(SEED)
-        random.seed(SEED)
+            if args.bar == 1:
+                bar = True
+            else:
+                bar = False
 
-        if args.bar == 1:
-            bar = True
-        else:
-            bar = False
+            if args.edges == 1:
+                edges = True
+                print('trainable edges')
+            else:
+                edges = False
 
-        if args.edges == 1:
-            edges = True
-            print('trainable edges')
-        else:
-            edges = False
+            dictLabel = {}
+            fff = open(fpTextLabel, 'r')
+            lUn = fff.read().split('\n')
+            fff.close()
 
-        dictLabel = {}
-        fff = open(fpTextLabel, 'r')
-        lUn = fff.read().split('\n')
-        fff.close()
+            for i in range(0, len(lUn)):
+                dictLabel[i] = lUn[i].strip()
 
-        for i in range(0, len(lUn)):
-            dictLabel[i] = lUn[i].strip()
-
-        model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
-        #model='temp_model_'+fnSystem
-        result,lLabel,lPred=test(model, args.dataset,dictLabel)
-        print('test acc: ', result.numpy())
-        maeAccuracy = mean_absolute_error(lLabel, lPred)
+            model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
+            #model='temp_model_'+fnSystem
+            result,lLabel,lPred=test(model, args.dataset,dictLabel)
+            print('test acc: ', result.numpy())
+            maeAccuracy = mean_absolute_error(lLabel, lPred)
 
 
 
-        fff=open(fpLabel,'w')
-        fff.write('\n'.join(map(str,lLabel)))
-        fff.close()
-        fff=open(fpPred,'w')
-        fff.write('\n'.join(map(str,lPred)))
-        fff.close()
-        fff = open(fpResultSEE, 'a')
-        fff.write('{}\t{}\n'.format(fnSystem, maeAccuracy))
-        fff.close()
+            fff=open(fpLabel,'w')
+            fff.write('\n'.join(map(str,lLabel)))
+            fff.close()
+            fff=open(fpPred,'w')
+            fff.write('\n'.join(map(str,lPred)))
+            fff.close()
+            fff = open(fpResultSEE, 'a')
+            fff.write('{}\t{}\n'.format(fnSystem, maeAccuracy))
+            fff.close()
+        except Exception as e:
+            fff = open(fpResultSEE, 'a')
+            fff.write('{}\t{}\n'.format(fnSystem, 'Error'))
+            fff.close()
 

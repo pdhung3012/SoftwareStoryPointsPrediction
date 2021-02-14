@@ -14,7 +14,7 @@ NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
 fopDataset='../../../../dataPapers/dataTextLevelPaper/'
-fnSystem='moodle'
+fnSystem='usergrid'
 fpLabel=fopDataset+fnSystem+"/test_label.txt"
 fpPred=fopDataset+fnSystem+"/test_pred.txt"
 fpResultSEE=fopDataset+"/resultSEE.txt"
