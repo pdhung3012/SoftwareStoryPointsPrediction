@@ -148,7 +148,7 @@ if __name__ == "__main__":
         fpOutputTextIndex = fopFatherFolder+fnSystemAbbrev+'.txt'
         fpOutputTextTrainIndex = fopFatherFolder + fnSystemAbbrev + '.train.txt'
         fpOutputTestLbl= fopFatherFolder + fnSystemAbbrev + '_testLblStep1.txt'
-        fopOutputCosineApp = fopFatherFolder + fnSystemAbbrev + '/cosineDistance/'
+        fopOutputCosineApp = fopFatherFolder + fnSystemAbbrev + '/simDistance/'
         fpPred = fopOutputCosineApp + "/test_pred.txt"
         fpCompareDetails = fopOutputCosineApp + "/compareDetails.txt"
 
@@ -194,8 +194,9 @@ if __name__ == "__main__":
             for indexTrain in range(0,len(X_train)):
                 itemTrain = str(X_train[indexTrain])
                 labelTrain = y_train[indexTrain]
-                #arrScore=get_cosine_sim(itemTrain,itemTest)
-                scoreIt=get_jaccard_sim(itemTrain,itemTest)
+                arrScore=get_cosine_sim(itemTrain,itemTest)
+                scoreIt=arrScore[0][1]
+                #scoreIt=get_jaccard_sim(itemTrain,itemTest)
                 #print('score {}'.format(scoreIt))
                # listTrainSimScore.append(0.7)
                 listTrainSimScore.append(scoreIt)
@@ -204,7 +205,7 @@ if __name__ == "__main__":
             indexWin=listTrainSimScore.index(maxS)
             labelSelected=y_train[indexWin]
             itemSelected=str(X_train[indexWin])
-            strCompare='{}\texpected\t{}\t{}\t{}\n{}\texpected\t{}\t{}\t{}'.format(indexTest,labelTest,maxS,itemTest,indexTest,labelSelected,maxS,itemSelected)
+            strCompare='{}\texpected\t{}\t{}\t{}\n{}\tpredict\t{}\t{}\t{}'.format(indexTest,labelTest,maxS,itemTest,indexTest,labelSelected,maxS,itemSelected)
             lstCompareDetails.append(strCompare)
             lstCosineResult.append(labelSelected)
             print('{}\t{}'.format(indexTest,len(X_test)))
