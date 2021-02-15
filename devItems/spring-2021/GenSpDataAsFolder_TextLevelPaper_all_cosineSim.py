@@ -150,6 +150,7 @@ if __name__ == "__main__":
         fpOutputTestLbl= fopFatherFolder + fnSystemAbbrev + '_testLblStep1.txt'
         fopOutputCosineApp = fopFatherFolder + fnSystemAbbrev + '/cosineDistance/'
         fpPred = fopOutputCosineApp + "/test_pred.txt"
+        fpCompareDetails = fopOutputCosineApp + "/compareDetails.txt"
 
         fpOutputPercentLbl = fopOutputDs + 'percentLabel.txt'
         fopOutputLabelInfo = fopOutputDs + 'labelInfo/'
@@ -185,6 +186,7 @@ if __name__ == "__main__":
                                                             stratify=None)
         #input('sss ')
         lstCosineResult=[]
+        lstCompareDetails=[]
         for indexTest in range(0,len(X_test)):
             itemTest=str(X_test[indexTest])
             labelTest=y_test[indexTest]
@@ -198,8 +200,12 @@ if __name__ == "__main__":
                # listTrainSimScore.append(0.7)
                 listTrainSimScore.append(scoreIt)
 
-            indexWin=listTrainSimScore.index(max(listTrainSimScore))
+            maxS=max(listTrainSimScore)
+            indexWin=listTrainSimScore.index(maxS)
             labelSelected=y_train[indexWin]
+            itemSelected=str(X_train[indexWin])
+            strCompare='{}\texpected\t{}\t{}\t{}\n{}\texpected\t{}\t{}\t{}'.format(indexTest,labelTest,maxS,itemTest,indexTest,labelSelected,maxS,itemSelected)
+            lstCompareDetails.append(strCompare)
             lstCosineResult.append(labelSelected)
             print('{}\t{}'.format(indexTest,len(X_test)))
 
@@ -212,6 +218,10 @@ if __name__ == "__main__":
         for id2 in range(0,len(y_test)):
             lstStr.append('{}\t{}'.format(y_test[id2],lstCosineResult[id2]))
         fff.write('\n'.join(lstStr))
+        fff.close()
+
+        fff = open(fpCompareDetails, 'w')
+        fff.write('\n'.join(lstCompareDetails))
         fff.close()
 
         fff = open(fpResultCosine, 'a')
