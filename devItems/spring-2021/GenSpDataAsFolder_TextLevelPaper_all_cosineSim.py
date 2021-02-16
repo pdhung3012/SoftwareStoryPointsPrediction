@@ -106,12 +106,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-def get_cosine_sim(*strs):
-    vectors = [t for t in get_vectors(*strs)]
+def get_cosine_sim(strs):
+    vectors = [t for t in get_vectors(strs)]
     return cosine_similarity(vectors)
 
 
-def get_vectors(*strs):
+def get_vectors(strs):
     text = [t for t in strs]
     vectorizer = CountVectorizer(text)
     vectorizer.fit(text)
@@ -194,7 +194,8 @@ if __name__ == "__main__":
             for indexTrain in range(0,len(X_train)):
                 itemTrain = str(X_train[indexTrain])
                 labelTrain = y_train[indexTrain]
-                arrScore=get_cosine_sim(itemTrain,itemTest)
+                lstIt2=[itemTrain,itemTest]
+                arrScore=get_cosine_sim(lstIt2)
                 scoreIt=arrScore[0][1]
                 #scoreIt=get_jaccard_sim(itemTrain,itemTest)
                 #print('score {}'.format(scoreIt))
