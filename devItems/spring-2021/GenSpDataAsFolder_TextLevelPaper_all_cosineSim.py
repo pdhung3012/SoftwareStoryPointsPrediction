@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 from nltk.tokenize import word_tokenize
 from numpy import unique
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+import pandas as pd
 
 def initDefaultTextEnvi():
     nlp_model = spacy.load('en_core_web_sm')
@@ -121,7 +122,8 @@ def get_jaccard_sim(str1, str2):
     a = set(str1.split())
     b = set(str2.split())
     c = a.intersection(b)
-    return float(len(c)) / (len(a) + len(b) - len(c))
+    score=float(len(c)) / (len(a) + len(b) - len(c))
+    return score,c
 
 
 if __name__ == "__main__":
@@ -148,9 +150,10 @@ if __name__ == "__main__":
         fpOutputTextIndex = fopFatherFolder+fnSystemAbbrev+'.txt'
         fpOutputTextTrainIndex = fopFatherFolder + fnSystemAbbrev + '.train.txt'
         fpOutputTestLbl= fopFatherFolder + fnSystemAbbrev + '_testLblStep1.txt'
-        fopOutputCosineApp = fopFatherFolder + fnSystemAbbrev + '/simDistance/'
+        fopOutputCosineApp = fopFatherFolder + fnSystemAbbrev + '/jaccardDistance/'
         fpPred = fopOutputCosineApp + "/test_pred.txt"
-        fpCompareDetails = fopOutputCosineApp + "/compareDetails.txt"
+        fpCompareDetails = fopOutputCosineApp + "/compareDetails.csv"
+        fpCompareDetailsSorted = fopOutputCosineApp + "/compareDetailsSorted.csv"
 
         fpOutputPercentLbl = fopOutputDs + 'percentLabel.txt'
         fopOutputLabelInfo = fopOutputDs + 'labelInfo/'
@@ -173,7 +176,7 @@ if __name__ == "__main__":
         colTest=[]
         for i in range(0, len(raw_data['description'])):
             strContent = ' '.join([str(raw_data['title'][i]), ' . ', str(raw_data['description'][i])])
-            strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').strip()
+            strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').replace(',',' ').strip()
 
             #fopOutputCosineApp
 
@@ -186,7 +189,7 @@ if __name__ == "__main__":
                                                             stratify=None)
         #input('sss ')
         lstCosineResult=[]
-        lstCompareDetails=[]
+        lstCompareDetails=['indexTest,indexTrain,maxS,labelTest,labelSelected,gapLabel,intersect,itemTest,itemSelected']
         for indexTest in range(0,len(X_test)):
             itemTest=str(X_test[indexTest])
             labelTest=y_test[indexTest]
@@ -195,9 +198,10 @@ if __name__ == "__main__":
                 itemTrain = str(X_train[indexTrain])
                 labelTrain = y_train[indexTrain]
                 lstIt2=[itemTrain,itemTest]
-                arrScore=get_cosine_sim(lstIt2)
-                scoreIt=arrScore[0][1]
-                #scoreIt=get_jaccard_sim(itemTrain,itemTest)
+                #arrScore=get_cosine_sim(lstIt2)
+                #scoreIt=arrScore[0][1]
+                scoreIt,lstIntersect=get_jaccard_sim(itemTrain,itemTest)
+                strIntersect=' ABC '.join(lstIntersect)
                 #print('score {}'.format(scoreIt))
                # listTrainSimScore.append(0.7)
                 listTrainSimScore.append(scoreIt)
@@ -206,7 +210,7 @@ if __name__ == "__main__":
             indexWin=listTrainSimScore.index(maxS)
             labelSelected=y_train[indexWin]
             itemSelected=str(X_train[indexWin])
-            strCompare='{}\texpected\t{}\t{}\t{}\n{}\tpredict\t{}\t{}\t{}'.format(indexTest,labelTest,maxS,itemTest,indexTest,labelSelected,maxS,itemSelected)
+            strCompare='{},{},{},{},{},{},{},{},{}'.format(indexTest,indexTrain,maxS,labelTest,labelSelected,abs(labelTest-labelSelected),strIntersect,itemTest,itemSelected)
             lstCompareDetails.append(strCompare)
             lstCosineResult.append(labelSelected)
             print('{}\t{}'.format(indexTest,len(X_test)))
@@ -225,6 +229,11 @@ if __name__ == "__main__":
         fff = open(fpCompareDetails, 'w')
         fff.write('\n'.join(lstCompareDetails))
         fff.close()
+
+        df=pd.read_csv(fpCompareDetails)
+        df=df.sort_values(by='gapLabel', ascending=False)
+        df.to_csv(fpCompareDetailsSorted,index=False)
+
 
         fff = open(fpResultCosine, 'a')
         fff.write('{}\t{}\n'.format(fnSystemAbbrev,maeAccuracy))
