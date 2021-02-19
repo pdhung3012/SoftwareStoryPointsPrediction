@@ -176,7 +176,7 @@ if __name__ == "__main__":
             strContent = ' '.join([str(raw_data['title'][i]), ' . ', str(raw_data['description'][i])])
             strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').strip()
             intValue=int(columnRegStory[i])
-            if(intValue>60):
+            if(intValue>30):
                 continue
 
             titles_and_descriptions.append(str(strContent))
