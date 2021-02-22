@@ -175,6 +175,10 @@ if __name__ == "__main__":
         for i in range(0, len(raw_data['description'])):
             strContent = ' '.join([str(raw_data['title'][i]), ' . ', str(raw_data['description'][i])])
             strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').strip()
+            intValue=int(columnRegStory[i])
+            if(intValue>30):
+                continue
+
             titles_and_descriptions.append(str(strContent))
             colTest.append(str(columnRegStory[i]))
 
