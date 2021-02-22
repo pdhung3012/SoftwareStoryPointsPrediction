@@ -178,8 +178,6 @@ if __name__ == "__main__":
             strContent = ' '.join([str(raw_data['title'][i]), ' . ', str(raw_data['description'][i])])
             strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').replace(',',' ').strip()
 
-            #fopOutputCosineApp
-
             titles_and_descriptions.append(str(strContent))
             colTest.append(int(columnRegStory[i]))
 
