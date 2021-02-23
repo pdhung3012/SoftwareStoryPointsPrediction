@@ -1,4 +1,10 @@
 import os
+import spacy
+from spacy.lang.en import English
+import networkx as nx
+import matplotlib.pyplot as plt
+from nltk.tokenize import word_tokenize
+from numpy import unique
 
 def createDirIfNotExist(fopOutput):
     try:
@@ -7,3 +13,27 @@ def createDirIfNotExist(fopOutput):
         #print("Directory ", fopOutput, " Created ")
     except FileExistsError:
         print("Directory ", fopOutput, " already exists")
+
+
+def initDefaultTextEnvi():
+    nlp_model = spacy.load('en_core_web_sm')
+    nlp = English()
+    nlp.add_pipe(nlp.create_pipe('sentencizer'))
+    return nlp_model,nlp
+
+def getSentences(text,nlp):
+    result=None
+    try:
+        document = nlp(text)
+        result= [sent.string.strip() for sent in document.sents]
+    except Exception as e:
+        print('sone error occured {}'.format(str(e)))
+    return result
+
+
+def preprocess(textInLine):
+    text = textInLine.lower()
+    doc = word_tokenize(text)
+    # doc = [word for word in doc if word in words]
+    # doc = [word for word in doc if word.isalpha()]
+    return ' '.join(doc)
