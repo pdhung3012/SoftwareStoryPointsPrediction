@@ -37,3 +37,14 @@ def preprocess(textInLine):
     # doc = [word for word in doc if word in words]
     # doc = [word for word in doc if word.isalpha()]
     return ' '.join(doc)
+
+
+
+# Python program to illustrate the intersection
+# of two lists in most simple way
+def intersection(lst1, lst2):
+    lst3 = [value for value in lst1 if value in lst2]
+    return lst3
+def diff(li1, li2):
+    li_dif = [i for i in li1 + li2 if i not in li1 or i not in li2]
+    return li_dif
