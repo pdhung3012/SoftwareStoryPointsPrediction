@@ -92,8 +92,10 @@ for filename in list_dir:
     print(filename)
 
     index=index+1
+    '''
     if index==5:
         break
+    '''
     fpCsv=fopDataset+filename
     nameSystem=filename.replace('.csv','')
     listSystemNames.append(nameSystem)
