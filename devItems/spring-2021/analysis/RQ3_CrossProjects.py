@@ -29,24 +29,37 @@ fopOutputLabelAna='../../../../dataPapers/analysisSEE/'
 fopPerProject=fopOutputLabelAna+'perProjects/rq3_relations/'
 
 
-def extractOverlapAndMatchBetweenSystems(systemName1,systemName2,dictAll,numMax):
-    lstExcelSheetDataInter=['No,Label,InterWord,IndexSys1,IndexSys2,NumAppSys1,NumAppSys2']
+def extractOverlapAndMatchBetweenSystems(systemName1,systemName2,dictAll,numMax,listCompareSystem):
+    lstExcelSheetDataInter=['No,Label,InterWord,IndexSys1,IndexSys2,NumAppSys1,NumAppSys2,NumWordsIntersect,NumWordsDiff1,NumWordsDiff2,PercentageOverlap']
     lstExcelSheetDataSubtract = ['No,Label,DiffWord,IndexSys1,IndexSys2,NumAppSys1,NumAppSys2']
 
     dictLblSys1=dictAll[systemName1];
     dictLblSys2 = dictAll[systemName2];
+    nI=0
+    nD1=0
+    nD2=0
+    arrName1 = systemName1.split('_')
+    nameAb1 = arrName1[2]
+    nR1=arrName1[1]
+    arrName2 = systemName2.split('_')
+    nameAb2 = arrName2[2]
+    nR2 = arrName2[1]
+    isSame=(nR1==nR2)
     for intValue in sorted(dictLblSys1.keys()):
         if(intValue in dictLblSys2.keys()):
             dictWord1={}
             listAllWord1=dictLblSys1[intValue]
-            for i in range(0,min(len(listAllWord1),numMax)):
+
+            for i in range(0, len(listAllWord1)):
+            #for i in range(0,min(len(listAllWord1),numMax)):
                 keyIt=list(listAllWord1.keys())[i]
                 #print('key {}'.format(keyIt))
                 dictWord1[keyIt]=listAllWord1[keyIt]
 
             dictWord2 = {}
             listAllWord2 = dictLblSys2[intValue]
-            for i in range(0, min(len(listAllWord2), numMax)):
+            for i in range(0, len(listAllWord2)):
+            #for i in range(0, min(len(listAllWord2), numMax)):
                 keyIt = list(listAllWord2.keys())[i]
                 dictWord2[keyIt] = listAllWord2[keyIt]
 
@@ -56,8 +69,23 @@ def extractOverlapAndMatchBetweenSystems(systemName1,systemName2,dictAll,numMax)
             lstInter=intersection(lstKeyWord1,lstKeyWord2)
             listDistinct1=diff(lstKeyWord1,lstInter)
             listDistinct2 = diff(lstKeyWord2, lstInter)
+
+            lenDis=len(listDistinct1)+len(listDistinct2)
+            lenTotal=lenDis+len(lstInter)
+
+            nI = nI + len(lstInter)
+            nD1=nD1+len(listDistinct1)
+            nD2=nD2+len(listDistinct2)
+
+            avge=0.0
+            if lenTotal>0:
+                avge=(len(lstInter)*1.0)/lenTotal
+            strNumber='{},{},{},{},{},{},{},{}'.format(nameAb1,nameAb2,intValue,isSame,len(lstInter),len(listDistinct1),len(listDistinct2),avge)
+            listCsvStatistic.append(strNumber)
+
+
             for i in range(0,len(lstInter)):
-                strInter='{},{},{},{},{},{},{}'.format((i+1),intValue,lstInter[i],lstKeyWord1.index(lstInter[i]),lstKeyWord2.index(lstInter[i]),dictWord1[lstInter[i]],dictWord2[lstInter[i]])
+                strInter='{},{},{},{},{},{},{},{},{},{},{}'.format((i+1),intValue,lstInter[i],lstKeyWord1.index(lstInter[i]),lstKeyWord2.index(lstInter[i]),dictWord1[lstInter[i]],dictWord2[lstInter[i]],len(lstInter),len(listDistinct1),len(listDistinct2),avge)
                 #print(strInter)
                 lstExcelSheetDataInter.append(strInter)
 
@@ -73,7 +101,7 @@ def extractOverlapAndMatchBetweenSystems(systemName1,systemName2,dictAll,numMax)
 
     dfItemInter = pd.read_csv(io.StringIO('\n'.join(lstExcelSheetDataInter)), sep=",")
     dfItemSubtract = pd.read_csv(io.StringIO('\n'.join(lstExcelSheetDataSubtract)), sep=",")
-    return dfItemInter,dfItemSubtract
+    return dfItemInter,dfItemSubtract,isSame,nI,nD1,nD2
 
 
 createDirIfNotExist(fopOutputLabelAna)
@@ -154,12 +182,17 @@ for filename in list_dir:
 
 #listSystemNames=dictTextFrequenceAllProjects[nameSystem].keys()
 numMax=100
+
+fpTotalStat=fopPerProject+'all_statisticCompare.xlsx'
+writerTotal = pd.ExcelWriter(fpTotalStat, engine='xlsxwriter')
 for i in range(0,len(listSystemNames)):
     systemI = listSystemNames[i]
     arrNameI=systemI.split('_')
     nameAbI=arrNameI[2]
     fpExcelItem=fopPerProject+systemI+'.xlsx'
     print(fpExcelItem)
+    listTotalCsvStatistic = ['System1,System2,IsSameRepo,NumOfIntersect,NumOfDiff1,NumOfDiff2,PercentOverlap']
+    listCsvStatistic=['System1,System2,IsSameRepo,NumOfIntersect,NumOfDiff1,NumOfDiff2,PercentOverlap']
     writer = pd.ExcelWriter(fpExcelItem, engine='xlsxwriter')
     for j in range(0,len(listSystemNames)):
         if i==j:
@@ -168,14 +201,26 @@ for i in range(0,len(listSystemNames)):
         print('couple {} {}'.format(systemI, systemJ))
         arrNameJ = systemJ.split('_')
         nameAbJ=arrNameJ[2]
-        dfInter,dfSubtract=extractOverlapAndMatchBetweenSystems(systemI,systemJ,dictTextFrequenceAllProjects,numMax)
+        dfInter,dfSubtract,isSame,nI,nDiff1,nDiff2=extractOverlapAndMatchBetweenSystems(systemI,systemJ,dictTextFrequenceAllProjects,numMax,listCsvStatistic)
+        nScore=nI*1.0/(nI+nDiff1+nDiff2)
         nameInter=nameAbI+'_'+nameAbJ+'_inter'
         nameSub = nameAbI + '_' + nameAbJ + '_sub'
         dfInter.to_excel(writer, sheet_name=nameInter, index=False)
         dfSubtract.to_excel(writer, sheet_name=nameSub, index=False)
-    writer.save()
-    print('finish excel of {}'.format(systemI))
+        strTotalCsv='{},{},{},{},{},{},{}'.format(nameAbI,nameAbJ,isSame,nI,nDiff1,nDiff2,nScore)
+        listTotalCsvStatistic.append(strTotalCsv)
 
+    nameTotal = nameAbI + '_compare'
+    dfItemTotal = pd.read_csv(io.StringIO('\n'.join(listCsvStatistic)), sep=",")
+    dfItemTotal.to_excel(writer, sheet_name=nameTotal, index=False)
+    dfTotal = pd.read_csv(io.StringIO('\n'.join(listTotalCsvStatistic)), sep=",")
+    dfTotal.to_excel(writerTotal, sheet_name=nameAbI, index=False)
+
+
+    writer.save()
+
+    print('finish excel of {}'.format(systemI))
+writerTotal.save()
 
 
 
