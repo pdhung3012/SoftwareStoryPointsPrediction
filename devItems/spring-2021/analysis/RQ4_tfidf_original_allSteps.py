@@ -18,7 +18,7 @@ import sys
 sys.path.append('../')
 from UtilFunctions import createDirIfNotExist
 
-fopOutput='../../../dataPapers/analysisSEE/'
+fopOutput='../../../../dataPapers/analysisSEE/'
 fopOutputAllSystems=fopOutput+'/RQ4_TfidfML/'
 fopDataset='../../dataset_sorted/'
 
@@ -55,8 +55,7 @@ for i in range(0,len(list_files)):
     pca = PCA(n_components=100)
     X = pca.fit_transform(X)
 
-    csv = open(fpVectorItemReg, 'w')
-    csv.write(columnTitleRow)
+
     lenVectorOfWord = len(X[0])
     columnTitleRow = "no,story,"
     for j in range(0, lenVectorOfWord):
@@ -65,6 +64,8 @@ for i in range(0,len(list_files)):
         if j != lenVectorOfWord - 1:
             columnTitleRow = ''.join([columnTitleRow, ","])
     columnTitleRow = ''.join([columnTitleRow, "\n"])
+    csv = open(fpVectorItemReg, 'w')
+    csv.write(columnTitleRow)
     corpusVector = []
     for j in range(0, len(lstTexts)):
         vector = X[j]
@@ -92,6 +93,7 @@ for i in range(0,len(list_files)):
     predicted = regressor.predict(X_test)
     maeAccuracy = mean_absolute_error(y_test, predicted)
     strAcc='{}\t{}'.format(systemName,maeAccuracy)
+    lstMAE.append(strAcc)
     lstValMAE.append(maeAccuracy)
     print('Finish {}'.format(systemName))
 
