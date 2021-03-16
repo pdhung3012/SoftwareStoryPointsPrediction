@@ -104,7 +104,7 @@ for i in range(0,len(list_files)):
     strAcc = '{}'.format(maeAccuracy)
     lstMAE.append(strAcc)
     lstValMAE.append(maeAccuracy)
-    if maeAccuracy>priorI:
+    if maeAccuracy<priorI:
         countBeaten=countBeaten+1
     print('Finish {}'.format(systemName))
 
@@ -113,7 +113,7 @@ avgValue=mean(lstValMAE)
 #lstMAE.append('Average\t{}'.format(avgValue))
 lstMAE.append('{}\n{}'.format(avgValue,countBeaten))
 
-fpRegressionResult=fopOutput+'rq4_originResult_lsvr.txt'
+fpRegressionResult=fopOutputAllSystems+'result_lsvr.txt'
 fff=open(fpRegressionResult,'w')
 fff.write('\n'.join(lstMAE))
 fff.close()

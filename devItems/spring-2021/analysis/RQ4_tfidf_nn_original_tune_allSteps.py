@@ -117,7 +117,7 @@ for i in range(0,len(list_files)):
     strAcc = '{}'.format(maeAccuracy)
     lstMAE.append(strAcc)
     lstValMAE.append(maeAccuracy)
-    if maeAccuracy>priorI:
+    if maeAccuracy<priorI:
         countBeaten=countBeaten+1
     print('Finish {}'.format(systemName))
 
