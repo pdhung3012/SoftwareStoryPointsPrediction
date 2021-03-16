@@ -19,7 +19,7 @@ sys.path.append('../')
 from UtilFunctions import createDirIfNotExist
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_TfidfML/'
+fopOutputAllSystems=fopOutput+'/RQ4_TfidfML_nn/'
 fopDataset='../../dataset_sorted/'
 
 createDirIfNotExist(fopOutputAllSystems)
@@ -92,14 +92,16 @@ for i in range(0,len(list_files)):
     regressor.fit(X_train, y_train)
     predicted = regressor.predict(X_test)
     maeAccuracy = mean_absolute_error(y_test, predicted)
-    strAcc='{}\t{}'.format(systemName,maeAccuracy)
+    # strAcc='{}\t{}'.format(systemName,maeAccuracy)
+    strAcc = '{}'.format(maeAccuracy)
     lstMAE.append(strAcc)
     lstValMAE.append(maeAccuracy)
     print('Finish {}'.format(systemName))
 
 from statistics import mean
 avgValue=mean(lstValMAE)
-lstMAE.append('Average\t{}'.format(avgValue))
+#lstMAE.append('Average\t{}'.format(avgValue))
+lstMAE.append('{}'.format(avgValue))
 fpRegressionResult=fopOutput+'rq4_originResult.txt'
 fff=open(fpRegressionResult,'w')
 fff.write('\n'.join(lstMAE))
