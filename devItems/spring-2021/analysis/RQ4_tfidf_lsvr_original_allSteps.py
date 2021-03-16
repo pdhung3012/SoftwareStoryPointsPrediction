@@ -30,12 +30,20 @@ random_seed=100
 
 lstMAE=[]
 lstValMAE=[]
+lstPrior=[]
+fpPriorWork=fopOutput+'priorWork.txt'
+fff=open(fpPriorWork,'r')
+arrPriorResult=fff.read().split('\n')
+for item in arrPriorResult:
+    lstPrior.append(float(item))
+countBeaten=0
 
 for i in range(0,len(list_files)):
     fileName=list_files[i]
     systemName=fileName.replace('.csv','')
     fpSystemCsv=fopDataset+fileName
     dfSystem=pd.read_csv(fpSystemCsv)
+    priorI=lstPrior[i]
     fpVectorItemReg=fopOutputAllSystems+systemName+'_vector.csv'
     lstTexts=[]
     lstLabels=[]
@@ -96,12 +104,15 @@ for i in range(0,len(list_files)):
     strAcc = '{}'.format(maeAccuracy)
     lstMAE.append(strAcc)
     lstValMAE.append(maeAccuracy)
+    if maeAccuracy>priorI:
+        countBeaten=countBeaten+1
     print('Finish {}'.format(systemName))
 
 from statistics import mean
 avgValue=mean(lstValMAE)
 #lstMAE.append('Average\t{}'.format(avgValue))
-lstMAE.append('{}'.format(avgValue))
+lstMAE.append('{}\n{}'.format(avgValue,countBeaten))
+
 fpRegressionResult=fopOutput+'rq4_originResult_lsvr.txt'
 fff=open(fpRegressionResult,'w')
 fff.write('\n'.join(lstMAE))

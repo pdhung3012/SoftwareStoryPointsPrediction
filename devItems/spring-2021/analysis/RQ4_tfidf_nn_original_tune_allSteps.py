@@ -17,9 +17,12 @@ from sklearn.metrics import mean_squared_error,mean_absolute_error
 import sys
 sys.path.append('../')
 from UtilFunctions import createDirIfNotExist
+from sklearn.model_selection import GridSearchCV
+
+
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_TfidfML_nn/'
+fopOutputAllSystems=fopOutput+'/RQ4_TfidfML_nn_tune/'
 fopDataset='../../dataset_sorted/'
 
 createDirIfNotExist(fopOutputAllSystems)
@@ -36,15 +39,23 @@ fff=open(fpPriorWork,'r')
 arrPriorResult=fff.read().split('\n')
 for item in arrPriorResult:
     lstPrior.append(float(item))
-
 countBeaten=0
+
+parameter_space = {
+    'hidden_layer_sizes': [(50,50,50), (50,100,50), (100,)],
+    'activation': ['tanh', 'relu'],
+    'solver': ['sgd', 'adam'],
+    'alpha': [0.0001, 0.05],
+    'learning_rate': ['constant','adaptive'],
+}
+
 for i in range(0,len(list_files)):
     fileName=list_files[i]
     systemName=fileName.replace('.csv','')
     fpSystemCsv=fopDataset+fileName
     dfSystem=pd.read_csv(fpSystemCsv)
-    priorI=lstPrior[i]
     fpVectorItemReg=fopOutputAllSystems+systemName+'_vector.csv'
+    priorI = lstPrior[i]
     lstTexts=[]
     lstLabels=[]
     columnTitle=dfSystem['title']
@@ -97,8 +108,10 @@ for i in range(0,len(list_files)):
     X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
 
     regressor=MLPRegressor(alpha=1,hidden_layer_sizes=(5,5))
+    clf = GridSearchCV(regressor, parameter_space, n_jobs=-1, cv=3)
+    clf.fit(X_train, y_train)
     regressor.fit(X_train, y_train)
-    predicted = regressor.predict(X_test)
+    predicted = clf.predict(X_test)
     maeAccuracy = mean_absolute_error(y_test, predicted)
     # strAcc='{}\t{}'.format(systemName,maeAccuracy)
     strAcc = '{}'.format(maeAccuracy)
@@ -112,7 +125,7 @@ from statistics import mean
 avgValue=mean(lstValMAE)
 #lstMAE.append('Average\t{}'.format(avgValue))
 lstMAE.append('{}\n{}'.format(avgValue,countBeaten))
-fpRegressionResult=fopOutput+'result.txt'
+fpRegressionResult=fopOutputAllSystems+'rq4_originResult.txt'
 fff=open(fpRegressionResult,'w')
 fff.write('\n'.join(lstMAE))
 fff.close()
