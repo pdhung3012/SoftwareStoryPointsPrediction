@@ -112,7 +112,7 @@ from statistics import mean
 avgValue=mean(lstValMAE)
 #lstMAE.append('Average\t{}'.format(avgValue))
 lstMAE.append('{}\n{}'.format(avgValue,countBeaten))
-fpRegressionResult=fopOutput+'result.txt'
+fpRegressionResult=fopOutputAllSystems+'result_nn.txt'
 fff=open(fpRegressionResult,'w')
 fff.write('\n'.join(lstMAE))
 fff.close()

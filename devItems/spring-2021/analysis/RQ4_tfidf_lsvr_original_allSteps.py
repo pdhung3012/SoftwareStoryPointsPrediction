@@ -19,7 +19,7 @@ sys.path.append('../')
 from UtilFunctions import createDirIfNotExist
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_TfidfML_lvsr/'
+fopOutputAllSystems=fopOutput+'/RQ4_TfidfML_lsvr/'
 fopDataset='../../dataset_sorted/'
 
 createDirIfNotExist(fopOutputAllSystems)
