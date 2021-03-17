@@ -40,6 +40,21 @@ def preprocessText(strInput,stop_words,ps,lemmatizer):
     strOutput=strTemp
     return strOutput
 
+def preprocessTextV2(strInput,ps,lemmatizer):
+    words=word_tokenize(strInput)
+    lstStems=[]
+    for w in words:
+        lstStems.append(ps.stem(w))
+    strTemp=' '.join(lstStems)
+
+    words = word_tokenize(strTemp)
+    lstLems = []
+    for w in words:
+        lstLems.append(lemmatizer.lemmatize(w))
+    strTemp = ' '.join(lstLems)
+    strOutput=strTemp
+    return strOutput
+
 
 def initDefaultTextEnvi():
     nlp_model = spacy.load('en_core_web_sm')
