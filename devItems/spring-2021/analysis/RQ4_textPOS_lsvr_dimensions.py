@@ -74,6 +74,10 @@ for i in range(0,len(list_files)):
         strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
         # strContent = ' '.join([str(columnDescription[j])])
         strContent=preprocessTextV3(strContent,ps,lemmatizer)
+        intValue=int(columnSP[j])
+        if intValue>=40:
+            continue
+
         # print(strContent)
         lstTexts.append(strContent)
         lstLabels.append(columnSP[j])
