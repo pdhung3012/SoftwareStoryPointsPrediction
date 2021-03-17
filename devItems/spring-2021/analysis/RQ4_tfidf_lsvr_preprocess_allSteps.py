@@ -15,6 +15,7 @@ from sklearn.random_projection import GaussianRandomProjection
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 
+import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
@@ -24,36 +25,19 @@ from nltk.stem import WordNetLemmatizer
 
 import sys
 sys.path.append('../')
-from UtilFunctions import createDirIfNotExist
+from UtilFunctions import createDirIfNotExist,preprocessText
 
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_TfidfML_nn_preprocess/'
+fopOutputAllSystems=fopOutput+'/RQ4_lsvr_preprocess/'
 fopDataset='../../dataset_sorted/'
 
 createDirIfNotExist(fopOutputAllSystems)
 stop_words = set(stopwords.words('english'))
 ps = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
+nltk.download('wordnet')
 
-def preprocessText(strInput,stop_words,ps,lemmatizer):
-    word_tokens = word_tokenize(strInput)
-    filtered_sentence = [w for w in word_tokens if not w in stop_words]
-    strTemp=' '.join(filtered_sentence)
-
-    words=word_tokenize(strTemp)
-    lstStems=[]
-    for w in words:
-        lstStems.append(ps.stem(w))
-    strTemp=' '.join(lstStems)
-
-    words = word_tokenize(strTemp)
-    lstLems = []
-    for w in words:
-        lstLems.append(lemmatizer.lemmatize(w))
-    strTemp = ' '.join(lstLems)
-    strOutput=strTemp
-    return strOutput
 
 
 
@@ -68,7 +52,7 @@ lstValMAE=[]
 lstPrior=[]
 fpPriorWork=fopOutput+'priorWork.txt'
 fff=open(fpPriorWork,'r')
-arrPriorResult=fff.read().split('\n')
+arrPriorResult=fff.read().strip().split('\n')
 for item in arrPriorResult:
     lstPrior.append(float(item))
 
@@ -132,7 +116,7 @@ for i in range(0,len(list_files)):
 
     X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
 
-    regressor=MLPRegressor(alpha=1,hidden_layer_sizes=(5,5))
+    regressor=LinearSVR(C=1.0,random_state=random_seed)
     regressor.fit(X_train, y_train)
     predicted = regressor.predict(X_test)
     maeAccuracy = mean_absolute_error(y_test, predicted)
