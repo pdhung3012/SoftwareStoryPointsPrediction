@@ -25,7 +25,7 @@ from nltk.stem import WordNetLemmatizer
 
 import sys
 sys.path.append('../')
-from UtilFunctions import createDirIfNotExist,preprocessTextV4
+from UtilFunctions import createDirIfNotExist,preprocessTextV3
 
 
 fopOutput='../../../../dataPapers/analysisSEE/'
@@ -73,7 +73,7 @@ for i in range(0,len(list_files)):
     for j in range(0,len(columnTitle)):
         strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
         # strContent = ' '.join([str(columnDescription[j])])
-        strContent=preprocessTextV4(strContent,ps,lemmatizer)
+        strContent=preprocessTextV3(strContent,ps,lemmatizer)
         # print(strContent)
         lstTexts.append(strContent)
         lstLabels.append(columnSP[j])
