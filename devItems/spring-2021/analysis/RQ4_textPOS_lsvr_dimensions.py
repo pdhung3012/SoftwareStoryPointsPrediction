@@ -72,15 +72,17 @@ for i in range(0,len(list_files)):
 
     for j in range(0,len(columnTitle)):
         strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
+        # strContent = ' '.join([str(columnDescription[j])])
         strContent=preprocessTextV4(strContent,ps,lemmatizer)
+        # print(strContent)
         lstTexts.append(strContent)
         lstLabels.append(columnSP[j])
     vectorizer = TfidfVectorizer(ngram_range=(1, 2))
     X = vectorizer.fit_transform(lstTexts)
     X = X.toarray()
-
+    print('Numbers of n-grams: {}'.format(len(X[0])))
     # X = PCA().fit(X)
-    pca = PCA(n_components=1000)
+    pca = PCA(n_components=100)
     X = pca.fit_transform(X)
 
 
