@@ -116,20 +116,19 @@ for i in range(0,len(list_files)):
 
     dfVectors=pd.read_csv(fpVectorItemReg)
     all_label = dfVectors['story']
-    all_data = dfVectors.drop(['no', 'story'], axis=1)
+    all_data = dfVectors
+        #.drop(['no', 'story'], axis=1)
 
 
 
     X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
 
-    filter_X_train=[]
-    filter_y_train=[]
-    for j in range(0,len(X_train)):
-        if y_train<=40:
-            filter_X_train.append(X_train[j])
-            filter_y_train.append(y_train[j])
-    X_train=filter_X_train
-    y_train=filter_y_train
+    print('{}\t{}'.format(type(X_train),type(y_train)))
+    X_train=X_train[X_train['story']<=20]
+    y_train = X_train['story']
+    X_train=X_train.drop(['no', 'story'], axis=1)
+    X_test=X_test.drop(['no', 'story'], axis=1)
+
 
     regressor=LinearSVR(C=1.0,random_state=random_seed)
     regressor.fit(X_train, y_train)
