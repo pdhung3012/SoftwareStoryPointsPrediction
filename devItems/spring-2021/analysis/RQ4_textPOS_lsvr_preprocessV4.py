@@ -72,7 +72,7 @@ for i in range(0,len(list_files)):
 
     for j in range(0,len(columnTitle)):
         strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
-        strContent=preprocessTextV3(strContent,ps,lemmatizer)
+        strContent=preprocessTextV4(strContent,ps,lemmatizer)
         lstTexts.append(strContent)
         lstLabels.append(columnSP[j])
     vectorizer = TfidfVectorizer(ngram_range=(1, 2))
