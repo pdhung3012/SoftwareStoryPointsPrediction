@@ -25,11 +25,11 @@ from nltk.stem import WordNetLemmatizer
 
 import sys
 sys.path.append('../')
-from UtilFunctions import createDirIfNotExist,preprocessText
+from UtilFunctions import createDirIfNotExist,preprocessTextV2
 
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_lsvr_preprocess/'
+fopOutputAllSystems=fopOutput+'/RQ4_lsvr_preprocessS2/'
 fopDataset='../../dataset_sorted/'
 
 createDirIfNotExist(fopOutputAllSystems)
@@ -72,7 +72,7 @@ for i in range(0,len(list_files)):
 
     for j in range(0,len(columnTitle)):
         strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
-        strContent=preprocessText(strContent,stop_words,ps,lemmatizer)
+        strContent=preprocessTextV2(strContent,ps,lemmatizer)
         lstTexts.append(strContent)
         lstLabels.append(columnSP[j])
     vectorizer = TfidfVectorizer(ngram_range=(1, 2))
