@@ -122,6 +122,15 @@ for i in range(0,len(list_files)):
 
     X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
 
+    filter_X_train=[]
+    filter_y_train=[]
+    for j in range(0,len(X_train)):
+        if y_train<=40:
+            filter_X_train.append(X_train[j])
+            filter_y_train.append(y_train[j])
+    X_train=filter_X_train
+    y_train=filter_y_train
+
     regressor=LinearSVR(C=1.0,random_state=random_seed)
     regressor.fit(X_train, y_train)
     predicted = regressor.predict(X_test)
