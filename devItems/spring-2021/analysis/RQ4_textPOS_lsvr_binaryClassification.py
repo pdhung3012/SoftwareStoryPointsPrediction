@@ -37,6 +37,7 @@ from UtilFunctions import createDirIfNotExist,preprocessTextV3
 fopOutput='../../../../dataPapers/analysisSEE/'
 fopOutputAllSystems=fopOutput+'/RQ4_pp4_binaryClass/'
 fopDataset='../../dataset_sorted/'
+fpResultDetails=fopOutputAllSystems+'result_details.txt'
 
 createDirIfNotExist(fopOutputAllSystems)
 stop_words = set(stopwords.words('english'))
@@ -61,7 +62,7 @@ fff=open(fpPriorWork,'r')
 arrPriorResult=fff.read().strip().split('\n')
 for item in arrPriorResult:
     lstPrior.append(float(item))
-
+lstResultDetails=[]
 countBeaten=0
 for i in range(0,len(list_files)):
     fileName=list_files[i]
@@ -156,6 +157,13 @@ for i in range(0,len(list_files)):
     lstValMAE.append(accuracyScore)
     if accuracyScore<priorI:
         countBeaten=countBeaten+1
+    o2 = open(fpResultDetails, 'a')
+    o2.write('{}\n total accuracy ' + str(systemName) + '\n')
+
+    o2.write('Confusion matrix:\n')
+    o2.write(str(confusion_matrix(y_test, predicted)) + '\n')
+    o2.write(str(classification_report(y_test, predicted)) + '\n')
+    o2.close()
     print('Finish {}'.format(systemName))
 
 from statistics import mean
