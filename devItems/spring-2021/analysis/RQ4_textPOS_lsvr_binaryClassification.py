@@ -64,6 +64,9 @@ for item in arrPriorResult:
     lstPrior.append(float(item))
 lstResultDetails=[]
 countBeaten=0
+o2 = open(fpResultDetails, 'w')
+o2.write('')
+o2.close()
 for i in range(0,len(list_files)):
     fileName=list_files[i]
     systemName=fileName.replace('.csv','')
