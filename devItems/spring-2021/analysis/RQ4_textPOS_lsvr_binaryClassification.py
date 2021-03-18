@@ -64,6 +64,9 @@ for item in arrPriorResult:
     lstPrior.append(float(item))
 lstResultDetails=[]
 countBeaten=0
+o2 = open(fpResultDetails, 'w')
+o2.write('')
+o2.close()
 for i in range(0,len(list_files)):
     fileName=list_files[i]
     systemName=fileName.replace('.csv','')
@@ -81,9 +84,13 @@ for i in range(0,len(list_files)):
     # minValue=columnSP.min()
     maxValue=columnSP.max()
     halfValue=maxValue //2
-    dfSystem['storypoint'].loc[(dfSystem['storypoint'] >= halfValue)] = 1
-    dfSystem['storypoint'].loc[(dfSystem['storypoint'] < halfValue)] = 0
+    print('old lbl {}/{} '.format(halfValue,maxValue))
+    dfSystem.loc[dfSystem['storypoint'] < halfValue, 'storypoint'] = 0
+    dfSystem.loc[dfSystem['storypoint'] >= halfValue, 'storypoint'] = 1
+
     columnSP = dfSystem['storypoint']
+    #print(columnSP.idxmax(1))
+
 
     for j in range(0,len(columnTitle)):
         strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
@@ -97,7 +104,7 @@ for i in range(0,len(list_files)):
         lstTexts.append(strContent)
         lstLabels.append(columnSP[j])
 
-
+    #print(lstLabels)
     vectorizer = TfidfVectorizer(ngram_range=(1, 2))
     X = vectorizer.fit_transform(lstTexts)
     X = X.toarray()
