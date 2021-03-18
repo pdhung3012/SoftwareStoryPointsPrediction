@@ -112,7 +112,10 @@ def preprocessTextV4(strInput,ps,lemmatizer):
 
 def filterGapLabels(y_expected,y_predicted,percentRemove):
     lstGaps=[]
-    for index in range(0,len(y_expected)):
+    y_expected=y_expected.tolist()
+    y_predicted=y_predicted.tolist()
+    for index in range(1,len(y_expected)):
+        # print('item {}'.format(y_expected[index]))
         minus=abs(y_expected[index]-y_predicted[index])
         newTuple=(index,minus)
         lstGaps.append(newTuple)
@@ -123,11 +126,12 @@ def filterGapLabels(y_expected,y_predicted,percentRemove):
 
     lstMaintained=[]
     for index in range(0,len(lstGaps)):
-        lstMaintained.append(lstGaps[0])
+        # print(lstGaps[index][0])
+        lstMaintained.append(lstGaps[index][0])
 
     newy_expected=[]
     newy_predicted=[]
-    for index in range(0,len(y_predicted)):
+    for index in range(1,len(y_predicted)):
         if index in lstMaintained:
             newy_predicted.append(y_predicted[index])
             newy_expected.append(y_expected[index])
