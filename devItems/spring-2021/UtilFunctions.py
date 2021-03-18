@@ -10,6 +10,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
 
+from operator import itemgetter
 
 from numpy import unique
 
@@ -107,6 +108,38 @@ def preprocessTextV4(strInput,ps,lemmatizer):
     strTemp=' '.join([' '.join(lstStr1),' '.join(lstStr2)])
     strOutput=strTemp
     return strOutput
+
+
+def filterGapLabels(y_expected,y_predicted,percentRemove):
+    lstGaps=[]
+    for index in range(0,len(y_expected)):
+        minus=abs(y_expected[index]-y_predicted[index])
+        newTuple=(index,minus)
+        lstGaps.append(newTuple)
+    sorted(lstGaps, key=itemgetter(1),reverse=True)
+    numberRemove=int(percentRemove*len(lstGaps))
+    for index in range(0,numberRemove):
+        lstGaps.pop(0)
+
+    lstMaintained=[]
+    for index in range(0,len(lstGaps)):
+        lstMaintained.append(lstGaps[0])
+
+    newy_expected=[]
+    newy_predicted=[]
+    for index in range(0,len(y_predicted)):
+        if index in lstMaintained:
+            newy_predicted.append(y_predicted[index])
+            newy_expected.append(y_expected[index])
+    return newy_expected,newy_predicted
+
+
+
+
+
+
+
+
 
 
 def initDefaultTextEnvi():
