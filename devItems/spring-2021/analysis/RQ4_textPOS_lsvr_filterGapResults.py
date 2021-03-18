@@ -45,7 +45,7 @@ nltk.download('wordnet')
 list_files = os.listdir(fopDataset)   # Convert to lower case
 list_files =sorted(list_files)
 random_seed=100
-percentRemove=0.2
+percentRemove=0.5
 lstMAE=[]
 lstValMAE=[]
 lstPrior=[]
