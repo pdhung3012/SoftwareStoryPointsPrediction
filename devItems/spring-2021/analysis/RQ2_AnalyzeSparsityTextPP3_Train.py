@@ -3,7 +3,6 @@ import pandas as pd
 from nltk.tokenize import word_tokenize
 import os
 import numpy as np
-import gensim
 from sklearn.decomposition import PCA
 from sklearn.random_projection import GaussianRandomProjection
 import spacy
