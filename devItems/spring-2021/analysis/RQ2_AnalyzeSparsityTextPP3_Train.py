@@ -34,7 +34,7 @@ from nltk.stem import WordNetLemmatizer
 fopDataset='../../dataset/'
 fopOutputLabelAna='../../../../dataPapers/analysisSEE/'
 fopPerProject=fopOutputLabelAna+'perProjects/'
-fpRQ2PerProject= fopPerProject + 'rq2_pp3_textCount_train.xlsx'
+fpRQ2PerProject= fopPerProject + 'rq2_pp3_textCount_train.xls'
 
 stop_words = set(stopwords.words('english'))
 ps = PorterStemmer()

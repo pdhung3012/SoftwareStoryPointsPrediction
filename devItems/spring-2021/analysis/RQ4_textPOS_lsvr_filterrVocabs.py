@@ -52,21 +52,24 @@ lstValMAE=[]
 lstPrior=[]
 fpPriorWork=fopOutput+'priorWork.txt'
 fopPerProject=fopOutput+'/perProjects/'
-fpRQ2PerProject= fopPerProject + 'rq2_pp3_textCount_train.xlsx'
+fpRQ2PerProject= fopPerProject + 'rq2_pp3_textCount_train.xls'
 
 dfWords = pd.read_excel(fpRQ2PerProject, sheet_name='total')
 lstFilterWords=[]
-columnCount=dfWords['count']
+columnCount=dfWords['Count']
 columnUniqueWords=dfWords['Text']
 threshold=30
 for index in range(0,len(columnUniqueWords)):
     itemCount=columnCount[index]
-    itemWord=columnUniqueWords[index]
+    itemWord=str(columnUniqueWords[index])
+    '''
     arrWs=itemWord.split('---')
     if(len(arrWs)<2):
         continue
-    wordInside=arrWs[1].strip()
-    lstFilterWords.append(wordInside)
+    '''
+    if itemCount<=1:
+        continue
+    lstFilterWords.append(itemWord)
 
 setFilterWords=set(lstFilterWords)
 
@@ -94,7 +97,7 @@ for i in range(0,len(list_files)):
     for j in range(0,len(columnTitle)):
         strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
         # strContent = ' '.join([str(columnDescription[j])])
-        strContent=preprocessTextV3(strContent,ps,lemmatizer)
+        strContent=preprocessTextV3_FilerWord(strContent,setFilterWords,ps,lemmatizer)
         # intValue=int(columnSP[j])
         # if intValue>=40:
         #     continue
