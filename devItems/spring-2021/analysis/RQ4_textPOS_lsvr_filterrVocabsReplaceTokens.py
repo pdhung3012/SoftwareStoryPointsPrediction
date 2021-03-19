@@ -67,9 +67,8 @@ for index in range(0,len(columnUniqueWords)):
     if(len(arrWs)<2):
         continue
     '''
-    if itemCount<=1:
-        continue
-    lstFilterWords.append(itemWord)
+    if itemCount<=5:
+        lstFilterWords.append(itemWord)
 
 setFilterWords=set(lstFilterWords)
 
