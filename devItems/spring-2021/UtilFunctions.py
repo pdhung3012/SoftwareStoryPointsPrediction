@@ -82,6 +82,34 @@ def preprocessTextV3(strInput,ps,lemmatizer):
     strOutput=strTemp
     return strOutput
 
+def preprocessTextV3_FilerWord(strInput,setSparsityWords,ps,lemmatizer):
+    words=word_tokenize(strInput)
+    lstStems=[]
+    for w in words:
+        lstStems.append(ps.stem(w))
+    strTemp=' '.join(lstStems)
+
+    words = word_tokenize(strTemp)
+    lstLems = []
+    for w in words:
+        lstLems.append(lemmatizer.lemmatize(w))
+    strTemp = ' '.join(lstLems)
+
+    wordsList = nltk.word_tokenize(strTemp)
+    tagged = nltk.pos_tag(wordsList)
+    # print('tagged {}'.format(type(tagged[0][0])))
+    lstContentI = []
+    for it in tagged:
+        if(it[0] in setSparsityWords):
+            continue
+        strIt = '{} {}'.format(it[0], it[1])
+        lstContentI.append(strIt)
+    strTemp=' '.join(lstContentI)
+
+    strOutput=strTemp
+    return strOutput
+
+
 def preprocessTextV4(strInput,ps,lemmatizer):
     words=word_tokenize(strInput)
     lstStems=[]
