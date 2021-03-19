@@ -29,7 +29,7 @@ from UtilFunctions import createDirIfNotExist,preprocessTextV3_FilerWord
 
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_lsvr_dimension1000/'
+fopOutputAllSystems=fopOutput+'/RQ4_lsvr_filterVocab/'
 fopDataset='../../dataset_sorted/'
 
 createDirIfNotExist(fopOutputAllSystems)
@@ -67,12 +67,11 @@ for index in range(0,len(columnUniqueWords)):
     if(len(arrWs)<2):
         continue
     '''
-    if itemCount<=1:
-        continue
-    lstFilterWords.append(itemWord)
+    if itemCount<=5:
+        lstFilterWords.append(itemWord)
 
 setFilterWords=set(lstFilterWords)
-
+print(setFilterWords)
 
 
 fff=open(fpPriorWork,'r')
@@ -105,7 +104,7 @@ for i in range(0,len(list_files)):
         # print(strContent)
         lstTexts.append(strContent)
         lstLabels.append(columnSP[j])
-    vectorizer = TfidfVectorizer(ngram_range=(1, 2))
+    vectorizer = TfidfVectorizer(ngram_range=(1,1))
     X = vectorizer.fit_transform(lstTexts)
     X = X.toarray()
     print('Numbers of n-grams: {}'.format(len(X[0])))
