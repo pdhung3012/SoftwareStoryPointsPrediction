@@ -71,7 +71,7 @@ for i in range(0,len(list_files)):
     priorI=lstPrior[i]
     fpVectorItemReg=fopOutputAllSystems+systemName+'_vector.csv'
 
-    projectName=systemName.split('_')[1].lower()
+    projectName=systemName.split('_')[3].lower()
     dfWords = pd.read_excel(fpRQ2PerProject, sheet_name=projectName)
     lstFilterWords = []
     columnCount = dfWords['Count']
