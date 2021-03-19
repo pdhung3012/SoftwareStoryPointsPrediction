@@ -25,7 +25,7 @@ from nltk.stem import WordNetLemmatizer
 
 import sys
 sys.path.append('../')
-from UtilFunctions import createDirIfNotExist,preprocessTextV3_FilerWord
+from UtilFunctions import createDirIfNotExist,preprocessTextV3_FilerWordAndReplace
 
 
 fopOutput='../../../../dataPapers/analysisSEE/'
@@ -99,7 +99,7 @@ for i in range(0,len(list_files)):
     for j in range(0,len(columnTitle)):
         strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
         # strContent = ' '.join([str(columnDescription[j])])
-        strContent=preprocessTextV3_FilerWord(strContent,setFilterWords,ps,lemmatizer)
+        strContent=preprocessTextV3_FilerWordAndReplace(strContent,setFilterWords,ps,lemmatizer)
         # intValue=int(columnSP[j])
         # if intValue>=40:
         #     continue
@@ -107,7 +107,7 @@ for i in range(0,len(list_files)):
         # print(strContent)
         lstTexts.append(strContent)
         lstLabels.append(columnSP[j])
-    vectorizer = TfidfVectorizer(ngram_range=(1, 2))
+    vectorizer = TfidfVectorizer(ngram_range=(1,1))
     X = vectorizer.fit_transform(lstTexts)
     X = X.toarray()
     print('Numbers of n-grams: {}'.format(len(X[0])))
@@ -149,7 +149,7 @@ for i in range(0,len(list_files)):
 
     X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
 
-    print('{}\t{}'.format(type(X_train),type(y_train)))
+   # print('{}\t{}'.format(type(X_train),type(y_train)))
     X_train=X_train[X_train['story']<=20]
     y_train = X_train['story']
     X_train=X_train.drop(['no', 'story'], axis=1)
