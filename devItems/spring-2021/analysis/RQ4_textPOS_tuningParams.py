@@ -184,7 +184,7 @@ for cIndex in range(0,len(param_grid['C'])):
                #  X_test=X_test.drop(['no', 'story'], axis=1)
 
 
-                regressor=LinearSVR(C=valCItem,loss=valMItem,max_iter=valMItem)
+                regressor=LinearSVR(C=valCItem,loss=valLItem,max_iter=valMItem)
                 regressor.fit(X_train, y_train)
                 predicted = regressor.predict(X_test)
                 maeAccuracy = mean_absolute_error(y_test, predicted)
