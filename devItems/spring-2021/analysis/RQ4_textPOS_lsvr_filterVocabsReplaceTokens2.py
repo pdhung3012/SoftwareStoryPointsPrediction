@@ -132,8 +132,8 @@ for i in range(0,len(list_files)):
         corpusVector.append(vector)
         strReg = str(lstLabels[j])
         strRow2 = ''.join([str(j + 1), ',', '' + strReg, ])
-        for j in range(0, lenVectorOfWord):
-            strRow2 = ''.join([strRow2, ',', str(vector[j])])
+        for k in range(0, lenVectorOfWord):
+            strRow2 = ''.join([strRow2, ',', str(vector[k])])
 
         strRow2 = ''.join([strRow2, '\n'])
         #   csv.write(strRow)

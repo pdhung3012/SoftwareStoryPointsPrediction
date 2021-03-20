@@ -235,3 +235,11 @@ def intersection(lst1, lst2):
 def diff(li1, li2):
     li_dif = [i for i in li1 + li2 if i not in li1 or i not in li2]
     return li_dif
+
+
+def sortTuple(tup,isReverse):
+    # reverse = None (Sorts in Ascending order)
+    # key is set to sort using second element of
+    # sublist lambda has been used
+    tup.sort(key=lambda x: x[1],reverse=isReverse)
+    return tup
