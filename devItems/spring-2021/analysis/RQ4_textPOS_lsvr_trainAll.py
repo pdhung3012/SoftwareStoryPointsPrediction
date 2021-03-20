@@ -139,7 +139,7 @@ for i in range(0,len(list_files)):
     print('Finish {}'.format(systemName))
 
 
-lenOfTrainingList=len(lstTrainPrTxt)
+lenOfTrainingList=len(lstTrainText)
 print('len of new training {}'.format(lenOfTrainingList))
 
 for i in range(0, len(list_files)):
@@ -152,6 +152,8 @@ for i in range(0, len(list_files)):
 
     lstTrainAllText= lstTrainText+ itemTuple[0]
     lstTrainAllLabel = lstTrainLabel + itemTuple[1]
+    print('len total {} {}'.format(len(lstTrainAllText),len(itemTuple[0])))
+
 
 
     vectorizer = TfidfVectorizer(ngram_range=(1,1))
@@ -174,13 +176,13 @@ for i in range(0, len(list_files)):
     csv = open(fpVectorItemReg, 'w')
     csv.write(columnTitleRow)
     corpusVector = []
-    for j in range(0, len(lstTexts)):
+    for j in range(0, len(lstTrainAllText)):
         vector = X[j]
         corpusVector.append(vector)
-        strReg = str(lstLabels[j])
+        strReg = str(lstTrainAllLabel[j])
         strRow2 = ''.join([str(j + 1), ',', '' + strReg, ])
-        for j in range(0, lenVectorOfWord):
-            strRow2 = ''.join([strRow2, ',', str(vector[j])])
+        for k in range(0, lenVectorOfWord):
+            strRow2 = ''.join([strRow2, ',', str(vector[k])])
 
         strRow2 = ''.join([strRow2, '\n'])
         #   csv.write(strRow)
@@ -189,23 +191,24 @@ for i in range(0, len(list_files)):
 
     dfVectors=pd.read_csv(fpVectorItemReg)
     all_label = dfVectors['story']
-    all_data = dfVectors
-        #.drop(['no', 'story'], axis=1)
+    all_data = dfVectors.drop(['no', 'story'], axis=1)
 
-    X_train= dfVectors[:(lenOfTrainingList-1)]
+    X_train= all_data[:(lenOfTrainingList-1)]
     y_train=all_label[:(lenOfTrainingList-1)]
     X_test=all_data[(lenOfTrainingList-1):]
     y_test=all_label[(lenOfTrainingList-1):]
+    print('len test {}'.format(len(y_test)))
 
 
     # X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
 
    # print('{}\t{}'.format(type(X_train),type(y_train)))
+    '''
     X_train=X_train[X_train['story']<=20]
     y_train = X_train['story']
     X_train=X_train.drop(['no', 'story'], axis=1)
     X_test=X_test.drop(['no', 'story'], axis=1)
-
+    '''
 
     regressor=LinearSVR(C=1.0,random_state=random_seed)
     regressor.fit(X_train, y_train)
@@ -217,7 +220,7 @@ for i in range(0, len(list_files)):
     lstValMAE.append(maeAccuracy)
     if maeAccuracy<priorI:
         countBeaten=countBeaten+1
-    print('Finish {}'.format(systemName))
+    print('Finish {} {} {}'.format(systemName,len(y_train),len(y_test)))
     '''
     if i==1:
         break
