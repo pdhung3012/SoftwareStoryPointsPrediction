@@ -31,6 +31,7 @@ from UtilFunctions import createDirIfNotExist,preprocessTextV3_FilerWordAndRepla
 fopOutput='../../../../dataPapers/analysisSEE/'
 fopOutputAllSystems=fopOutput+'/RQ4_pp3_trainAll/'
 fopDataset='../../dataset_sorted/'
+isUseBackup=True
 
 createDirIfNotExist(fopOutputAllSystems)
 stop_words = set(stopwords.words('english'))
@@ -70,45 +71,64 @@ countBeaten=0
 for i in range(0,len(list_files)):
     fileName=list_files[i]
     systemName=fileName.replace('.csv','')
+    fpItemText = fopOutputAllSystems + systemName + '_text.txt'
+    fpItemLabel = fopOutputAllSystems + systemName + '_label.txt'
     fpSystemCsv=fopDataset+fileName
     dfSystem=pd.read_csv(fpSystemCsv)
-    priorI=lstPrior[i]
 
-    projectName=systemName.split('_')[3].lower()
-    dfWords = pd.read_excel(fpRQ2PerProject, sheet_name=projectName)
-    lstFilterWords = []
-    columnCount = dfWords['Count']
-    columnUniqueWords = dfWords['Text']
-    threshold = 30
-    for index in range(0, len(columnUniqueWords)):
-        itemCount = columnCount[index]
-        itemWord = str(columnUniqueWords[index])
-        '''
-        arrWs=itemWord.split('---')
-        if(len(arrWs)<2):
-            continue
-        '''
-        if itemCount <= 1:
-            lstFilterWords.append(itemWord)
+    lstTexts = []
+    lstLabels = []
+    if(isUseBackup and os.path.exists(fpItemText)):
+        fff=open(fpItemText,'r')
+        lstTexts=fff.read().strip().split('\n')
+        fff.close()
+        fff = open(fpItemLabel, 'r')
+        arrLbls = fff.read().strip().split('\n')
+        for item in arrLbls:
+            lstLabels.append(int(item))
+        fff.close()
+    else:
+        projectName=systemName.split('_')[3].lower()
+        dfWords = pd.read_excel(fpRQ2PerProject, sheet_name=projectName)
+        lstFilterWords = []
+        columnCount = dfWords['Count']
+        columnUniqueWords = dfWords['Text']
+        threshold = 30
+        for index in range(0, len(columnUniqueWords)):
+            itemCount = columnCount[index]
+            itemWord = str(columnUniqueWords[index])
+            '''
+            arrWs=itemWord.split('---')
+            if(len(arrWs)<2):
+                continue
+            '''
+            if itemCount <= 1:
+                lstFilterWords.append(itemWord)
 
-    setFilterWords = set(lstFilterWords)
+        setFilterWords = set(lstFilterWords)
 
-    lstTexts=[]
-    lstLabels=[]
-    columnTitle=dfSystem['title']
-    columnDescription=dfSystem['description']
-    columnSP=dfSystem['storypoint']
 
-    for j in range(0,len(columnTitle)):
-        strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
-        # strContent = ' '.join([str(columnDescription[j])])
-        strContent=preprocessTextV3_FilerWordAndReplace(strContent,setFilterWords,ps,lemmatizer)
-        # intValue=int(columnSP[j])
-        # if intValue>=40:
-        #     continue
-        # print(strContent)
-        lstTexts.append(strContent)
-        lstLabels.append(columnSP[j])
+        columnTitle=dfSystem['title']
+        columnDescription=dfSystem['description']
+        columnSP=dfSystem['storypoint']
+
+        for j in range(0,len(columnTitle)):
+            strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
+            # strContent = ' '.join([str(columnDescription[j])])
+            strContent=preprocessTextV3_FilerWordAndReplace(strContent,setFilterWords,ps,lemmatizer)
+            # intValue=int(columnSP[j])
+            # if intValue>=40:
+            #     continue
+            # print(strContent)
+            lstTexts.append(strContent)
+            lstLabels.append(columnSP[j])
+        fff = open(fpItemText, 'w')
+        fff.write('\n'.join(lstTexts))
+        fff.close()
+        fff = open(fpItemLabel, 'w')
+        fff.write('\n'.join(map(str,lstLabels)))
+        fff.close()
+
 
     lstTrainPrTxt, lstTestPrTxt, lstTrainPrLbl, lstTestPrLbl = train_test_split(lstTexts, lstLabels, test_size=0.2, shuffle=False)
     newTutpleItem=(lstTestPrTxt,lstTestPrLbl)
@@ -125,6 +145,7 @@ print('len of new training {}'.format(lenOfTrainingList))
 for i in range(0, len(list_files)):
     fileName = list_files[i]
     systemName = fileName.replace('.csv', '')
+    priorI = lstPrior[i]
     fpVectorItemReg = fopOutputAllSystems + systemName + '_vector.csv'
 
     itemTuple=dictTestPr[systemName]
@@ -171,10 +192,10 @@ for i in range(0, len(list_files)):
     all_data = dfVectors
         #.drop(['no', 'story'], axis=1)
 
-    X_train= dfVectors[:lenOfTrainingList-1]
-    y_train=all_label[:lenOfTrainingList-1]
-    X_test=all_data[lenOfTrainingList-1:]
-    y_test=all_label[lenOfTrainingList-1:]
+    X_train= dfVectors[:(lenOfTrainingList-1)]
+    y_train=all_label[:(lenOfTrainingList-1)]
+    X_test=all_data[(lenOfTrainingList-1):]
+    y_test=all_label[(lenOfTrainingList-1):]
 
 
     # X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
