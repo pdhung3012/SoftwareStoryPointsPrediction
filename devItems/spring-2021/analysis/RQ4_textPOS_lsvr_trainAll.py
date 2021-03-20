@@ -36,7 +36,7 @@ createDirIfNotExist(fopOutputAllSystems)
 stop_words = set(stopwords.words('english'))
 ps = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
-nltk.download('wordnet')
+#nltk.download('wordnet')
 
 
 
@@ -73,7 +73,6 @@ for i in range(0,len(list_files)):
     fpSystemCsv=fopDataset+fileName
     dfSystem=pd.read_csv(fpSystemCsv)
     priorI=lstPrior[i]
-    fpVectorItemReg=fopOutputAllSystems+systemName+'_vector.csv'
 
     projectName=systemName.split('_')[3].lower()
     dfWords = pd.read_excel(fpRQ2PerProject, sheet_name=projectName)
@@ -117,13 +116,19 @@ for i in range(0,len(list_files)):
     for j in range(0,len(lstTrainPrTxt)):
         lstTrainText.append(lstTrainPrTxt[j])
         lstTrainLabel.append(lstTrainPrLbl[j])
+    print('Finish {}'.format(systemName))
+    if i==1:
+        break
 
 
 lenOfTrainingList=len(lstTrainPrTxt)
+print('len of new training {}'.format(lenOfTrainingList))
 
 for i in range(0, len(list_files)):
     fileName = list_files[i]
     systemName = fileName.replace('.csv', '')
+    fpVectorItemReg = fopOutputAllSystems + systemName + '_vector.csv'
+
     itemTuple=dictTestPr[systemName]
 
     lstTrainAllText= lstTrainText+ itemTuple[0]
@@ -194,6 +199,12 @@ for i in range(0, len(list_files)):
     if maeAccuracy<priorI:
         countBeaten=countBeaten+1
     print('Finish {}'.format(systemName))
+    if i == 1:
+        break
+    '''
+    if i==1:
+        break
+    '''
 
 from statistics import mean
 avgValue=mean(lstValMAE)
