@@ -193,10 +193,10 @@ for i in range(0, len(list_files)):
     all_label = dfVectors['story']
     all_data = dfVectors.drop(['no', 'story'], axis=1)
 
-    X_train= all_data[:(lenOfTrainingList-1)]
-    y_train=all_label[:(lenOfTrainingList-1)]
-    X_test=all_data[(lenOfTrainingList-1):]
-    y_test=all_label[(lenOfTrainingList-1):]
+    X_train= all_data[:(lenOfTrainingList)]
+    y_train=all_label[:(lenOfTrainingList)]
+    X_test=all_data[(lenOfTrainingList):]
+    y_test=all_label[(lenOfTrainingList):]
     print('len test {}'.format(len(y_test)))
 
 
