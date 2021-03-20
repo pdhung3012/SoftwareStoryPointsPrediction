@@ -117,8 +117,6 @@ for i in range(0,len(list_files)):
         lstTrainText.append(lstTrainPrTxt[j])
         lstTrainLabel.append(lstTrainPrLbl[j])
     print('Finish {}'.format(systemName))
-    if i==1:
-        break
 
 
 lenOfTrainingList=len(lstTrainPrTxt)
@@ -199,8 +197,6 @@ for i in range(0, len(list_files)):
     if maeAccuracy<priorI:
         countBeaten=countBeaten+1
     print('Finish {}'.format(systemName))
-    if i == 1:
-        break
     '''
     if i==1:
         break
