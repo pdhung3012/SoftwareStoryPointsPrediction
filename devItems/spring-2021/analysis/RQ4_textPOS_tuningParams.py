@@ -87,6 +87,8 @@ for cIndex in range(0,len(param_grid['C'])):
                 fpItemLabel = fopOutputAllSystems + systemName + '_label.txt'
                 fpVectorItemReg=fopOutputAllSystems+systemName+'_vector.csv'
 
+                lstTexts = []
+                lstLabels = []
                 if (isUseBackup and os.path.exists(fpItemText)):
                     fff = open(fpItemText, 'r')
                     lstTexts = fff.read().strip().split('\n')
@@ -215,10 +217,10 @@ for cIndex in range(0,len(param_grid['C'])):
             fff.write('\n'.join(lstMAE))
             fff.close()
 
-sortTuple(lstAvgTuneMAE,True)
+sortTuple(lstAvgTuneMAE,False)
 fpTotalResult=fopOutputAllSystems+'result.txt'
 lstTupleOut=[]
-for item in range(0,len(lstAvgTuneMAE)):
+for item in lstAvgTuneMAE:
     strItem='{}\t{}'.format(item[0],item[1])
     lstTupleOut.append(strItem)
 fff=open(fpTotalResult,'w')
