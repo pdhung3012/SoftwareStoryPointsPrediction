@@ -63,7 +63,7 @@ for item in arrPriorResult:
     lstPrior.append(float(item))
 
 param_grid = {
-    'hidden_layer_sizes': [(50,50), (100,50)],
+    'hidden_layer_sizes': [(50,50,50), (50,100,50), (100,)],
     'activation': ['tanh', 'relu'],
     'solver': ['sgd', 'adam'],
     'alpha': [0.0001, 0.05],
@@ -202,7 +202,7 @@ for hlsIndex in range(0, len(param_grid['hidden_layer_sizes'])):
                         X_test=X_test.drop(['no', 'story'], axis=1)
 
 
-                        regressor=MLPRegressor(hidden_layer_sizes =valHlsItem,activation=valAItem,solver=valSItem,alpha=valAlpItem,learning_rate=valLrItem)
+                        regressor=MLPRegressor(hidden_layer_sizes =valHlsItem,activation=valAItem,solver=valSItem,alpha=valAlpItem,learning_rate=valLrItem,max_iter=100000,batch_size=64,learning_rate_init=0.005)
                         regressor.fit(X_train, y_train)
                         predicted = regressor.predict(X_test)
                         maeAccuracy = mean_absolute_error(y_test, predicted)
