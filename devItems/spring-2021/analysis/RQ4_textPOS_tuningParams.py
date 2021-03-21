@@ -133,6 +133,12 @@ for cIndex in range(0,len(param_grid['C'])):
                         # print(strContent)
                         lstTexts.append(strContent)
                         lstLabels.append(columnSP[j])
+                    fff = open(fpItemText, 'w')
+                    fff.write('\n'.join(lstTexts))
+                    fff.close()
+                    fff = open(fpItemLabel, 'w')
+                    fff.write('\n'.join(map(str, lstLabels)))
+                    fff.close()
 
                 if not os.path.exists(fpVectorItemReg):
                     vectorizer = TfidfVectorizer(ngram_range=(1,1))
@@ -198,7 +204,7 @@ for cIndex in range(0,len(param_grid['C'])):
 
             from statistics import mean
             avgValue=mean(lstValMAE)
-            fnTuneName='-'.join([valCItem,valMItem,valLItem])
+            fnTuneName='-'.join([str(valCItem),str(valMItem),str(valLItem)])
             newTuple=(fnTuneName,avgValue)
             lstAvgTuneMAE.append(newTuple)
 
