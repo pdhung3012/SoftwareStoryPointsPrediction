@@ -28,8 +28,8 @@ sys.path.append('../')
 from UtilFunctions import *
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_tuning/'
-fopResultTuning=fopOutputAllSystems+'/result_tuning_filter/'
+fopOutputAllSystems=fopOutput+'/RQ4_tuning_filter/'
+fopResultTuning=fopOutputAllSystems+'/result_tuning/'
 fopDataset='../../dataset_sorted/'
 isUseBackup=True
 
