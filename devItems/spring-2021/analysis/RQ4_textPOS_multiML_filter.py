@@ -208,6 +208,7 @@ for i in range(0,len(list_files)):
     strAcc = '{}'.format(minMaeAccuracy)
     lstMAE.append(strAcc)
     lstValMAE.append(minMaeAccuracy)
+    print('winner: {}'.format(type(lstTupMAEForMLs[0][0]).__name__))
     lstRegressorName.append(type(lstTupMAEForMLs[0][0]).__name__)
     if minMaeAccuracy<priorI:
         countBeaten=countBeaten+1
@@ -221,22 +222,12 @@ fpRegressionResult=fopOutputAllSystems+'result.txt'
 fff=open(fpRegressionResult,'w')
 lstWriteToStr=[]
 for i in range(0,len(lstRegressorName)):
-    strItem='{}\t{}'.format(lstValMAE,lstRegressorName)
+    strItem='{}\t{}'.format(lstValMAE[i],lstRegressorName[i])
     lstWriteToStr.append(strItem)
+    print(strItem)
+
 lstWriteToStr.append('{}\n{}'.format(avgValue,countBeaten))
-
-
 fff.write('\n'.join(lstWriteToStr))
-fff.close()
-
-sortTuple(lstAvgTuneMAE,False)
-fpTotalResult=fopOutputAllSystems+'result.txt'
-lstTupleOut=[]
-for item in lstAvgTuneMAE:
-    strItem='{}\t{}'.format(item[0],item[1])
-    lstTupleOut.append(strItem)
-fff=open(fpTotalResult,'w')
-fff.write('\n'.join(lstTupleOut))
 fff.close()
 
 
