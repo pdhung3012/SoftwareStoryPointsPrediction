@@ -218,7 +218,7 @@ for i in range(0,len(list_files)):
     for indexP in range(0,len(minPredicted)):
         newTuple=(indexP,abs(minPredicted[indexP]-lstExpected[indexP]))
         lstTupPreExp.append(newTuple)
-    sortTuple(lstTupPreExp, False)
+    #sortTuple(lstTupPreExp, False)
 
     lstWriteToString=[]
     for item in lstTupPreExp:
@@ -262,16 +262,6 @@ lstWriteToStr.append('{}\n{}'.format(avgValue,countBeaten))
 
 
 fff.write('\n'.join(lstWriteToStr))
-fff.close()
-
-sortTuple(lstAvgTuneMAE,False)
-fpTotalResult=fopOutputAllSystems+'result.txt'
-lstTupleOut=[]
-for item in lstAvgTuneMAE:
-    strItem='{}\t{}'.format(item[0],item[1])
-    lstTupleOut.append(strItem)
-fff=open(fpTotalResult,'w')
-fff.write('\n'.join(lstTupleOut))
 fff.close()
 
 
