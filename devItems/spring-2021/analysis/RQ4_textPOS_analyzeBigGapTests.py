@@ -30,7 +30,7 @@ sys.path.append('../')
 from UtilFunctions import *
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_multiML_filter/'
+fopOutputAllSystems=fopOutput+'/RQ4_analyzeGap/'
 fopResultTuning=fopOutputAllSystems+'/result_tuning/'
 fopDataset='../../dataset_sorted/'
 isUseBackup=True
