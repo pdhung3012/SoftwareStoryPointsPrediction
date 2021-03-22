@@ -213,9 +213,10 @@ for i in range(0,len(list_files)):
     minPredicted=lstTupMAEForMLs[0][2]
 
     lstMinPredicted=minPredicted.tolist()
+    lstExpected=y_test.tolist()
     lstTupPreExp=[]
     for indexP in range(0,len(minPredicted)):
-        newTuple=(indexP,abs(minPredicted[indexP]-columnSP[indexP]))
+        newTuple=(indexP,abs(minPredicted[indexP]-lstExpected[indexP]))
         lstTupPreExp.append(newTuple)
     sortTuple(lstTupPreExp, False)
 
@@ -223,7 +224,7 @@ for i in range(0,len(list_files)):
     for item in lstTupPreExp:
         indexP=item[0]
         indexInBigList=indexP+lenOldTrain
-        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[1]),str(columnSP[indexInBigList]),str(predicted[indexP])
+        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[1]),str(lstExpected[indexP]),str(predicted[indexP])
                               ,str(columnTitle[indexInBigList]),str(columnDescription[indexInBigList]),'\n\n\n'
                                                                                                 ,lstTexts[indexInBigList]])
         fnNameItem='_'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),'.txt'])
