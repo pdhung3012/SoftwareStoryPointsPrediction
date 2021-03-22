@@ -30,7 +30,7 @@ sys.path.append('../')
 from UtilFunctions import *
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_multiML_filter/'
+fopOutputAllSystems=fopOutput+'/RQ4_multiML_tune_filter/'
 fopResultTuning=fopOutputAllSystems+'/result_tuning/'
 fopDataset='../../dataset_sorted/'
 isUseBackup=True
@@ -72,10 +72,10 @@ lstValMAE = []
 lstRegressorName=[]
 
 regressors = [DecisionTreeRegressor(),
-                  AdaBoostRegressor(),  XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
-                max_depth = 5, alpha = 10, n_estimators = 10),
-                   LinearSVR(C=1.0,random_state=random_seed),
-                   MLPRegressor(alpha=1,hidden_layer_sizes=(5,5)),
+                  AdaBoostRegressor(),  XGBRegressor(max_depth=9,min_child_weight=7,eta=0.01,objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
+                alpha = 10, n_estimators = 10),
+                   LinearSVR(max_iter=5000,loss='epsilon_insensitive',C=1.0,random_state=random_seed),
+                   MLPRegressor(solver='sgd',activation='tanh',alpha=0.0001,hidden_layer_sizes=(100,),learning_rate='constant'),
                    GradientBoostingRegressor(random_state=random_seed, max_depth=3)
                   ]
 
