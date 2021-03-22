@@ -218,7 +218,7 @@ for i in range(0,len(list_files)):
     for indexP in range(0,len(minPredicted)):
         newTuple=(indexP,abs(minPredicted[indexP]-lstExpected[indexP]))
         lstTupPreExp.append(newTuple)
-    #sortTuple(lstTupPreExp, False)
+    sortTuple(lstTupPreExp, False)
 
     lstWriteToString=[]
     for item in lstTupPreExp:
