@@ -30,7 +30,7 @@ sys.path.append('../')
 from UtilFunctions import *
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_analyzeGap/'
+fopOutputAllSystems=fopOutput+'/RQ4_regradeNull/'
 fopResultTuning=fopOutputAllSystems+'/result_tuning/'
 fopDataset='../../dataset_sorted/'
 isUseBackup=True
@@ -205,10 +205,21 @@ for i in range(0,len(list_files)):
     lenOldTrain = len(y_train)
 
     lstTupMAEForMLs=[]
+    list_y_test = y_test.tolist()
+
     for regressor in regressors:
         regressor.fit(X_train, y_train)
         predicted = regressor.predict(X_test)
-        maeAccuracy = mean_absolute_error(y_test, predicted)
+        list_predicted=predicted.tolist()
+        for idx in range(0,len(list_predicted)):
+            indexInBigList = idx + lenOldTrain
+            strDesc=columnDescription[indexInBigList]
+            if columnSP[indexInBigList]==100 and strDesc == 'nan':
+                list_predicted[idx]=100
+
+
+
+        maeAccuracy = mean_absolute_error(list_y_test, list_predicted)
         newTupML=(regressor,maeAccuracy,predicted)
         lstTupMAEForMLs.append(newTupML)
     sortTuple(lstTupMAEForMLs, False)
