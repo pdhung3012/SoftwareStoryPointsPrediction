@@ -86,6 +86,8 @@ for i in range(0,len(list_files)):
     fpSystemCsv=fopDataset+fileName
     dfSystem=pd.read_csv(fpSystemCsv)
     priorI=lstPrior[i]
+    if not 'datamanagement' in systemName:
+        continue
     fpItemText = fopOutputAllSystems + systemName + '_text.txt'
     fpItemLabel = fopOutputAllSystems + systemName + '_label.txt'
     fpVectorItemReg=fopOutputAllSystems+systemName+'_vector.csv'
@@ -188,21 +190,22 @@ for i in range(0,len(list_files)):
 
     dfVectors=pd.read_csv(fpVectorItemReg)
     all_label = dfVectors['story']
-#    all_data = dfVectors
-    all_data = dfVectors.drop(['no', 'story'], axis=1)
+    all_data = dfVectors
+#    all_data = dfVectors.drop(['no', 'story'], axis=1)
 
 
 
     X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
 
    # # print('{}\t{}'.format(type(X_train),type(y_train)))
-    '''
+
+    lenOldTrain = len(y_train)
     X_train=X_train[X_train['story']<=20]
     y_train = X_train['story']
     X_train=X_train.drop(['no', 'story'], axis=1)
     X_test=X_test.drop(['no', 'story'], axis=1)
-    '''
-    lenOldTrain = len(y_train)
+
+
 
     lstTupMAEForMLs=[]
     list_y_test = y_test.tolist()
@@ -213,19 +216,18 @@ for i in range(0,len(list_files)):
         list_predicted=predicted.tolist()
         for idx in range(0,len(list_predicted)):
             indexInBigList = idx + lenOldTrain
-            strDesc=columnDescription[indexInBigList]
-            if columnSP[indexInBigList]==100 and strDesc == 'nan':
-                list_predicted[idx]=100
+            strDesc=str(columnDescription[indexInBigList]).strip()
+
+
 
 
 
         maeAccuracy = mean_absolute_error(list_y_test, list_predicted)
-        newTupML=(regressor,maeAccuracy,predicted)
+        newTupML=(regressor,maeAccuracy,list_predicted)
         lstTupMAEForMLs.append(newTupML)
     sortTuple(lstTupMAEForMLs, False)
     minPredicted=lstTupMAEForMLs[0][2]
 
-    lstMinPredicted=minPredicted.tolist()
     lstExpected=y_test.tolist()
     lstTupPreExp=[]
     for indexP in range(0,len(minPredicted)):
@@ -237,7 +239,7 @@ for i in range(0,len(list_files)):
     for item in lstTupPreExp:
         indexP=item[0]
         indexInBigList=indexP+lenOldTrain
-        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[1]),str(lstExpected[indexP]),str(minpredicted[indexP])
+        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[1]),str(lstExpected[indexP]),str(minPredicted[indexP])
                               ,str(columnTitle[indexInBigList]),str(columnDescription[indexInBigList]),'\n\n\n'
                                                                                                 ,lstTexts[indexInBigList]])
         fnNameItem='_'.join([str(colIssueKey[indexInBigList]),'.txt'])
