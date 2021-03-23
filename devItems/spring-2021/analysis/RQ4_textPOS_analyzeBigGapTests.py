@@ -226,10 +226,10 @@ for i in range(0,len(list_files)):
     for item in lstTupPreExp:
         indexP=item[0]
         indexInBigList=indexP+lenOldTrain
-        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[1]),str(lstExpected[indexP]),str(predicted[indexP])
+        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[1]),str(lstExpected[indexP]),str(minpredicted[indexP])
                               ,str(columnTitle[indexInBigList]),str(columnDescription[indexInBigList]),'\n\n\n'
                                                                                                 ,lstTexts[indexInBigList]])
-        fnNameItem='_'.join([str(indexP),str(indexInBigList),str(lstExpected[indexP]),'.txt'])
+        fnNameItem='_'.join([str(colIssueKey[indexInBigList]),'.txt'])
         fff=open(fopAnalyzeFolder+fnNameItem,'w')
         fff.write(strItem)
         fff.close()
