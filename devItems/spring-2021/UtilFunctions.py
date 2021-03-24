@@ -9,6 +9,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
+import numpy as np
 
 from operator import itemgetter
 
@@ -243,3 +244,15 @@ def sortTuple(tup,isReverse):
     # sublist lambda has been used
     tup.sort(key=lambda x: x[1],reverse=isReverse)
     return tup
+
+def getNdArray(inputTrainX,inputTrainY):
+    listTrainX=[]
+
+    for i in range(0,len(inputTrainX)):
+        item=inputTrainX.iloc[i]
+        listTrainX.append(item)
+
+    listTrainY=inputTrainY.tolist()
+    arrayTrainX= np.array(listTrainX)
+    arrayTrainY=np.array(listTrainY)
+    return arrayTrainX,arrayTrainY

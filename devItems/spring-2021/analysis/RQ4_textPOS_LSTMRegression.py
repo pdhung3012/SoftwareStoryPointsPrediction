@@ -94,6 +94,8 @@ for i in range(0,len(list_files)):
     fpSystemCsv=fopDataset+fileName
     dfSystem=pd.read_csv(fpSystemCsv)
     priorI=lstPrior[i]
+    if not 'datamanagement' in systemName:
+        continue
     fpItemText = fopOutputAllSystems + systemName + '_text.txt'
     fpItemLabel = fopOutputAllSystems + systemName + '_label.txt'
     fpVectorItemReg=fopOutputAllSystems+systemName+'_vector.csv'
@@ -202,37 +204,33 @@ for i in range(0,len(list_files)):
 
 
     X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2, shuffle=False)
+    # # # print('{}\t{}'.format(type(X_train),type(y_train)))
+    #  X_train=X_train[X_train['story']<=20]
+    #  y_train = X_train['story']
+    #  X_train=X_train.drop(['no', 'story'], axis=1)
+    #  X_test=X_test.drop(['no', 'story'], axis=1)
+
+    trainX,trainY=getNdArray(X_train,y_train)
+    testX, testY = getNdArray(X_test, y_test)
 
     # reshape input to be [samples, time steps, features]
-    trainX = numpy.reshape(X_train, (X_train.shape[0], 1, X_train.shape[1]))
-    testX = numpy.reshape(X_test, (X_test.shape[0], 1, X_test.shape[1]))
+    nFeats=trainX.shape[1]
+    print('nfeats {}'.format(nFeats))
+    trainX = numpy.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
+    testX = numpy.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
     # reshape input to be [samples, time steps, features]
     model = Sequential()
-    model.add(LSTM(4, input_shape=(1, 1)))
+    model.add(LSTM(4, input_shape=(1, nFeats)))
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
-    model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2)
+    model.fit(trainX, trainY, epochs=100000, batch_size=1000)
 
     testPredict = model.predict(testX)
+    #print(testPredict)
 
-    # # # print('{}\t{}'.format(type(X_train),type(y_train)))
-   #  X_train=X_train[X_train['story']<=20]
-   #  y_train = X_train['story']
-   #  X_train=X_train.drop(['no', 'story'], axis=1)
-   #  X_test=X_test.drop(['no', 'story'], axis=1)
     lenOldTrain=len(y_train)
+    minPredicted=testPredict.tolist()
 
-    lstTupMAEForMLs=[]
-    for regressor in regressors:
-        regressor.fit(X_train, y_train)
-        predicted = regressor.predict(X_test)
-        maeAccuracy = mean_absolute_error(y_test, predicted)
-        newTupML=(regressor,maeAccuracy,predicted)
-        lstTupMAEForMLs.append(newTupML)
-    sortTuple(lstTupMAEForMLs, False)
-    minPredicted=lstTupMAEForMLs[0][2]
-
-    lstMinPredicted=minPredicted.tolist()
     lstTupPreExp=[]
     for indexP in range(0,len(minPredicted)):
         newTuple=(indexP,abs(minPredicted[indexP]-columnSP[indexP]))
@@ -243,25 +241,27 @@ for i in range(0,len(list_files)):
     for item in lstTupPreExp:
         indexP=item[0]
         indexInBigList=indexP+lenOldTrain
-        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[0]),str(columnSP[indexInBigList]),str(predicted[indexP]),str(columnTitle[indexInBigList]),str(columnDescription[indexInBigList],'\n\n\n'
-                                                                                                ,lstTexts[indexInBigList])])
+        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[0]),str(columnSP[indexInBigList])
+                              ,str(minPredicted[indexP]),str(columnTitle[indexInBigList]),str(columnDescription[indexInBigList]),'\n\n\n'
+                                                                                                ,str(lstTexts[indexInBigList])])
         fnNameItem='_'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),'.txt'])
         fff=open(fopAnalyzeFolder+fnNameItem,'w')
         fff.write(strItem)
         fff.close()
-        strNameItem='\t'.join([str(colIssueKey[indexInBigList]),str(item[0]),str(columnSP[indexInBigList]),str(predicted[indexP])])
+        strNameItem='\t'.join([str(colIssueKey[indexInBigList]),str(item[0]),str(columnSP[indexInBigList]),str(minPredicted[indexP])])
         lstWriteToString.append(strNameItem)
     fpSortResult = fopSortGapByIds+systemName+'.txt'
     fff=open(fpSortResult,'w')
     fff.write('\n'.join(lstWriteToString))
     fff.close()
 
-    minMaeAccuracy=lstTupMAEForMLs[0][1]
+    minMaeAccuracy=mean_absolute_error(testY,testPredict)
+    print('minMAE {}'.format(minMaeAccuracy))
     # strAcc='{}\t{}'.format(systemName,maeAccuracy)
     strAcc = '{}'.format(minMaeAccuracy)
     lstMAE.append(strAcc)
     lstValMAE.append(minMaeAccuracy)
-    lstRegressorName.append(type(lstTupMAEForMLs[0][0]).__name__)
+
     if minMaeAccuracy<priorI:
         countBeaten=countBeaten+1
     print('Finish {}'.format(systemName))
@@ -273,12 +273,10 @@ avgValue=mean(lstValMAE)
 fpRegressionResult=fopOutputAllSystems+'result.txt'
 fff=open(fpRegressionResult,'w')
 lstWriteToStr=[]
-for i in range(0,len(lstRegressorName)):
-    strItem='{}\t{}'.format(lstValMAE,lstRegressorName)
+for i in range(0,len(lstValMAE)):
+    strItem='{}'.format(lstValMAE[i])
     lstWriteToStr.append(strItem)
 lstWriteToStr.append('{}\n{}'.format(avgValue,countBeaten))
-
-
 fff.write('\n'.join(lstWriteToStr))
 fff.close()
 
