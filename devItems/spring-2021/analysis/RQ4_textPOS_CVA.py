@@ -239,13 +239,11 @@ for i in range(0,len(list_files)):
         lstTupMAEForMLs.append(newTupML)
     sortTuple(lstTupMAEForMLs, False)
     minPredicted = lstTupMAEForMLs[0][2]
-    lstMinPredicted = minPredicted.tolist()
-
-
-
-
 
     minMaeAccuracy=mean_absolute_error(y_test, minPredicted)
+    lstValMAE.append(minMaeAccuracy)
+    lstRegressorName.append(type(lstTupMAEForMLs[0][0]).__name__)
+
     # strAcc='{}\t{}'.format(systemName,maeAccuracy)
     lstValMAE.append(minMaeAccuracy)
     if minMaeAccuracy<priorI:
