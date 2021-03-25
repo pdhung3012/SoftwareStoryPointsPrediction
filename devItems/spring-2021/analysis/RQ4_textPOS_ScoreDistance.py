@@ -21,8 +21,6 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
-from statistics import mean
-
 
 
 
@@ -33,11 +31,13 @@ sys.path.append('../')
 from UtilFunctions import *
 
 fopOutput='../../../../dataPapers/analysisSEE/'
-fopOutputAllSystems=fopOutput+'/RQ4_cva/'
+fopOutputAllSystems=fopOutput+'/RQ4_scoreDistance/'
+fopResultTuning=fopOutputAllSystems+'/result_tuning/'
 fopDataset='../../dataset_sorted/'
 isUseBackup=True
 
 createDirIfNotExist(fopOutputAllSystems)
+createDirIfNotExist(fopResultTuning)
 stop_words = set(stopwords.words('english'))
 ps = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
@@ -66,17 +66,9 @@ for item in arrPriorResult:
     lstPrior.append(float(item))
 
 
-lstMAE = []
-lstValMAE = []
-lstRegressorName=[]
+lstAvgTuneMAE=[]
 
-regressors = [DecisionTreeRegressor(),
-                  AdaBoostRegressor(),  XGBRegressor(objective ='reg:squarederror', colsample_bytree = 0.3, learning_rate = 0.1,
-                max_depth = 5, alpha = 10, n_estimators = 10),
-                   LinearSVR(C=1.0,random_state=random_seed),
-                   MLPRegressor(alpha=1,hidden_layer_sizes=(5,5)),
-                   GradientBoostingRegressor(random_state=random_seed, max_depth=3)
-                  ]
+lstValMAE = []
 
 countBeaten=0
 for i in range(0,len(list_files)):
@@ -88,8 +80,7 @@ for i in range(0,len(list_files)):
     fpItemText = fopOutputAllSystems + systemName + '_text.txt'
     fpItemLabel = fopOutputAllSystems + systemName + '_label.txt'
     fpVectorItemReg=fopOutputAllSystems+systemName+'_vector.csv'
-    fopAnalyzeFolder=fopOutputAllSystems+'anaFolder_'+systemName+'/'
-    fopSortGapByIds = fopOutputAllSystems + 'anaFolder_allDetails/'
+
 
 
     lstTexts = []
@@ -165,10 +156,10 @@ for i in range(0,len(list_files)):
             dictLstStr[scoreLbl]=lst
         else:
             dictLstStr[scoreLbl].append(lstTexts[j])
-    lstKeys=list(dictLstStr.keys())
+    lstKeys=dictLstStr.keys()
     lstKeyVectors=[]
 
-    for key in lstKeys:
+    for key in dictLstStr.keys():
         lst=dictLstStr[key]
         lstKeyVectors.append(' '.join(lst))
     numKeys=len(dictLstStr.keys())
@@ -189,62 +180,17 @@ for i in range(0,len(list_files)):
     testIndex=numKeys+numTrainOnly
     minPredicted=[]
     y_test=[]
-
-    matrixVector=[]
-    for j in range(numKeys,len(lstKeyVectors)):
-        vectorJ=X[j].todense()
+    for j in range(testIndex,len(lstKeyVectors)):
+        vectorJ=lstKeyVectors[j].todense()
         listScores=[]
         y_test.append(lstLabels[j-testIndex+numTrainOnly])
-        lstItemVectors=[]
-        for key in lstKeys:
+        for key in dictSummaryDocumentVectors.keys():
             scoreItem= cosine_similarity(dictSummaryDocumentVectors[key],vectorJ)[0][0]
-            lstItemVectors.append(scoreItem)
-        matrixVector.append(lstItemVectors)
-
-    lenVectorOfWord = numKeys
-    columnTitleRow = "no,story,"
-    for j in range(0, numKeys):
-        item = 'feature-' + str(j + 1)
-        columnTitleRow = ''.join([columnTitleRow, item])
-        if j != lenVectorOfWord - 1:
-            columnTitleRow = ''.join([columnTitleRow, ","])
-    columnTitleRow = ''.join([columnTitleRow, "\n"])
-    csv = open(fpVectorItemReg, 'w')
-    csv.write(columnTitleRow)
-
-    for j in range(0, len(matrixVector)):
-        vector = matrixVector[j]
-        strReg = str(lstLabels[j])
-        strRow2 = ''.join([str(j + 1), ',', '' + strReg, ])
-        for k in range(0, lenVectorOfWord):
-            strRow2 = ''.join([strRow2, ',', str(vector[k])])
-        strRow2 = ''.join([strRow2, '\n'])
-        #   csv.write(strRow)
-        csv.write(strRow2)
-    csv.close()
-
-    dfVectors = pd.read_csv(fpVectorItemReg)
-    all_label = dfVectors['story']
-    #all_data = dfVectors
-    all_data = dfVectors.drop(['no', 'story'], axis=1)
-
-    X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size=0.2, shuffle=False)
-
-    lstTupMAEForMLs = []
-    for regressor in regressors:
-        regressor.fit(X_train, y_train)
-        predicted = regressor.predict(X_test)
-        maeAccuracy = mean_absolute_error(y_test, predicted)
-        newTupML = (regressor, maeAccuracy, predicted)
-        lstTupMAEForMLs.append(newTupML)
-    sortTuple(lstTupMAEForMLs, False)
-    minPredicted = lstTupMAEForMLs[0][2]
-    lstMinPredicted = minPredicted.tolist()
-
-
-
-
-
+            sampleTuple=(key,scoreItem)
+            listScores.append(sampleTuple)
+        sortTuple(listScores, False)
+        selectedKey=listScores[0][0]
+        minPredicted.append(selectedKey)
     minMaeAccuracy=mean_absolute_error(y_test, minPredicted)
     # strAcc='{}\t{}'.format(systemName,maeAccuracy)
     lstValMAE.append(minMaeAccuracy)
@@ -252,17 +198,18 @@ for i in range(0,len(list_files)):
         countBeaten=countBeaten+1
     print('Finish {}'.format(systemName))
 
+from statistics import mean
 avgValue=mean(lstValMAE)
+
 fpRegressionResult=fopOutputAllSystems+'result.txt'
 fff=open(fpRegressionResult,'w')
 lstWriteToStr=[]
-for i in range(0,len(lstRegressorName)):
-    strItem='{}\t{}'.format(lstValMAE,lstRegressorName)
+for i in range(0,len(lstValMAE)):
+    strItem='{}'.format(lstValMAE[i])
     lstWriteToStr.append(strItem)
 lstWriteToStr.append('{}\n{}'.format(avgValue,countBeaten))
 fff.write('\n'.join(lstWriteToStr))
 fff.close()
-
 
 
 
