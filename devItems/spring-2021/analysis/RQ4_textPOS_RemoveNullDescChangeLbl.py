@@ -87,7 +87,7 @@ for i in range(0,len(list_files)):
     dfSystem=pd.read_csv(fpSystemCsv)
     print('before {}'.format(len(dfSystem)))
     dfSystem=dfSystem[~dfSystem['description'].isnull()].reset_index(drop= True)
-    dfSystem.loc[dfSystem['storypoint'] > 20, 'storypoint'] = 21
+    dfSystem.loc[dfSystem['storypoint'] > 10, 'storypoint'] = 11
     print('len {}'.format(len(dfSystem)))
     priorI=lstPrior[i]
     fpItemText = fopOutputAllSystems + systemName + '_text.txt'
