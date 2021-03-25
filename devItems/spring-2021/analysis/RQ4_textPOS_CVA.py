@@ -162,7 +162,7 @@ for i in range(0,len(list_files)):
     lstKeys=list(dictLstStr.keys())
     lstKeyVectors=[]
 
-    for key in dictLstStr.keys():
+    for key in lstKeys:
         lst=dictLstStr[key]
         lstKeyVectors.append(' '.join(lst))
     numKeys=len(dictLstStr.keys())
@@ -187,11 +187,11 @@ for i in range(0,len(list_files)):
         vectorJ=X[j].todense()
         listScores=[]
         y_test.append(lstLabels[j-testIndex+numTrainOnly])
-        for key in dictSummaryDocumentVectors.keys():
+        for key in lstKeys:
             scoreItem= cosine_similarity(dictSummaryDocumentVectors[key],vectorJ)[0][0]
             sampleTuple=(key,scoreItem)
             listScores.append(sampleTuple)
-        sortTuple(listScores, False)
+        sortTuple(listScores, True)
         print('tuple result {}'.format(listScores))
         selectedKey=listScores[0][0]
         minPredicted.append(selectedKey)
