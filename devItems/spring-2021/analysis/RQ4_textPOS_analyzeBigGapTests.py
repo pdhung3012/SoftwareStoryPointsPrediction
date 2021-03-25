@@ -226,7 +226,7 @@ for i in range(0,len(list_files)):
     for item in lstTupPreExp:
         indexP=item[0]
         indexInBigList=indexP+lenOldTrain
-        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[1]),str(lstExpected[indexP]),str(minpredicted[indexP])
+        strItem='\n'.join([str(indexP),str(indexInBigList),str(colIssueKey[indexInBigList]),str(item[1]),str(lstExpected[indexP]),str(minPredicted[indexP])
                               ,str(columnTitle[indexInBigList]),str(columnDescription[indexInBigList]),'\n\n\n'
                                                                                                 ,lstTexts[indexInBigList]])
         fnNameItem='_'.join([str(colIssueKey[indexInBigList]),'.txt'])
