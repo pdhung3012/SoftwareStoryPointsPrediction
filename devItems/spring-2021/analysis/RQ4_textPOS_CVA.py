@@ -255,7 +255,7 @@ fpRegressionResult=fopOutputAllSystems+'result.txt'
 fff=open(fpRegressionResult,'w')
 lstWriteToStr=[]
 for i in range(0,len(lstRegressorName)):
-    strItem='{}\t{}'.format(lstValMAE,lstRegressorName)
+    strItem='{}\t{}'.format(lstValMAE[i],lstRegressorName[i])
     lstWriteToStr.append(strItem)
 lstWriteToStr.append('{}\n{}'.format(avgValue,countBeaten))
 fff.write('\n'.join(lstWriteToStr))
