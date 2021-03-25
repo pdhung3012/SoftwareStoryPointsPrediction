@@ -84,6 +84,7 @@ for i in range(0,len(list_files)):
     systemName=fileName.replace('.csv','')
     fpSystemCsv=fopDataset+fileName
     dfSystem=pd.read_csv(fpSystemCsv)
+    dfSystem = dfSystem[~dfSystem['description'].isnull()].reset_index(drop=True)
     priorI=lstPrior[i]
     fpItemText = fopOutputAllSystems + systemName + '_text.txt'
     fpItemLabel = fopOutputAllSystems + systemName + '_label.txt'
