@@ -85,7 +85,9 @@ for i in range(0,len(list_files)):
     systemName=fileName.replace('.csv','')
     fpSystemCsv=fopDataset+fileName
     dfSystem=pd.read_csv(fpSystemCsv)
-    dfSystem=dfSystem[dfSystem['description'] != 'NULL']
+    print('before {}'.format(len(dfSystem)))
+    dfSystem=dfSystem[~dfSystem['description'].isnull()].reset_index(drop= True)
+    print('len {}'.format(len(dfSystem)))
     priorI=lstPrior[i]
     fpItemText = fopOutputAllSystems + systemName + '_text.txt'
     fpItemLabel = fopOutputAllSystems + systemName + '_label.txt'
@@ -104,6 +106,8 @@ for i in range(0,len(list_files)):
     columnTitle = dfSystem['title']
     columnDescription = dfSystem['description']
     columnSP = dfSystem['storypoint']
+    #print('len title col {} {}'.format(len(columnTitle), len(columnDescription)))
+
     lstTextTrain, lstTextTest, lstLblTrain, lstLblTest = train_test_split(dfSystem, columnSP, test_size=0.2, shuffle=False)
 
 
@@ -136,6 +140,7 @@ for i in range(0,len(list_files)):
         setFilterWords = set(lstFilterWords)
 
         for j in range(0,len(columnTitle)):
+            #print('j {} {}\n{}'.format(j,columnTitle[j],columnDescription[j]))
             strContent =' '.join([str(columnTitle[j]),str(columnDescription[j])])
             # strContent = ' '.join([str(columnDescription[j])])
             strContent=preprocessTextV3_FilerWordAndReplace(strContent,setFilterWords,ps,lemmatizer)
