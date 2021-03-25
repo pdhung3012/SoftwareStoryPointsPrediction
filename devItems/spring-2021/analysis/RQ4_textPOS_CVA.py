@@ -243,9 +243,7 @@ for i in range(0,len(list_files)):
     minMaeAccuracy=mean_absolute_error(y_test, minPredicted)
     lstValMAE.append(minMaeAccuracy)
     lstRegressorName.append(type(lstTupMAEForMLs[0][0]).__name__)
-
     # strAcc='{}\t{}'.format(systemName,maeAccuracy)
-    lstValMAE.append(minMaeAccuracy)
     if minMaeAccuracy<priorI:
         countBeaten=countBeaten+1
     print('Finish {}'.format(systemName))
