@@ -192,6 +192,7 @@ for i in range(0,len(list_files)):
             sampleTuple=(key,scoreItem)
             listScores.append(sampleTuple)
         sortTuple(listScores, False)
+        print('tuple result {}'.format(listScores))
         selectedKey=listScores[0][0]
         minPredicted.append(selectedKey)
     minMaeAccuracy=mean_absolute_error(y_test, minPredicted)
