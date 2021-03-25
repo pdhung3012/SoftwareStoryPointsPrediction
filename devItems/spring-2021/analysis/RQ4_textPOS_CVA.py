@@ -154,7 +154,7 @@ for i in range(0,len(list_files)):
     dictLstStr={}
     for j in range(0,len(lstTexts)):
         scoreLbl=lstLabels[j]
-        if not scoreLbl in lstLabels:
+        if not scoreLbl in dictLstStr.keys():
             lst=[lstTexts[j]]
             dictLstStr[scoreLbl]=lst
         else:
