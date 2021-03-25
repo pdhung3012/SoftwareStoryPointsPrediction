@@ -157,7 +157,7 @@ for i in range(0,len(list_files)):
             dictLstStr[scoreLbl]=lst
         else:
             dictLstStr[scoreLbl].append(lstTexts[j])
-    lstKeys=dictLstStr.keys()
+    lstKeys=list(dictLstStr.keys())
     lstKeyVectors=[]
 
     for key in dictLstStr.keys():
@@ -182,7 +182,7 @@ for i in range(0,len(list_files)):
     minPredicted=[]
     y_test=[]
     for j in range(testIndex,len(lstKeyVectors)):
-        vectorJ=lstKeyVectors[j].todense()
+        vectorJ=X[j].todense()
         listScores=[]
         y_test.append(lstLabels[j-testIndex+numTrainOnly])
         for key in dictSummaryDocumentVectors.keys():
