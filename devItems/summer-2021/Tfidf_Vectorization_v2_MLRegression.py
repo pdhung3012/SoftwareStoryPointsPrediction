@@ -120,7 +120,7 @@ for file in lstFilePathProjects:
     fileName=os.path.basename(file).replace('.csv', '')
     # fileCsv = fopVectorAllSystems + file+
     fpVectorItemRegTrain = fopVectorAllSystemsTrain + fileName + '.csv'
-    fpVectorItemRegTest = fopVectorAllSystemsTrain + fileName + '.csv'
+    fpVectorItemRegTest = fopVectorAllSystemsTest + fileName + '.csv'
     fpPredictedResult=fopOutputItemPredictedResult+fileName+'.txt'
 
     df_train = pd.read_csv(fpVectorItemRegTrain)

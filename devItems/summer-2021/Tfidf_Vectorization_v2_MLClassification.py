@@ -83,7 +83,17 @@ def convertTopLabelToNormalLabel(topColumn):
         lstNewColumn.append(realValue)
     return lstNewColumn
 
-
+def scoreName(val):
+    text='A'
+    if val <= 5:
+        text = 'A'
+    elif val>5 and val<=15:
+        text = 'B'
+    elif val>15 and val<=40:
+        text = 'C'
+    else:
+        text = 'D'
+    return text
 
 fopRootData='../../../dataPapers/SEE/'
 createDirIfNotExist(fopRootData)
@@ -119,25 +129,26 @@ for file in lstFilePathProjects:
         continue
     fileName=os.path.basename(file).replace('.csv', '')
     # fileCsv = fopVectorAllSystems + file+
-    fpVectorItemRegTrain = fopVectorAllSystemsTrain + fileName + '.csv'
-    fpVectorItemRegTest = fopVectorAllSystemsTrain + fileName + '.csv'
+    fpVectorItemClassTrain = fopVectorAllSystemsTrain + fileName + '.csv'
+    fpVectorItemClassTest = fopVectorAllSystemsTest + fileName + '.csv'
     fpPredictedResult=fopOutputItemPredictedResult+fileName+'.txt'
 
-    df_train = pd.read_csv(fpVectorItemRegTrain)
-    df_train[df_train['storypoint']<=5]='A'
-    df_train[df_train['storypoint'] >5 & df_train['storypoint'] <= 15] = 'B'
-    df_train[df_train['storypoint'] > 15 & df_train['storypoint'] <= 50] = 'C'
-    df_train[df_train['storypoint'] > 50 & df_train['storypoint'] <= 100] = 'D'
-
-    print(list(df_train.columns.values))
+    df_train = pd.read_csv(fpVectorItemClassTrain)
+    # df_train[df_train['storypoint']<=5]='A'
+    # df_train[df_train['storypoint'] >5 & df_train['storypoint'] <= 15] = 'B'
+    # df_train[df_train['storypoint'] > 15 & df_train['storypoint'] <= 40] = 'C'
+    # df_train[df_train['storypoint'] > 40 & df_train['storypoint'] <= 100] = 'D'
+    df_train['storypoint'] = df_train['storypoint'].apply(scoreName)
+    # print(list(df_train.columns.values))
     y_train = df_train['storypoint']
     X_train = df_train.drop(['storypoint','issuekey'],axis=1)
 
-    df_test = pd.read_csv(fpVectorItemRegTest)
-    df_test[df_test['storypoint'] <= 5] = 'A'
-    df_test[df_test['storypoint'] > 5 & df_test['storypoint'] <= 15] = 'B'
-    df_test[df_test['storypoint'] > 15 & df_test['storypoint'] <= 50] = 'C'
-    df_test[df_test['storypoint'] > 50 & df_test['storypoint'] <= 100] = 'D'
+    df_test = pd.read_csv(fpVectorItemClassTest)
+    # df_test[df_test['storypoint'] <= 5] = 'A'
+    # df_test[df_test['storypoint'] > 5 & df_test['storypoint'] <= 15] = 'B'
+    # df_test[df_test['storypoint'] > 15 & df_test['storypoint'] <= 40] = 'C'
+    # df_test[df_test['storypoint'] > 40 & df_test['storypoint'] <= 100] = 'D'
+    df_test['storypoint'] = df_test['storypoint'].apply(scoreName)
     y_test = df_test['storypoint']
     X_test = df_test.drop(['storypoint','issuekey'], axis=1)
     # print("********", "\n", "Random Forest Results Regression with: ", str(classifier))
