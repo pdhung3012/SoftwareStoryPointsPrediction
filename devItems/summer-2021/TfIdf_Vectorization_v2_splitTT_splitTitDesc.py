@@ -111,7 +111,7 @@ for filename in list_dir:
     df['description'] = df['description'].values.astype('U')
 
     X_train, X_test, y_train, y_test = train_test_split(
-        df[['title', 'description','storypoint']],
+        df[['title', 'description','storypoint','issuekey']],
         df['storypoint'], test_size=0.2, shuffle = False, stratify = None)
 
     # print(X_train['title'])
@@ -125,9 +125,9 @@ for filename in list_dir:
     tfidf_train_description = description_vect_fit.transform(X_train['description'])
     tfidf_test_description = description_vect_fit.transform(X_test['description'])
 
-    X_train_vect = pd.concat([X_train[['storypoint']].reset_index(drop=True),
+    X_train_vect = pd.concat([X_train[['storypoint','issuekey']].reset_index(drop=True),
                               pd.DataFrame(tfidf_train_title.toarray()),pd.DataFrame(tfidf_train_description.toarray())], axis=1)
-    X_test_vect = pd.concat([X_test[['storypoint']].reset_index(drop=True),
+    X_test_vect = pd.concat([X_test[['storypoint','issuekey']].reset_index(drop=True),
                               pd.DataFrame(tfidf_test_title.toarray()),pd.DataFrame(tfidf_test_description.toarray())], axis=1)
     X_train_vect.to_csv(fpVectorItemRegTrain, index=False)
     X_test_vect.to_csv(fpVectorItemRegTest, index=False)

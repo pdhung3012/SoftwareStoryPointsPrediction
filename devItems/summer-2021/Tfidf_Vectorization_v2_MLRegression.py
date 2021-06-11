@@ -126,11 +126,11 @@ for file in lstFilePathProjects:
     df_train = pd.read_csv(fpVectorItemRegTrain)
     print(list(df_train.columns.values))
     y_train = df_train['storypoint']
-    X_train = df_train.drop(['storypoint'],axis=1)
+    X_train = df_train.drop(['storypoint','issuekey'],axis=1)
 
     df_test = pd.read_csv(fpVectorItemRegTest)
     y_test = df_test['storypoint']
-    X_test = df_test.drop(['storypoint'], axis=1)
+    X_test = df_test.drop(['storypoint','issuekey'], axis=1)
     # print("********", "\n", "Random Forest Results Regression with: ", str(classifier))
     # X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2,shuffle = False, stratify = None)
     # dictReverse={}
