@@ -8,6 +8,9 @@ from sklearn.decomposition import PCA
 from sklearn.random_projection import GaussianRandomProjection
 from sklearn.model_selection import cross_val_score, cross_val_predict, StratifiedKFold, train_test_split
 
+import sys,os
+sys.path.append(os.path.abspath(os.path.join('..')))
+from UtilFunctions import createDirIfNotExist,scoreName
 
 
 import spacy
@@ -159,14 +162,14 @@ if __name__ == "__main__":
     fnSystem=fnSystemAbbrev+'.csv'
     fileCsv = fopDataset + fnSystem
 
-    raw_data = pd.read_csv(fileCsv)
-    raw_data_2 = pd.read_csv(fileCsv)
-    columnId = raw_data['issuekey']
-    columnRegStory = raw_data_2['storypoint']
+    df = pd.read_csv(fileCsv)
+    columnId = df['issuekey']
+    df['srotypoint']= df['storypoint'].apply(scoreName)
+    columnRegStory = df['storypoint']
     titles_and_descriptions = []
     colTest=[]
-    for i in range(0, len(raw_data['description'])):
-        strContent = ' '.join([str(raw_data['title'][i]), ' . ', str(raw_data['description'][i])])
+    for i in range(0, len(df['description'])):
+        strContent = ' '.join([str(df['title'][i]), ' . ', str(df['description'][i])])
         strContent=preprocess(strContent).replace('\t',' ').replace('\n',' ').strip()
         titles_and_descriptions.append(str(strContent))
         colTest.append(str(columnRegStory[i]))

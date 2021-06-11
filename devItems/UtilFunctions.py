@@ -267,3 +267,14 @@ def createDirIfNotExist(fopOutput):
     except FileExistsError:
         print("Directory ", fopOutput, " already exists")
 
+def scoreName(val):
+    text='A'
+    if val <= 5:
+        text = 'A'
+    elif val>5 and val<=15:
+        text = 'B'
+    elif val>15 and val<=40:
+        text = 'C'
+    else:
+        text = 'D'
+    return text
