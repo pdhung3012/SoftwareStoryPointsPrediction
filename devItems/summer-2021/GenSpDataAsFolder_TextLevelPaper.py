@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
     df = pd.read_csv(fileCsv)
     columnId = df['issuekey']
-    df['srotypoint']= df['storypoint'].apply(scoreName)
+    df['storypoint']= df['storypoint'].apply(scoreName)
     columnRegStory = df['storypoint']
     titles_and_descriptions = []
     colTest=[]
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     dictTotalLabel= {}
     dictTotalStrContent = {}
     for i in range(0,len(colTest)):
-        itemC =int(colTest[i])
+        itemC =str(colTest[i])
         if itemC not in dictTotalLabel.keys():
             dictTotalLabel[itemC]=1
             lstItem=[]
