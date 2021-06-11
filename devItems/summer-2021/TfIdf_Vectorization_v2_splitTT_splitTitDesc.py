@@ -117,7 +117,7 @@ for filename in list_dir:
     # print(X_train['title'])
     vectorizer = TfidfVectorizer(ngram_range=(1, 1))
     title_vect_fit = vectorizer.fit(X_train['title'])
-    tfidf_train_title = title_vect_fit.transform(X_train['title'].values.astype('U'))
+    tfidf_train_title = title_vect_fit.transform(X_train['title'])
     tfidf_test_title = title_vect_fit.transform(X_test['title'])
 
     vectorizer = TfidfVectorizer(ngram_range=(1, 1))
