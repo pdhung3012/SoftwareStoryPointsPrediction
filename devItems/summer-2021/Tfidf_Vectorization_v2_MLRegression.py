@@ -115,7 +115,7 @@ o2.write('')
 o2.close()
 
 for file in lstFilePathProjects:
-    if not file.endswith('_regression.csv'):
+    if not file.endswith('.csv'):
         continue
     fileName=os.path.basename(file).replace('.csv', '')
     # fileCsv = fopVectorAllSystems + file+
@@ -125,12 +125,12 @@ for file in lstFilePathProjects:
 
     df_train = pd.read_csv(fpVectorItemRegTrain)
     print(list(df_train.columns.values))
-    X_train = df_train['storypoint']
-    y_train = df_train.drop(['storypoint'],axis=1)
+    y_train = df_train['storypoint']
+    X_train = df_train.drop(['storypoint'],axis=1)
 
     df_test = pd.read_csv(fpVectorItemRegTest)
-    X_test = df_test['storypoint']
-    y_test = df_test.drop(['storypoint'], axis=1)
+    y_test = df_test['storypoint']
+    X_test = df_test.drop(['storypoint'], axis=1)
     # print("********", "\n", "Random Forest Results Regression with: ", str(classifier))
     # X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2,shuffle = False, stratify = None)
     # dictReverse={}
@@ -146,7 +146,7 @@ for file in lstFilePathProjects:
 
     np.savetxt(fpPredictedResult, predicted, fmt='%s', delimiter=',')
     o2 = open(fpReportDetails, 'a')
-    o2.write(fileName)
+    o2.write(fileName+'\n')
     o2.write('Result for ' + str(classifier) + '\n')
     o2.write('MAE {}\nMQE {}\n\n\n'.format(maeAccuracy,mqeAccuracy))
 
