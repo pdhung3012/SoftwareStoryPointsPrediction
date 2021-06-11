@@ -109,38 +109,47 @@ for filename in list_dir:
     for i in range(0, len(raw_data['description'])):
         strContent = ' '.join([str(raw_data['title'][i]),' . ', str(raw_data['description'][i])])
         titles_and_descriptions.append(str(strContent))
-
-    text_after_tokenize = []
-    listDependences=[]
-    index=0
-    for lineStr in titles_and_descriptions:
-        lineAppend = preprocess(lineStr)
-        strToAdd = lineAppend
-        # try:
-        #     doc = nlp(lineStr)
-        #     strDepend = addDependenciesToSentencePOS(doc)
-        #     strToAdd = ' '.join([lineAppend, strDepend])
-        #     # strToAdd = ' '.join([strDepend])
-        # except:
-        #     print('{} error on issue {}'.format(index,columnId[index]))
-        text_after_tokenize.append(strToAdd)
-        index=index+1
-
+    raw_data=raw_data.assign(titles_and_descriptions=titles_and_descriptions)
     columnTitleRow='no,text\n'
     csv = open(fpTextInfo, 'w')
     csv.write(columnTitleRow)
-    for i in range(0, len(text_after_tokenize)):
-        strItem=text_after_tokenize[i].replace(',',' ')
+    for i in range(0, len(raw_data['titles_and_descriptions'])):
+        strItem=raw_data['titles_and_descriptions'][i].replace(',',' ')
         csv.write(','.join([str(i+1),strItem]))
-        if(i<(len(text_after_tokenize)-1)):
+        if(i<(len(raw_data['titles_and_descriptions'])-1)):
             csv.write('\n')
     csv.close()
+
+    # text_after_tokenize = []
+    # listDependences=[]
+    # index=0
+    # for lineStr in titles_and_descriptions:
+    #     lineAppend = preprocess(lineStr)
+    #     strToAdd = lineAppend
+    #     # try:
+    #     #     doc = nlp(lineStr)
+    #     #     strDepend = addDependenciesToSentencePOS(doc)
+    #     #     strToAdd = ' '.join([lineAppend, strDepend])
+    #     #     # strToAdd = ' '.join([strDepend])
+    #     # except:
+    #     #     print('{} error on issue {}'.format(index,columnId[index]))
+    #     text_after_tokenize.append(strToAdd)
+    #     index=index+1
+
+    # columnTitleRow='no,text\n'
+    # csv = open(fpTextInfo, 'w')
+    # csv.write(columnTitleRow)
+    # for i in range(0, len(text_after_tokenize)):
+    #     strItem=text_after_tokenize[i].replace(',',' ')
+    #     csv.write(','.join([str(i+1),strItem]))
+    #     if(i<(len(text_after_tokenize)-1)):
+    #         csv.write('\n')
+    # csv.close()
     # get vector using TF-IDF
     vectorizer = TfidfVectorizer(ngram_range=(1, 1))
-    X = vectorizer.fit_transform(text_after_tokenize)
+    X = vectorizer.fit_transform(raw_data['titles_and_descriptions'])
     X = X.toarray()
-
-    # pca = PCA(n_components=100)
+    # pca = PCA(n_components=50)
     # X = pca.fit_transform(X)
     lenVectorOfWord = len(X[0])
 
@@ -161,7 +170,7 @@ for filename in list_dir:
 
 
     corpusVector = []
-    for i in range(0,len(text_after_tokenize)):
+    for i in range(0,len(raw_data['titles_and_descriptions'])):
         # arrTokens = word_tokenize(str(text_after_tokenize[i]))
         # if not has_vector_representation(dictWordVectors, str(text_after_tokenize[i])):
         #     continue
