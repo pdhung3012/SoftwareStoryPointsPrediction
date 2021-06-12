@@ -9,6 +9,9 @@ import time, datetime
 import os
 from custom_pmi import cal_PMI
 from sklearn.metrics import mean_squared_error,mean_absolute_error
+from sklearn.metrics import precision_score,accuracy_score
+from sklearn.metrics import classification_report,confusion_matrix
+
 
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
@@ -212,14 +215,21 @@ if __name__ == '__main__':
 
     fopDataset = '../../../../dataPapers/dataTextLevelPaper/'
     fopCsv='../../dataset/'
-    fpResultSEE = fopDataset + "/resultSEE.txt"
+    # fpResultSEE = fopDataset + "/resultSEE.txt"
+    fpResultSEEShort = fopDataset + "/resultSEE_short.txt"
+    fpResultSEEDetails = fopDataset + "/resultSEE_details.txt"
 
     list_dir = os.listdir(fopCsv)  # Convert to lower case
     list_dir = sorted(list_dir)
 
-    fff = open(fpResultSEE, 'w')
-    fff.write('')
-    fff.close()
+    o2 = open(fpResultSEEShort, 'w')
+    o2.write('')
+    o2.close()
+    o2 = open(fpResultSEEDetails, 'w')
+    o2.write('')
+    o2.close()
+    lstResultOverProjects = []
+    lstStrResultOverProjects = []
     index=0
 
     for filename in list_dir:
@@ -280,10 +290,25 @@ if __name__ == '__main__':
             model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
             #model='temp_model_'+fnSystem
             result,lLabel,lPred=test(model, args.dataset,dictLabel)
-            print('test acc: ', result.numpy())
-            maeAccuracy = mean_absolute_error(lLabel, lPred)
+            # print('test acc: ', result.numpy())
+            # maeAccuracy = mean_absolute_error(lLabel, lPred)
+            y_test = lLabel
+            predicted = lPred
+            classAccuracy = accuracy_score(y_test, predicted)
 
+            print('{}\t{:.2f}'.format(fnSystem, classAccuracy))
 
+            o2 = open(fpResultSEEDetails, 'a')
+            o2.write(fnSystem + '\n')
+            o2.write('Result for GCN TextLevel \n')
+            # o2.write('MAE {}\nMQE {}\n\n\n'.format(maeAccuracy,mqeAccuracy))
+
+            # o2.write(str(sum(cross_val) / float(len(cross_val))) + '\n')
+            o2.write(str(confusion_matrix(y_test, predicted)) + '\n')
+            o2.write(str(classification_report(y_test, predicted)) + '\n\n\n')
+            o2.close()
+            lstResultOverProjects.append(classAccuracy)
+            lstStrResultOverProjects.append('{}\t{}'.format(fnSystem, classAccuracy))
 
             fff=open(fpLabel,'w')
             fff.write('\n'.join(map(str,lLabel)))
@@ -291,11 +316,20 @@ if __name__ == '__main__':
             fff=open(fpPred,'w')
             fff.write('\n'.join(map(str,lPred)))
             fff.close()
-            fff = open(fpResultSEE, 'a')
-            fff.write('{}\t{}\n'.format(fnSystem, maeAccuracy))
+            fff = open(fpResultSEEShort, 'a')
+            fff.write('{}\t{}\n'.format(fnSystem, classAccuracy))
             fff.close()
         except Exception as e:
-            fff = open(fpResultSEE, 'a')
+            fff = open(fpResultSEEShort, 'a')
             fff.write('{}\t{}\n'.format(fnSystem, 'Error'))
             fff.close()
+            fff = open(fpResultSEEDetails, 'a')
+            fff.write('{}\t{}\n'.format(fnSystem, 'Error {}'.format(str(e))))
+            fff.close()
+
+    averageAccuracy = np.average(lstResultOverProjects)
+    strAvg='{}\t{}'.format('Avg', averageAccuracy)
+    f1 = open(fpResultSEEShort, 'a')
+    f1.write(strAvg)
+    f1.close()
 

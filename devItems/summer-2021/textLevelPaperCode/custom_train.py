@@ -9,7 +9,8 @@ import time, datetime
 import os
 from custom_pmi import cal_PMI
 from sklearn.metrics import mean_squared_error,mean_absolute_error
-
+from sklearn.metrics import precision_score,accuracy_score
+from sklearn.metrics import classification_report,confusion_matrix
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
@@ -17,7 +18,8 @@ fopDataset='../../../../dataPapers/dataTextLevelPaper/'
 fnSystem='usergrid'
 fpLabel=fopDataset+fnSystem+"/test_label.txt"
 fpPred=fopDataset+fnSystem+"/test_pred.txt"
-fpResultSEE=fopDataset+"/resultSEE.txt"
+fpResultSEEShort=fopDataset+"/resultSEE_short.txt"
+fpResultSEEDetails=fopDataset+"/resultSEE_details.txt"
 fpTextLabel = fopDataset+fnSystem+'/label.txt'
 
 
@@ -258,13 +260,34 @@ if __name__ == '__main__':
     for i in range(0, len(lUn)):
         dictLabel[i] = lUn[i].strip()
 
+    o2 = open(fpResultSEEDetails, 'w')
+    o2.write('')
+    o2.close()
+    lstResultOverProjects = []
+    lstStrResultOverProjects = []
+
     model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
     #model='temp_model_'+fnSystem
     result,lLabel,lPred=test(model, args.dataset,dictLabel)
     print('test acc: ', result.numpy())
-    maeAccuracy = mean_absolute_error(lLabel, lPred)
+    # maeAccuracy = mean_absolute_error(lLabel, lPred)
+    y_test=lLabel
+    predicted=lPred
+    classAccuracy = accuracy_score(y_test, predicted)
 
+    print('{}\t{:.2f}'.format(fnSystem, classAccuracy))
 
+    o2 = open(fpResultSEEDetails, 'a')
+    o2.write(fnSystem + '\n')
+    o2.write('Result for GCN TextLevel \n')
+    # o2.write('MAE {}\nMQE {}\n\n\n'.format(maeAccuracy,mqeAccuracy))
+
+    # o2.write(str(sum(cross_val) / float(len(cross_val))) + '\n')
+    o2.write(str(confusion_matrix(y_test, predicted)) + '\n')
+    o2.write(str(classification_report(y_test, predicted)) + '\n\n\n')
+    o2.close()
+    lstResultOverProjects.append(classAccuracy)
+    lstStrResultOverProjects.append('{}\t{}'.format(fnSystem, classAccuracy))
 
     fff=open(fpLabel,'w')
     fff.write('\n'.join(map(str,lLabel)))
@@ -272,7 +295,13 @@ if __name__ == '__main__':
     fff=open(fpPred,'w')
     fff.write('\n'.join(map(str,lPred)))
     fff.close()
-    fff = open(fpResultSEE, 'w')
-    fff.write('{}\t{}\n'.format(fnSystem, maeAccuracy))
+    fff = open(fpResultSEEDetails, 'a')
+    fff.write('{}\t{}\n'.format(fnSystem, classAccuracy))
     fff.close()
+
+    averageAccuracy = np.average(lstResultOverProjects)
+    lstStrResultOverProjects.append('{}\t{}'.format('Avg', averageAccuracy))
+    f1 = open(fpResultSEEShort, 'w')
+    f1.write('\n'.join(lstStrResultOverProjects))
+    f1.close()
 
