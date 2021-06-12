@@ -15,7 +15,7 @@ NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
 fopDataset='../../../../dataPapers/dataTextLevelPaper/'
-fnSystem='clover'
+fnSystem='titanium'
 fpLabel=fopDataset+fnSystem+"/test_label.txt"
 fpPred=fopDataset+fnSystem+"/test_pred.txt"
 fpResultSEEShort=fopDataset+"/resultSEE_short.txt"
@@ -225,7 +225,7 @@ def word_eval():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ngram', required=False, type=int, default=4, help='ngram number')
+    parser.add_argument('--ngram', required=False, type=int, default=1, help='ngram number')
     parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
     parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
     parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')

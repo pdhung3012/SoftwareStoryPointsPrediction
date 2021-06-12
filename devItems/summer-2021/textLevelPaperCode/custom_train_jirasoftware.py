@@ -15,7 +15,7 @@ NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
 fopDataset='../../../../dataPapers/dataTextLevelPaper/'
-fnSystem='clover'
+fnSystem='jirasoftware'
 fpLabel=fopDataset+fnSystem+"/test_label.txt"
 fpPred=fopDataset+fnSystem+"/test_pred.txt"
 fpResultSEEShort=fopDataset+"/resultSEE_short.txt"
