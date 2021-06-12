@@ -69,10 +69,10 @@ def dev(model, dataset):
 
 
     print('type {}\t{}'.format(type(total_pred),type(correct)))
-    if not isinstance(total_pred,int):
-        total_pred = int(total_pred)
-    if not isinstance(correct,int):
-        correct = correct.int()
+    if not isinstance(total_pred,float):
+        total_pred = float(total_pred)
+    if not isinstance(correct,float):
+        correct = correct.float()
     # print(torch.div(correct, total_pred))
     if total_pred ==0:
         return 0
