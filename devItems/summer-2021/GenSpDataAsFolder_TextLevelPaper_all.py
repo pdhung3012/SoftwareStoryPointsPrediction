@@ -19,7 +19,8 @@ from numpy import unique
 import sys,os
 sys.path.append(os.path.abspath(os.path.join('..')))
 from UtilFunctions import createDirIfNotExist,scoreName
-
+import nltk
+nltk.download('punkt')
 
 def initDefaultTextEnvi():
     nlp_model = spacy.load('en_core_web_sm')

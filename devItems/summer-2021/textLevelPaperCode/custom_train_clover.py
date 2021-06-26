@@ -122,7 +122,8 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
         if name == 'temp_model':
             name = 'temp_model_%s' % dataset
         # edges_num, edges_matrix = edges_mapping(len(data_helper.vocab), data_helper.content, ngram)
-        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset)
+        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset,window_size=60)
+        print('count {} ds {}'.format(count,dataset))
         
         model = Model(class_num=len(data_helper.labels_str), hidden_size_node=200,
                       vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, edges_matrix=edges_mappings, edges_num=count,

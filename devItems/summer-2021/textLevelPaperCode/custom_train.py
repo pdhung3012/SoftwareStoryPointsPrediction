@@ -11,6 +11,9 @@ from custom_pmi import cal_PMI
 from sklearn.metrics import mean_squared_error,mean_absolute_error
 from sklearn.metrics import precision_score,accuracy_score
 from sklearn.metrics import classification_report,confusion_matrix
+import torch
+torch.zeros(1).cuda()
+print(torch.cuda.is_available())
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 

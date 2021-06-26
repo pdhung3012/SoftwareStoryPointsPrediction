@@ -44,7 +44,7 @@ class Model(torch.nn.Module):
 
         self.is_cuda = cuda
         self.vocab = vocab
-        # print(len(vocab))
+        print('lenVocab {}'.format(len(vocab)))
         self.seq_edge_w = torch.nn.Embedding(edges_num, 1)
         print(edges_num)
         print(pmi.shape)
