@@ -177,10 +177,9 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
                 best_acc = val_acc
                 last_best_epoch = epoch
                 improved = '*'
-                torch.save(model, name + '.pkl')
-            elif best_acc==0:
-                torch.save(model, name + '.pkl')
-
+                torch.save(model, name + '.pkl', pickle_protocol=4)
+            elif best_acc == 0:
+                torch.save(model, name + '.pkl', pickle_protocol=4)
             if epoch - last_best_epoch >= EARLY_STOP_EPOCH:
                 return name
             msg = 'Epoch: {0:>6} Iter: {1:>6}, Train Loss: {5:>7.2}, Train Acc: {6:>7.2%}' \

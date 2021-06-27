@@ -62,8 +62,17 @@ def dev(model, dataset):
         correct += correct_pred
         total_pred += len(content)
 
-    total_pred = float(total_pred)
-    correct = correct.float()
+    # total_pred = float(total_pred)
+    # correct = correct.float()
+    if not isinstance(total_pred,float):
+        total_pred = float(total_pred)
+    if not isinstance(correct,float):
+        correct = correct.float()
+    # print(torch.div(correct, total_pred))
+    if total_pred ==0:
+        return 0
+    return torch.div(correct, total_pred)
+
     # print(torch.div(correct, total_pred))
     return torch.div(correct, total_pred)
 
@@ -111,7 +120,7 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
         if name == 'temp_model':
             name = 'temp_model_%s' % dataset
         # edges_num, edges_matrix = edges_mapping(len(data_helper.vocab), data_helper.content, ngram)
-        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset)
+        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset,window_size=1)
         
         model = Model(class_num=len(data_helper.labels_str), hidden_size_node=200,
                       vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, edges_matrix=edges_mappings, edges_num=count,
@@ -167,7 +176,9 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
                 last_best_epoch = epoch
                 improved = '*'
 
-                torch.save(model, name + '.pkl')
+                torch.save(model, name + '.pkl', pickle_protocol=4)
+            elif best_acc == 0:
+                torch.save(model, name + '.pkl', pickle_protocol=4)
 
             if epoch - last_best_epoch >= EARLY_STOP_EPOCH:
                 return name

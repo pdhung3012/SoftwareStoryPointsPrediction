@@ -122,7 +122,7 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
         if name == 'temp_model':
             name = 'temp_model_%s' % dataset
         # edges_num, edges_matrix = edges_mapping(len(data_helper.vocab), data_helper.content, ngram)
-        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset,window_size=2)
+        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset,window_size=20)
         
         model = Model(class_num=len(data_helper.labels_str), hidden_size_node=200,
                       vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, edges_matrix=edges_mappings, edges_num=count,
@@ -177,9 +177,9 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
                 best_acc = val_acc
                 last_best_epoch = epoch
                 improved = '*'
-                torch.save(model, name + '.pkl')
+                torch.save(model, name + '.pkl',pickle_protocol=4)
             elif best_acc==0:
-                torch.save(model, name + '.pkl')
+                torch.save(model, name + '.pkl',pickle_protocol=4)
 
             if epoch - last_best_epoch >= EARLY_STOP_EPOCH:
                 return name
