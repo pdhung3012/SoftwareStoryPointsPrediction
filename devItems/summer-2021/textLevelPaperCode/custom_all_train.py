@@ -110,6 +110,7 @@ def test(model_name, dataset,dictLabel):
 
 
 def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
+    start_time = time.time()
     print('load data helper.')
     data_helper = DataHelper(dataset, mode='train')
     if os.path.exists(os.path.join('.', name+'.pkl')) and name != 'temp_model':
@@ -194,7 +195,8 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
             total = 0
             if bar:
                 pbar = tqdm.tqdm(total=NUM_ITER_EVAL)
-
+    end_time = time.time()
+    running_time=end_time-start_time
     return name
 
 
