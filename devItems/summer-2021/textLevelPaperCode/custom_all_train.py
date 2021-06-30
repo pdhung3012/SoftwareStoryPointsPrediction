@@ -111,8 +111,15 @@ def test(model_name, dataset,dictLabel):
 
 def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
     start_time = time.time()
+    tupLst=[]
     print('load data helper.')
     data_helper = DataHelper(dataset, mode='train')
+    f1=open(data_helper.current_set,'r')
+    arrContent=f1.read().strip().split('\n')
+    tupLst.append(len(arrContent))
+    f1.close()
+    print('len aaa {}'.format(len(arrContent)))
+
     if os.path.exists(os.path.join('.', name+'.pkl')) and name != 'temp_model':
         print('load model from file.')
         model = torch.load(os.path.join('.', name+'.pkl'))
@@ -121,8 +128,10 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
         if name == 'temp_model':
             name = 'temp_model_%s' % dataset
         # edges_num, edges_matrix = edges_mapping(len(data_helper.vocab), data_helper.content, ngram)
-        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset,window_size=1)
-        
+        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset,window_size=20)
+        tupLst.append(len(data_helper.vocab))
+        tupLst.append(count)
+
         model = Model(class_num=len(data_helper.labels_str), hidden_size_node=200,
                       vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, edges_matrix=edges_mappings, edges_num=count,
                       trainable_edges=edges, pmi=edges_weights, cuda=is_cuda)
@@ -182,7 +191,10 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
                 torch.save(model, name + '.pkl', pickle_protocol=4)
 
             if epoch - last_best_epoch >= EARLY_STOP_EPOCH:
-                return name
+                end_time = time.time()
+                running_time = end_time - start_time
+                tupLst.append(running_time)
+                return name,tupLst
             msg = 'Epoch: {0:>6} Iter: {1:>6}, Train Loss: {5:>7.2}, Train Acc: {6:>7.2%}' \
                   + 'Val Acc: {2:>7.2%}, Time: {3}{4}' \
                   # + ' Time: {5} {6}'
@@ -197,7 +209,9 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
                 pbar = tqdm.tqdm(total=NUM_ITER_EVAL)
     end_time = time.time()
     running_time=end_time-start_time
-    return name
+    tupLst.append(running_time)
+    # tup=tuple(tupLst)
+    return name,tupLst
 
 
 def word_eval():
@@ -231,6 +245,7 @@ if __name__ == '__main__':
     # fpResultSEE = fopDataset + "/resultSEE.txt"
     fpResultSEEShort = fopDataset + "/resultSEE_short.txt"
     fpResultSEEDetails = fopDataset + "/resultSEE_details.txt"
+    fpResultSEEAna = fopDataset + "/resultSEE_analyze.txt"
 
     list_dir = os.listdir(fopCsv)  # Convert to lower case
     list_dir = sorted(list_dir)
@@ -239,6 +254,9 @@ if __name__ == '__main__':
     o2.write('')
     o2.close()
     o2 = open(fpResultSEEDetails, 'w')
+    o2.write('')
+    o2.close()
+    o2 = open(fpResultSEEAna, 'w')
     o2.write('')
     o2.close()
     lstResultOverProjects = []
@@ -300,7 +318,7 @@ if __name__ == '__main__':
             for i in range(0, len(lUn)):
                 dictLabel[i] = lUn[i].strip()
 
-            model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
+            model, tupLst = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
             #model='temp_model_'+fnSystem
             result,lLabel,lPred=test(model, args.dataset,dictLabel)
             # print('test acc: ', result.numpy())
@@ -332,12 +350,18 @@ if __name__ == '__main__':
             fff = open(fpResultSEEShort, 'a')
             fff.write('{}\t{}\n'.format(fnSystem, classAccuracy))
             fff.close()
+            fff = open(fpResultSEEAna, 'a')
+            fff.write('{}\t{}\n'.format(fnSystem, '\n'.join(map(str,tupLst))))
+            fff.close()
         except Exception as e:
             fff = open(fpResultSEEShort, 'a')
             fff.write('{}\t{}\n'.format(fnSystem, 'Error'))
             fff.close()
             fff = open(fpResultSEEDetails, 'a')
             fff.write('{}\t{}\n'.format(fnSystem, 'Error {}'.format(str(e))))
+            fff.close()
+            fff = open(fpResultSEEAna, 'a')
+            fff.write('{}\t{}\n'.format(fnSystem, 'Error'))
             fff.close()
 
     averageAccuracy = np.average(lstResultOverProjects)
