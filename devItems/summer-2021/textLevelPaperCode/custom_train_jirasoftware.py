@@ -18,9 +18,11 @@ fopDataset='../../../../dataPapers/dataTextLevelPaper/'
 fnSystem='jirasoftware'
 fpLabel=fopDataset+fnSystem+"/test_label.txt"
 fpPred=fopDataset+fnSystem+"/test_pred.txt"
-fpResultSEEShort=fopDataset+"/resultSEE_short.txt"
-fpResultSEEDetails=fopDataset+"/resultSEE_details.txt"
+fpResultSEEShort=fopDataset+"/resultSEE_"+fnSystem+"_short.txt"
+fpResultSEEDetails=fopDataset+"/resultSEE_"+fnSystem+"_details.txt"
+fpResultSEEAna=fopDataset+"/resultSEE_"+fnSystem+"_ana.txt"
 fpTextLabel = fopDataset+fnSystem+'/label.txt'
+
 
 
 def edges_mapping(vocab_len, content, ngram):
@@ -112,8 +114,15 @@ def test(model_name, dataset,dictLabel):
 
 
 def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
+    start_time = time.time()
+    tupLst = []
     print('load data helper.')
     data_helper = DataHelper(dataset, mode='train')
+    f1 = open(data_helper.current_set, 'r')
+    arrContent = f1.read().strip().split('\n')
+    tupLst.append(len(arrContent))
+    f1.close()
+
     if os.path.exists(os.path.join('.', name+'.pkl')) and name != 'temp_model':
         print('load model from file.')
         model = torch.load(os.path.join('.', name+'.pkl'))
@@ -123,7 +132,8 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
             name = 'temp_model_%s' % dataset
         # edges_num, edges_matrix = edges_mapping(len(data_helper.vocab), data_helper.content, ngram)
         edges_weights, edges_mappings, count = cal_PMI(dataset=dataset)
-        
+        tupLst.append(len(data_helper.vocab))
+        tupLst.append(count)
         model = Model(class_num=len(data_helper.labels_str), hidden_size_node=200,
                       vocab=data_helper.vocab, n_gram=ngram, drop_out=drop_out, edges_matrix=edges_mappings, edges_num=count,
                       trainable_edges=edges, pmi=edges_weights, cuda=is_cuda)
@@ -182,7 +192,10 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
                 torch.save(model, name + '.pkl')
 
             if epoch - last_best_epoch >= EARLY_STOP_EPOCH:
-                return name
+                end_time = time.time()
+                running_time = end_time - start_time
+                tupLst.append(running_time)
+                return name, tupLst
             msg = 'Epoch: {0:>6} Iter: {1:>6}, Train Loss: {5:>7.2}, Train Acc: {6:>7.2%}' \
                   + 'Val Acc: {2:>7.2%}, Time: {3}{4}' \
                   # + ' Time: {5} {6}'
@@ -196,7 +209,10 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
             if bar:
                 pbar = tqdm.tqdm(total=NUM_ITER_EVAL)
 
-    return name
+    end_time = time.time()
+    running_time = end_time - start_time
+    tupLst.append(running_time)
+    return name, tupLst
 
 
 def word_eval():
@@ -225,7 +241,7 @@ def word_eval():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ngram', required=False, type=int, default=4, help='ngram number')
+    parser.add_argument('--ngram', required=False, type=int, default=1, help='ngram number')
     parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
     parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
     parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')
@@ -271,7 +287,7 @@ if __name__ == '__main__':
     lstResultOverProjects = []
     lstStrResultOverProjects = []
 
-    model = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
+    model, tupLst  = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
     #model='temp_model_'+fnSystem
     result,lLabel,lPred=test(model, args.dataset,dictLabel)
     print('test acc: ', result.numpy())
@@ -302,6 +318,9 @@ if __name__ == '__main__':
     fff.close()
     fff = open(fpResultSEEDetails, 'a')
     fff.write('{}\t{}\n'.format(fnSystem, classAccuracy))
+    fff.close()
+    fff = open(fpResultSEEAna, 'w')
+    fff.write('{}\t{}\n'.format(fnSystem, '\t'.join(map(str, tupLst))))
     fff.close()
 
     averageAccuracy = np.average(lstResultOverProjects)

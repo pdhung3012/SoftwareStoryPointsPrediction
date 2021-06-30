@@ -351,7 +351,7 @@ if __name__ == '__main__':
             fff.write('{}\t{}\n'.format(fnSystem, classAccuracy))
             fff.close()
             fff = open(fpResultSEEAna, 'a')
-            fff.write('{}\t{}\n'.format(fnSystem, '\n'.join(map(str,tupLst))))
+            fff.write('{}\t{}\n'.format(fnSystem, '\t'.join(map(str,tupLst))))
             fff.close()
         except Exception as e:
             fff = open(fpResultSEEShort, 'a')
