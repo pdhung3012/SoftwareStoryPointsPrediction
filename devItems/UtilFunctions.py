@@ -182,12 +182,14 @@ def preprocessFilterOnlyVerbNoun(strInput,ps,lemmatizer):
     for it in tagged:
 
         strForm=str(it[1])
-        if strForm.startswith('V') or strForm.startswith('NN')or strForm=='.':
+        # or strForm.startswith('NN')
+        if strForm.startswith('V') or strForm=='.':
             # print(it)
             lstStr1.append(it[0])
             # lstStr2.append(it[1])
 
     strTemp=' '.join(lstStr1)
+    print(strTemp)
     strOutput=strTemp
     return strOutput
 
