@@ -24,6 +24,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from nltk.stem import WordNetLemmatizer
 nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 
 ps = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
