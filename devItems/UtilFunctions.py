@@ -189,7 +189,7 @@ def preprocessFilterOnlyVerbNoun(strInput,ps,lemmatizer):
             # lstStr2.append(it[1])
 
     strTemp=' '.join(lstStr1)
-    print(strTemp)
+    # print(strTemp)
     strOutput=strTemp
     return strOutput
 
