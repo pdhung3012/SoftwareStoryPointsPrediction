@@ -160,6 +160,37 @@ def preprocessTextV4(strInput,ps,lemmatizer):
     strOutput=strTemp
     return strOutput
 
+def preprocessFilterOnlyVerbNoun(strInput,ps,lemmatizer):
+    words=word_tokenize(strInput)
+    lstStems=[]
+    for w in words:
+        lstStems.append(ps.stem(w))
+    strTemp=' '.join(lstStems)
+
+    words = word_tokenize(strTemp)
+    lstLems = []
+    for w in words:
+        lstLems.append(lemmatizer.lemmatize(w))
+    strTemp = ' '.join(lstLems)
+
+    wordsList = nltk.word_tokenize(strTemp)
+    tagged = nltk.pos_tag(wordsList)
+    # print('tagged {}'.format(type(tagged[0][0])))
+    lstContentI = []
+    lstStr1=[]
+    lstStr2 = []
+    for it in tagged:
+
+        strForm=str(it[1])
+        if strForm.startswith('V') or strForm.startswith('NN')or strForm=='.':
+            # print(it)
+            lstStr1.append(it[0])
+            # lstStr2.append(it[1])
+
+    strTemp=' '.join(lstStr1)
+    strOutput=strTemp
+    return strOutput
+
 
 def filterGapLabels(y_expected,y_predicted,percentRemove):
     lstGaps=[]
