@@ -90,6 +90,8 @@ list_dir = os.listdir(fopDataset)   # Convert to lower case
 list_dir =sorted(list_dir)
 print(str(list_dir))
 
+dictCountVars={}
+
 for filename in list_dir:
     if not filename.endswith('.csv'):
         continue

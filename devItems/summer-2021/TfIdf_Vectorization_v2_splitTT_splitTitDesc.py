@@ -95,6 +95,8 @@ createDirIfNotExist(fopTextPreprocess)
 list_dir = os.listdir(fopDataset)   # Convert to lower case
 list_dir =sorted(list_dir)
 print(str(list_dir))
+import time
+start_time = time.time()
 
 for filename in list_dir:
     if not filename.endswith('.csv'):
@@ -133,3 +135,6 @@ for filename in list_dir:
     X_test_vect.to_csv(fpVectorItemRegTest, index=False)
     print('Finish {}'.format(filename))
 
+end_time = time.time()
+dur=end_time-start_time
+print('Time duration: {}'.format(dur))

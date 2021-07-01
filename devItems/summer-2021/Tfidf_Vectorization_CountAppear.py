@@ -124,8 +124,11 @@ o2 = open(fpReportDetails, 'w')
 o2.write('')
 o2.close()
 
-import time
-start_time = time.time()
+countA=0
+countB=0
+countC=0
+countD=0
+
 for file in lstFilePathProjects:
     if not file.endswith('.csv'):
         continue
@@ -145,6 +148,13 @@ for file in lstFilePathProjects:
     y_train = df_train['storypoint']
     X_train = df_train.drop(['storypoint','issuekey'],axis=1)
 
+    dfTemp=df_train
+    countA=countA+dfTemp[dfTemp['storypoint']=='A'].shape[0]
+    countB = countB + dfTemp[dfTemp['storypoint'] == 'B'].shape[0]
+    countC = countC + dfTemp[dfTemp['storypoint'] == 'C'].shape[0]
+    countD = countD + dfTemp[dfTemp['storypoint'] == 'D'].shape[0]
+
+
     df_test = pd.read_csv(fpVectorItemClassTest)
     # df_test[df_test['storypoint'] <= 5] = 'A'
     # df_test[df_test['storypoint'] > 5 & df_test['storypoint'] <= 15] = 'B'
@@ -153,41 +163,12 @@ for file in lstFilePathProjects:
     df_test['storypoint'] = df_test['storypoint'].apply(scoreName)
     y_test = df_test['storypoint']
     X_test = df_test.drop(['storypoint','issuekey'], axis=1)
-    # print("********", "\n", "Random Forest Results Regression with: ", str(classifier))
-    # X_train, X_test, y_train, y_test = train_test_split(all_data, all_label, test_size = 0.2,shuffle = False, stratify = None)
-    # dictReverse={}
-    classifier = RandomForestClassifier(n_estimators=100, max_depth=None, n_jobs=-1)
-    classifier.fit(X_train, y_train)
-    predicted = classifier.predict(X_test)
 
-    #predicted=convertTopLabelToNormalLabel(predicted)
-    # maeAccuracy = mean_absolute_error(y_test, predicted)
-    # mqeAccuracy = mean_squared_error(y_test, predicted)
-    classAccuracy= accuracy_score(y_test, predicted)
+    dfTemp=df_test
+    countA=countA+dfTemp[dfTemp['storypoint']=='A'].shape[0]
+    countB = countB + dfTemp[dfTemp['storypoint'] == 'B'].shape[0]
+    countC = countC + dfTemp[dfTemp['storypoint'] == 'C'].shape[0]
+    countD = countD + dfTemp[dfTemp['storypoint'] == 'D'].shape[0]
 
-    print('{}\t{:.2f}'.format(fileName,classAccuracy))
-
-    np.savetxt(fpPredictedResult, predicted, fmt='%s', delimiter=',')
-    o2 = open(fpReportDetails, 'a')
-    o2.write(fileName+'\n')
-    o2.write('Result for ' + str(classifier) + '\n')
-    # o2.write('MAE {}\nMQE {}\n\n\n'.format(maeAccuracy,mqeAccuracy))
-
-    # o2.write(str(sum(cross_val) / float(len(cross_val))) + '\n')
-    o2.write(str(confusion_matrix(y_test, predicted)) + '\n')
-    o2.write(str(classification_report(y_test, predicted)) + '\n')
-    o2.close()
-
-    lstResultOverProjects.append(classAccuracy)
-    lstStrResultOverProjects.append('{}\t{}'.format(fileName,classAccuracy))
-
-end_time = time.time()
-dur=end_time-start_time
-print('Time duration: {}'.format(dur))
-averageAccuracy=np.average(lstResultOverProjects)
-lstStrResultOverProjects.append('{}\t{}'.format('Avg',averageAccuracy))
-f1=open(fpReportShort,'w')
-f1.write('\n'.join(lstStrResultOverProjects))
-f1.close()
-
+print('{}\n{}\n{}\n{}'.format(countA,countB,countC,countD))
 
