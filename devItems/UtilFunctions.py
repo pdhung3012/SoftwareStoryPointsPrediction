@@ -183,7 +183,7 @@ def preprocessFilterOnlyVerbNoun(strInput,ps,lemmatizer):
 
         strForm=str(it[1])
         # or strForm.startswith('NN')
-        if strForm.startswith('V') or strForm=='.':
+        if strForm.startswith('V') or strForm.startswith('NN') or strForm=='.':
             # print(it)
             lstStr1.append(it[0])
             # lstStr2.append(it[1])

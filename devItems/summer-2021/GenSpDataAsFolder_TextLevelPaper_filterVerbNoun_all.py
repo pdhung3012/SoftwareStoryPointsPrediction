@@ -261,10 +261,10 @@ if __name__ == "__main__":
         #print('y test{}'.format(y_test))
 
         createDirIfNotExist(fopOutputDs)
-        fpTextAll = fopOutputDs + fnSystemAbbrev + '-stemmed.txt'
-        fpTextTrain=fopOutputDs+fnSystemAbbrev+'-train-stemmed.txt'
-        fpTextDev = fopOutputDs + fnSystemAbbrev + '-dev-stemmed.txt'
-        fpTextTest = fopOutputDs + fnSystemAbbrev + '-test-stemmed.txt'
+        fpTextAll = fopOutputDs +'verbNoun_'+ fnSystemAbbrev + '-stemmed.txt'
+        fpTextTrain=fopOutputDs+'verbNoun_'+fnSystemAbbrev+'-train-stemmed.txt'
+        fpTextDev = fopOutputDs +'verbNoun_'+ fnSystemAbbrev + '-dev-stemmed.txt'
+        fpTextTest = fopOutputDs +'verbNoun_'+ fnSystemAbbrev + '-test-stemmed.txt'
         fpTextVocab = fopOutputDs + 'vocab.txt'
         fpTextVocab5 = fopOutputDs + 'vocab-5.txt'
         fpTextLabel = fopOutputDs + 'label.txt'
