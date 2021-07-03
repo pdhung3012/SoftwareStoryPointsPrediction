@@ -18,7 +18,6 @@ sys.path.append(os.path.abspath(os.path.join('..')))
 from UtilFunctions import createDirIfNotExist
 
 
-
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
@@ -264,7 +263,7 @@ if __name__ == '__main__':
     fopDataset = '../../../../dataPapers/dataTextLevelPaper/'
     fopCsv='../../dataset/'
     # fpResultSEE = fopDataset + "/resultSEE.txt"
-    fonResult='resultSEE_all/'
+    fonResult='resultSEE_verbNoun/'
     createDirIfNotExist(fopDataset+fonResult)
     fpResultSEEShort = fopDataset+fonResult + "short.txt"
     fpResultSEEDetails = fopDataset+fonResult + "details.txt"
@@ -295,6 +294,7 @@ if __name__ == '__main__':
             continue
         '''
         fnSystem = filename.replace('.csv', '')
+        fnSystem='verbNoun_'+fnSystem
         # if not (fnSystem == 'jirasoftware' or  fnSystem == 'clover'):
         #     continue
         fpLabel = fopDataset + fnSystem + "/test_label.txt"

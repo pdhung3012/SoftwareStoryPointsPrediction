@@ -18,7 +18,6 @@ sys.path.append(os.path.abspath(os.path.join('..')))
 from UtilFunctions import createDirIfNotExist
 
 
-
 NUM_ITER_EVAL = 100
 EARLY_STOP_EPOCH = 25
 
@@ -130,7 +129,7 @@ def test(model_name, dataset,dictLabel):
     return torch.div(correct, total_pred).to('cpu'),list_label,list_pred
 
 
-def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
+def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True,window=20):
     start_time = time.time()
     tupLst=[]
     print('load data helper.')
@@ -149,7 +148,7 @@ def train(ngram, name, bar, drop_out, dataset, is_cuda=False, edges=True):
         if name == 'temp_model':
             name = 'temp_model_%s' % dataset
         # edges_num, edges_matrix = edges_mapping(len(data_helper.vocab), data_helper.content, ngram)
-        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset,window_size=20)
+        edges_weights, edges_mappings, count = cal_PMI(dataset=dataset,window_size=window)
         tupLst.append(len(data_helper.vocab))
         tupLst.append(count)
 
@@ -264,7 +263,7 @@ if __name__ == '__main__':
     fopDataset = '../../../../dataPapers/dataTextLevelPaper/'
     fopCsv='../../dataset/'
     # fpResultSEE = fopDataset + "/resultSEE.txt"
-    fonResult='resultSEE_all/'
+    fonResult='resultSEE_sen/'
     createDirIfNotExist(fopDataset+fonResult)
     fpResultSEEShort = fopDataset+fonResult + "short.txt"
     fpResultSEEDetails = fopDataset+fonResult + "details.txt"
@@ -285,110 +284,123 @@ if __name__ == '__main__':
     lstResultOverProjects = []
     lstStrResultOverProjects = []
     index=0
+    arrWindow = [2, 5, 10, 20, 50, 100]
+    for win in arrWindow:
+        fff = open(fpResultSEEDetails, 'a')
+        fff.write('\n\n\nwindow_size = {}\n\n'.format(win))
+        fff.close()
 
-    for filename in list_dir:
-        if not filename.endswith('.csv'):
-            continue
-        index=index+1
-        '''
-        if(index<=15):
-            continue
-        '''
-        fnSystem = filename.replace('.csv', '')
-        # if not (fnSystem == 'jirasoftware' or  fnSystem == 'clover'):
-        #     continue
-        fpLabel = fopDataset + fnSystem + "/test_label.txt"
-        fpPred = fopDataset + fnSystem + "/test_pred.txt"
+        fff = open(fpResultSEEShort, 'a')
+        fff.write('\n\n\nwindow_size = {}\n\n'.format(win))
+        fff.close()
 
-        fpTextLabel = fopDataset + fnSystem + '/label.txt'
-        try:
-            parser = argparse.ArgumentParser()
-            parser.add_argument('--ngram', required=False, type=int, default=1, help='ngram number')
-            parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
-            parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
-            parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')
-            parser.add_argument('--dataset', required=False, type=str,default=fnSystem, help='dataset')
-            parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
-            parser.add_argument('--rand', required=False, type=int, default=7, help='rand_seed')
+        fff = open(fpResultSEEAna, 'a')
+        fff.write('\n\n\nwindow_size = {}\n\n'.format(win))
+        fff.close()
 
-            args = parser.parse_args()
+        for filename in list_dir:
+            if not filename.endswith('.csv'):
+                continue
+            index=index+1
+            '''
+            if(index<=15):
+                continue
+            '''
+            fnSystem = filename.replace('.csv', '')
+            # if not (fnSystem == 'jirasoftware' or  fnSystem == 'clover'):
+            #     continue
+            fpLabel = fopDataset + fnSystem + "/test_label.txt"
+            fpPred = fopDataset + fnSystem + "/test_pred.txt"
 
-            print('ngram: %d' % args.ngram)
-            print('project_name: %s' % args.name)
-            print('dataset: %s' % args.dataset)
-            print('trainable_edges: %s' % args.edges)
-            # #
-            SEED = args.rand
-            torch.manual_seed(SEED)
-            torch.cuda.manual_seed(SEED)
-            np.random.seed(SEED)
-            random.seed(SEED)
+            fpTextLabel = fopDataset + fnSystem + '/label.txt'
+            try:
+                parser = argparse.ArgumentParser()
+                parser.add_argument('--ngram', required=False, type=int, default=1, help='ngram number')
+                parser.add_argument('--name', required=False, type=str, default='temp_model', help='project name')
+                parser.add_argument('--bar', required=False, type=int, default=0, help='show bar')
+                parser.add_argument('--dropout', required=False, type=float, default=0.5, help='dropout rate')
+                parser.add_argument('--dataset', required=False, type=str,default=fnSystem, help='dataset')
+                parser.add_argument('--edges', required=False, type=int, default=1, help='trainable edges')
+                parser.add_argument('--rand', required=False, type=int, default=7, help='rand_seed')
 
-            if args.bar == 1:
-                bar = True
-            else:
-                bar = False
+                args = parser.parse_args()
 
-            if args.edges == 1:
-                edges = True
-                print('trainable edges')
-            else:
-                edges = False
+                print('ngram: %d' % args.ngram)
+                print('project_name: %s' % args.name)
+                print('dataset: %s' % args.dataset)
+                print('trainable_edges: %s' % args.edges)
+                # #
+                SEED = args.rand
+                torch.manual_seed(SEED)
+                torch.cuda.manual_seed(SEED)
+                np.random.seed(SEED)
+                random.seed(SEED)
 
-            dictLabel = {}
-            fff = open(fpTextLabel, 'r')
-            lUn = fff.read().split('\n')
-            fff.close()
+                if args.bar == 1:
+                    bar = True
+                else:
+                    bar = False
 
-            for i in range(0, len(lUn)):
-                dictLabel[i] = lUn[i].strip()
+                if args.edges == 1:
+                    edges = True
+                    print('trainable edges')
+                else:
+                    edges = False
 
-            model, tupLst = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges)
-            #model='temp_model_'+fnSystem
-            result,lLabel,lPred=test(model, args.dataset,dictLabel)
-            # print('test acc: ', result.numpy())
-            # maeAccuracy = mean_absolute_error(lLabel, lPred)
-            y_test = lLabel
-            predicted = lPred
-            classAccuracy = accuracy_score(y_test, predicted)
+                dictLabel = {}
+                fff = open(fpTextLabel, 'r')
+                lUn = fff.read().split('\n')
+                fff.close()
 
-            print('{}\t{:.2f}'.format(fnSystem, classAccuracy))
+                for i in range(0, len(lUn)):
+                    dictLabel[i] = lUn[i].strip()
 
-            o2 = open(fpResultSEEDetails, 'a')
-            o2.write(fnSystem + '\n')
-            o2.write('Result for GCN TextLevel \n')
-            # o2.write('MAE {}\nMQE {}\n\n\n'.format(maeAccuracy,mqeAccuracy))
+                model, tupLst = train(args.ngram, args.name, bar, args.dropout, dataset=args.dataset, is_cuda=True, edges=edges,window=win)
+                #model='temp_model_'+fnSystem
+                result,lLabel,lPred=test(model, args.dataset,dictLabel)
+                # print('test acc: ', result.numpy())
+                # maeAccuracy = mean_absolute_error(lLabel, lPred)
+                y_test = lLabel
+                predicted = lPred
+                classAccuracy = accuracy_score(y_test, predicted)
 
-            # o2.write(str(sum(cross_val) / float(len(cross_val))) + '\n')
-            o2.write(str(confusion_matrix(y_test, predicted)) + '\n')
-            o2.write(str(classification_report(y_test, predicted)) + '\n\n\n')
-            o2.close()
-            lstResultOverProjects.append(classAccuracy)
-            lstStrResultOverProjects.append('{}\t{}'.format(fnSystem, classAccuracy))
+                print('{}\t{:.2f}'.format(fnSystem, classAccuracy))
 
-            fff=open(fpLabel,'w')
-            fff.write('\n'.join(map(str,lLabel)))
-            fff.close()
-            fff=open(fpPred,'w')
-            fff.write('\n'.join(map(str,lPred)))
-            fff.close()
-            fff = open(fpResultSEEShort, 'a')
-            fff.write('{}\t{}\n'.format(fnSystem, classAccuracy))
-            fff.close()
-            fff = open(fpResultSEEAna, 'a')
-            fff.write('{}\t{}\n'.format(fnSystem, '\t'.join(map(str,tupLst))))
-            fff.close()
-        except Exception as e:
-            fff = open(fpResultSEEShort, 'a')
-            fff.write('{}\t{}\n'.format(fnSystem, 'Error'))
-            fff.close()
-            fff = open(fpResultSEEDetails, 'a')
-            fff.write('{}\t{}\n'.format(fnSystem, 'Error {}'.format(str(e))))
-            fff.close()
-            fff = open(fpResultSEEAna, 'a')
-            fff.write('{}\t{}\n'.format(fnSystem, 'Error'))
-            fff.close()
-            traceback.print_exc()
+                o2 = open(fpResultSEEDetails, 'a')
+                o2.write(fnSystem + '\n')
+                o2.write('Result for GCN TextLevel \n')
+                # o2.write('MAE {}\nMQE {}\n\n\n'.format(maeAccuracy,mqeAccuracy))
+
+                # o2.write(str(sum(cross_val) / float(len(cross_val))) + '\n')
+                o2.write(str(confusion_matrix(y_test, predicted)) + '\n')
+                o2.write(str(classification_report(y_test, predicted)) + '\n\n\n')
+                o2.close()
+                lstResultOverProjects.append(classAccuracy)
+                lstStrResultOverProjects.append('{}\t{}'.format(fnSystem, classAccuracy))
+
+                fff=open(fpLabel,'w')
+                fff.write('\n'.join(map(str,lLabel)))
+                fff.close()
+                fff=open(fpPred,'w')
+                fff.write('\n'.join(map(str,lPred)))
+                fff.close()
+                fff = open(fpResultSEEShort, 'a')
+                fff.write('{}\t{}\n'.format(fnSystem, classAccuracy))
+                fff.close()
+                fff = open(fpResultSEEAna, 'a')
+                fff.write('{}\t{}\n'.format(fnSystem, '\t'.join(map(str,tupLst))))
+                fff.close()
+            except Exception as e:
+                fff = open(fpResultSEEShort, 'a')
+                fff.write('{}\t{}\n'.format(fnSystem, 'Error'))
+                fff.close()
+                fff = open(fpResultSEEDetails, 'a')
+                fff.write('{}\t{}\n'.format(fnSystem, 'Error {}'.format(str(e))))
+                fff.close()
+                fff = open(fpResultSEEAna, 'a')
+                fff.write('{}\t{}\n'.format(fnSystem, 'Error'))
+                fff.close()
+                traceback.print_exc()
 
     averageAccuracy = np.average(lstResultOverProjects)
     strAvg='{}\t{}'.format('Avg', averageAccuracy)

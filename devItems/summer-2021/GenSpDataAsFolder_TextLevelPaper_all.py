@@ -7,6 +7,11 @@ import gensim
 from sklearn.decomposition import PCA
 from sklearn.random_projection import GaussianRandomProjection
 from sklearn.model_selection import cross_val_score, cross_val_predict, StratifiedKFold, train_test_split
+import sys,os
+print(os.path.abspath(os.path.join('..')))
+sys.path.append(os.path.abspath(os.path.join('..')))
+from UtilFunctions import createDirIfNotExist
+
 
 
 
