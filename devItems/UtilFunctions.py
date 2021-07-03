@@ -193,6 +193,80 @@ def preprocessFilterOnlyVerbNoun(strInput,ps,lemmatizer):
     strOutput=strTemp
     return strOutput
 
+def preprocessFilterOnlyVerbNoun(strInput,ps,lemmatizer):
+    words=word_tokenize(strInput)
+    lstStems=[]
+    for w in words:
+        lstStems.append(ps.stem(w))
+    strTemp=' '.join(lstStems)
+
+    words = word_tokenize(strTemp)
+    lstLems = []
+    for w in words:
+        lstLems.append(lemmatizer.lemmatize(w))
+    strTemp = ' '.join(lstLems)
+
+    wordsList = nltk.word_tokenize(strTemp)
+    tagged = nltk.pos_tag(wordsList)
+    # print('tagged {}'.format(type(tagged[0][0])))
+    lstContentI = []
+    lstStr1=[]
+    lstStr2 = []
+    for it in tagged:
+
+        strForm=str(it[1])
+        # or strForm.startswith('NN')
+        if strForm.startswith('V') or strForm.startswith('NN') or strForm=='.':
+            # print(it)
+            lstStr1.append(it[0])
+            # lstStr2.append(it[1])
+
+    strTemp=' '.join(lstStr1)
+    # print(strTemp)
+    strOutput=strTemp
+    return strOutput
+
+import time
+# https://medium.com/swlh/nlp-text-preprocessing-techniques-ea34d3f84de4
+def preprocessFollowingNLPStandard(strInput,ps,lemmatizer):
+    start_time = time.time()
+    strStep1=strInput.replace('\t',' ').replace('\n',' ').strip()
+    strLower=strStep1.lower().replace('\t',' ').replace('\n',' ').strip()
+    words=word_tokenize(strLower)
+    lstStems=[]
+    for w in words:
+        lstStems.append(ps.stem(w))
+    strTemp=' '.join(lstStems)
+
+    words = word_tokenize(strTemp)
+    lstLems = []
+    for w in words:
+        lstLems.append(lemmatizer.lemmatize(w))
+    strTemp = ' '.join(lstLems)
+
+    wordsList = nltk.word_tokenize(strTemp)
+    tagged = nltk.pos_tag(wordsList)
+    # print('tagged {}'.format(type(tagged[0][0])))
+    lstContentI = []
+    lstStr1=[]
+    lstStr2 = []
+    for it in tagged:
+
+        strForm=str(it[1]).strip()
+        strText = str(it[0]).strip()
+        # or strForm.startswith('NN')
+        if (not strText=='') and (not strForm==''):
+            # print(it)
+            lstStr1.append(it[0])
+            lstStr2.append(it[1])
+
+    strPre=' '.join(lstStr1)
+    strPOS=' '.join(lstStr2)
+    # print(strTemp)
+    end_time = time.time()
+    running_time = end_time - start_time
+    return strStep1,strPre,strPOS,running_time
+
 
 def filterGapLabels(y_expected,y_predicted,percentRemove):
     lstGaps=[]
