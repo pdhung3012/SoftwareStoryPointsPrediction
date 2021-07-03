@@ -53,44 +53,42 @@ def preprocess(textInLine):
     return ' '.join(doc)
 
 
-
+import codecs
+import glob
 if __name__ == "__main__":
 
     fopDataset = '../dataset/'
-    fopFatherFolder = '../../../dataPapers/POSTagDataset/storyPoint_ds/'
+    fopFatherFolder = '../../../dataPapers/POSTagDataset/pythondocstring_ds_validTest/'
+    fopInputText='../../../dataPapers/POSTagDataset/code_docstring_input_testValid/'
     createDirIfNotExist(fopFatherFolder)
 
+    lstFiles = sorted(glob.glob(fopInputText + "*"))
 
-
-    # fopRoot = '/home/hungphd/git/dataPapers/dataTextGCN/'
-
-    list_dir = os.listdir(fopDataset)  # Convert to lower case
-    list_dir = sorted(list_dir)
 
     indexLineWrite=0
     indexFileWrite = 1
     maxLineWrite=10000
+
+
 
     fnRawText='rawText_part{}.txt'.format(indexFileWrite)
     fnPreprocessText = 'preprocessText_part{}.txt'.format(indexFileWrite)
     fnPOSTag = 'pos_part{}.txt'.format(indexFileWrite)
     fnTime = 'time{}.txt'.format(indexFileWrite)
 
-    for filename in list_dir:
-        if not filename.endswith('.csv'):
-            continue
-        fnSystem = filename
-        fileCsv = fopDataset + fnSystem
-        fnSystemAbbrev = filename.replace('.csv', '')
+    for fpInput in lstFiles:
+        fff=codecs.open(fpInput, 'r',  encoding="latin-1")
+        arrContent=fff.read().split('\n')
+        fff.close()
 
-        df = pd.read_csv(fileCsv)
+
         lstText=[]
         lstPre=[]
         lstPOS=[]
         lstTime=[]
 
-        for i in range(0, len(df['description'])):
-            strTitle = ' '.join([str(df['title'][i]), ' . '])
+        for i in range(0, len(arrContent)):
+            strTitle = arrContent[i]
             isRunOK=False
             try:
                 strText,strPre,strPOS,run_time=preprocessFollowingNLPStandard(strTitle,ps,lemmatizer)
@@ -127,51 +125,6 @@ if __name__ == "__main__":
                 fnPOSTag = 'pos_part{}.txt'.format(indexFileWrite)
                 fnTime = 'time{}.txt'.format(indexFileWrite)
                 print('start write {}'.format(fnRawText))
-
-
-
-
-
-
-            strDescription = ' '.join([str(df['description'][i]), ' . '])
-            isRunOK=False
-            try:
-                strText, strPre, strPOS, run_time = preprocessFollowingNLPStandard(strDescription, ps, lemmatizer)
-                isRunOK=True
-            except:
-                isRunOK=False
-
-            if isRunOK:
-                indexLineWrite=indexLineWrite+1
-                lstText.append(strText)
-                lstPre.append(strPre)
-                lstPOS.append(strPOS)
-                lstTime.append(str(run_time))
-            if((indexLineWrite % maxLineWrite)==0):
-                print('run ok')
-                indexLineWrite = 0
-                indexFileWrite=indexFileWrite+1
-                fff=open(fopFatherFolder+fnRawText,'w')
-                fff.write('\n'.join(lstText))
-                fff.close()
-                fff = open(fopFatherFolder + fnPreprocessText, 'w')
-                fff.write('\n'.join(lstPre))
-                fff.close()
-                fff = open(fopFatherFolder + fnPOSTag, 'w')
-                fff.write('\n'.join(lstPOS))
-                fff.close()
-                fff=open(fopFatherFolder+fnTime,'w')
-                fff.write('\n'.join(lstTime))
-                fff.close()
-                lstText=[]
-                lstPOS=[]
-                lstPre=[]
-                lstTime=[]
-
-                fnRawText = 'rawText_part{}.txt'.format(indexFileWrite)
-                fnPreprocessText = 'preprocessText_part{}.txt'.format(indexFileWrite)
-                fnPOSTag = 'pos_part{}.txt'.format(indexFileWrite)
-                fnTime = 'time{}.txt'.format(indexFileWrite)
 
         if len(lstText)>0:
             indexFileWrite = indexFileWrite + 1
