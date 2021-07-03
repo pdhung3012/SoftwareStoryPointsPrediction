@@ -148,6 +148,7 @@ if __name__ == "__main__":
                 lstPOS.append(strPOS)
                 lstTime.append(str(run_time))
             if((indexLineWrite % maxLineWrite)==0):
+                print('run ok')
                 indexLineWrite = 0
                 indexFileWrite=indexFileWrite+1
                 fff=open(fopFatherFolder+fnRawText,'w')
