@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
         df = pd.read_csv(fileCsv)
         columnId = df['issuekey']
-        df['storypoint'] = df['storypoint'].apply(scoreName)
+        # df['storypoint'] = df['storypoint'].apply(scoreName)
         columnRegStory = df['storypoint']
         titles_and_descriptions = []
         colTest=[]
