@@ -148,7 +148,7 @@ for filename in list_dir:
     #         csv.write('\n')
     # csv.close()
     # get vector using TF-IDF
-    vectorizer = TfidfVectorizer(ngram_range=(1, 1))
+    vectorizer = TfidfVectorizer(ngram_range=(1, 4),max_features=20000)
     X = vectorizer.fit_transform(raw_data['titles_and_descriptions'])
     X = X.toarray()
     # pca = PCA(n_components=50)
